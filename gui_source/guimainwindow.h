@@ -23,6 +23,7 @@
 
 #include <QMainWindow>
 #include "../global.h"
+#include "dialogcreatemodule.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GuiMainWindow; }
@@ -38,7 +39,6 @@ public:
 
 private slots:
     void on_actionCreate_triggered();
-
     void on_pushButtonUpdateAll_clicked();
 
 private:

@@ -38,7 +38,9 @@ GuiMainWindow::~GuiMainWindow()
 
 void GuiMainWindow::on_actionCreate_triggered()
 {
+    DialogCreateModule dialogCreateModule(this);
 
+    dialogCreateModule.exec();
 }
 
 void GuiMainWindow::on_pushButtonUpdateAll_clicked()
