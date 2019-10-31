@@ -47,3 +47,27 @@ void GuiMainWindow::on_pushButtonUpdateAll_clicked()
 {
 
 }
+
+void GuiMainWindow::on_actionAbout_triggered()
+{
+    DialogAbout dialogAbout(this);
+
+    dialogAbout.exec();
+}
+
+void GuiMainWindow::on_actionOpen_triggered()
+{
+
+}
+
+void GuiMainWindow::on_actionOptions_triggered()
+{
+    DialogOptions dialogOptions(this);
+
+    dialogOptions.exec();
+}
+
+void GuiMainWindow::on_pushButtonReload_clicked()
+{
+
+}

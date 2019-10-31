@@ -32,3 +32,8 @@ DialogCreateModule::~DialogCreateModule()
 {
     delete ui;
 }
+
+void DialogCreateModule::on_pushButtonClose_clicked()
+{
+    this->close();
+}

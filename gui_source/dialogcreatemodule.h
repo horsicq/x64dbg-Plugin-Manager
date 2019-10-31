@@ -35,6 +35,9 @@ public:
     explicit DialogCreateModule(QWidget *parent = nullptr);
     ~DialogCreateModule();
 
+private slots:
+    void on_pushButtonClose_clicked();
+
 private:
     Ui::DialogCreateModule *ui;
 };
