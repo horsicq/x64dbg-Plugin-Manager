@@ -35,6 +35,9 @@ public:
     explicit DialogAbout(QWidget *parent = nullptr);
     ~DialogAbout();
 
+private slots:
+    void on_pushButtonOK_clicked();
+
 private:
     Ui::DialogAbout *ui;
 };

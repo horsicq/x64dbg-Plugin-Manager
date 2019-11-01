@@ -48,6 +48,8 @@ private slots:
     void on_actionOptions_triggered();
     void on_pushButtonReload_clicked();
 
+    void on_actionExit_triggered();
+
 private:
     Ui::GuiMainWindow *ui;
 };

@@ -35,7 +35,6 @@ GuiMainWindow::~GuiMainWindow()
     delete ui;
 }
 
-
 void GuiMainWindow::on_actionCreate_triggered()
 {
     DialogCreateModule dialogCreateModule(this);
@@ -70,4 +69,9 @@ void GuiMainWindow::on_actionOptions_triggered()
 void GuiMainWindow::on_pushButtonReload_clicked()
 {
 
+}
+
+void GuiMainWindow::on_actionExit_triggered()
+{
+    this->close();
 }

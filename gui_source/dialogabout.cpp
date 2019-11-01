@@ -32,3 +32,8 @@ DialogAbout::~DialogAbout()
 {
     delete ui;
 }
+
+void DialogAbout::on_pushButtonOK_clicked()
+{
+    this->close();
+}
