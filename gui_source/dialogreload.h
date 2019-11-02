@@ -32,7 +32,7 @@ class DialogReload : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogReload(QWidget *parent = nullptr);
+    explicit DialogReload(QWidget *parent=nullptr);
     ~DialogReload();
 
 private:

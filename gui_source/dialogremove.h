@@ -32,7 +32,7 @@ class DialogRemove : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogRemove(QWidget *parent = nullptr);
+    explicit DialogRemove(QWidget *parent=nullptr);
     ~DialogRemove();
 
 private:

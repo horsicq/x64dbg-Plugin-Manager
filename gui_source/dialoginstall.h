@@ -32,7 +32,7 @@ class DialogInstall : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstall(QWidget *parent = nullptr);
+    explicit DialogInstall(QWidget *parent=nullptr);
     ~DialogInstall();
 
 private:

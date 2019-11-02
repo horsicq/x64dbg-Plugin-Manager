@@ -32,8 +32,12 @@ class DialogOptions : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogOptions(QWidget *parent = nullptr);
+    explicit DialogOptions(QWidget *parent=nullptr);
     ~DialogOptions();
+
+private slots:
+    void on_pushButtonOK_clicked();
+    void on_pushButtonCancel_clicked();
 
 private:
     Ui::DialogOptions *ui;

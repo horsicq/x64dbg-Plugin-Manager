@@ -32,3 +32,15 @@ DialogOptions::~DialogOptions()
 {
     delete ui;
 }
+
+void DialogOptions::on_pushButtonOK_clicked()
+{
+    // TODO
+
+    this->close();
+}
+
+void DialogOptions::on_pushButtonCancel_clicked()
+{
+    this->close();
+}

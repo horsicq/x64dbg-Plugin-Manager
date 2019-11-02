@@ -26,6 +26,7 @@ DialogAbout::DialogAbout(QWidget *parent) :
     ui(new Ui::DialogAbout)
 {
     ui->setupUi(this);
+    // TODO
 }
 
 DialogAbout::~DialogAbout()
