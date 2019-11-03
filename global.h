@@ -33,6 +33,7 @@ namespace XPLUGINMANAGER
     struct OPTIONS
     {
         bool bStayOnTop;
+        QString sRootPath;
     };
 }
 

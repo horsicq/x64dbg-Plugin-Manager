@@ -33,6 +33,16 @@ DialogOptions::~DialogOptions()
     delete ui;
 }
 
+void DialogOptions::loadOptions(XPLUGINMANAGER::OPTIONS *pOptions)
+{
+    // TODO
+}
+
+void DialogOptions::saveOptions(XPLUGINMANAGER::OPTIONS *pOptions)
+{
+    // TODO
+}
+
 void DialogOptions::on_pushButtonOK_clicked()
 {
     // TODO

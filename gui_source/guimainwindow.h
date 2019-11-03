@@ -52,5 +52,7 @@ private slots:
 
 private:
     Ui::GuiMainWindow *ui;
+
+    XPLUGINMANAGER::OPTIONS options;
 };
 #endif // GUIMAINWINDOW_H

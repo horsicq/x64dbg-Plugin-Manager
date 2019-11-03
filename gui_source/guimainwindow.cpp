@@ -28,10 +28,14 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     ui->setupUi(this);
 
     setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
+
+    DialogOptions::loadOptions(&options);
 }
 
 GuiMainWindow::~GuiMainWindow()
 {
+    DialogOptions::saveOptions(&options);
+
     delete ui;
 }
 
@@ -61,6 +65,7 @@ void GuiMainWindow::on_actionOpen_triggered()
 
 void GuiMainWindow::on_actionOptions_triggered()
 {
+    // TODO otions
     DialogOptions dialogOptions(this);
 
     dialogOptions.exec();

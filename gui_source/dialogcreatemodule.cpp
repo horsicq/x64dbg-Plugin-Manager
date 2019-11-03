@@ -37,3 +37,18 @@ void DialogCreateModule::on_pushButtonClose_clicked()
 {
     this->close();
 }
+
+void DialogCreateModule::on_pushButtonLoad_clicked()
+{
+    // TODO
+}
+
+void DialogCreateModule::on_pushButtonSave_clicked()
+{
+    // TODO
+}
+
+void DialogCreateModule::on_pushButtonCreate_clicked()
+{
+    // TODO
+}

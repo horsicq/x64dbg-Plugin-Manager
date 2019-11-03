@@ -37,6 +37,9 @@ public:
 
 private slots:
     void on_pushButtonClose_clicked();
+    void on_pushButtonLoad_clicked();
+    void on_pushButtonSave_clicked();
+    void on_pushButtonCreate_clicked();
 
 private:
     Ui::DialogCreateModule *ui;
