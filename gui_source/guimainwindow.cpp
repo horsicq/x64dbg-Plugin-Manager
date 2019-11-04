@@ -65,10 +65,24 @@ void GuiMainWindow::on_actionOpen_triggered()
 
 void GuiMainWindow::on_actionOptions_triggered()
 {
-    // TODO otions
-    DialogOptions dialogOptions(this);
+    DialogOptions dialogOptions(this,&options);
 
     dialogOptions.exec();
+
+    Qt::WindowFlags wf=windowFlags();
+
+    if(options.bStayOnTop)
+    {
+        wf|=Qt::WindowStaysOnTopHint;
+    }
+    else
+    {
+        wf&=~(Qt::WindowStaysOnTopHint);
+    }
+
+    setWindowFlags(wf);
+
+    show();
 }
 
 void GuiMainWindow::on_pushButtonReload_clicked()

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>508</width>
-    <height>209</height>
+    <width>462</width>
+    <height>194</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,6 +21,13 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QCheckBox" name="checkBoxStayOnTop">
+     <property name="text">
+      <string>Stay on top</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -28,7 +35,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>157</height>
+       <height>119</height>
       </size>
      </property>
     </spacer>

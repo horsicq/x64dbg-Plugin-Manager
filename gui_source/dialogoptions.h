@@ -22,6 +22,8 @@
 #define DIALOGOPTIONS_H
 
 #include <QDialog>
+#include <QSettings>
+#include <QDir>
 #include "../global.h"
 
 namespace Ui {
@@ -33,7 +35,7 @@ class DialogOptions : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogOptions(QWidget *parent=nullptr);
+    explicit DialogOptions(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions);
     ~DialogOptions();
 
     static void loadOptions(XPLUGINMANAGER::OPTIONS *pOptions);
@@ -45,6 +47,8 @@ private slots:
 
 private:
     Ui::DialogOptions *ui;
+
+    XPLUGINMANAGER::OPTIONS *pOptions;
 };
 
 #endif // DIALOGOPTIONS_H

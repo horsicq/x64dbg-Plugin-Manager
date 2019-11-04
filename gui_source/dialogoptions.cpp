@@ -21,11 +21,15 @@
 #include "dialogoptions.h"
 #include "ui_dialogoptions.h"
 
-DialogOptions::DialogOptions(QWidget *parent) :
+DialogOptions::DialogOptions(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions) :
     QDialog(parent),
     ui(new Ui::DialogOptions)
 {
     ui->setupUi(this);
+
+    this->pOptions=pOptions;
+
+    ui->checkBoxStayOnTop->setChecked(pOptions->bStayOnTop);
 }
 
 DialogOptions::~DialogOptions()
@@ -35,17 +39,21 @@ DialogOptions::~DialogOptions()
 
 void DialogOptions::loadOptions(XPLUGINMANAGER::OPTIONS *pOptions)
 {
-    // TODO
+    QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"PluginManager.ini",QSettings::IniFormat);
+
+    pOptions->bStayOnTop=settings.value("StayOnTop",false).toBool();
 }
 
 void DialogOptions::saveOptions(XPLUGINMANAGER::OPTIONS *pOptions)
 {
-    // TODO
+    QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"PluginManager.ini",QSettings::IniFormat);
+
+    settings.setValue("StayOnTop",pOptions->bStayOnTop);
 }
 
 void DialogOptions::on_pushButtonOK_clicked()
 {
-    // TODO
+    pOptions->bStayOnTop=ui->checkBoxStayOnTop->isChecked();
 
     this->close();
 }
