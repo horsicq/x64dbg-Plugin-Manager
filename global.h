@@ -34,6 +34,7 @@ namespace XPLUGINMANAGER
     {
         bool bStayOnTop;
         QString sRootPath;
+        QString sJSONFile;
     };
 }
 

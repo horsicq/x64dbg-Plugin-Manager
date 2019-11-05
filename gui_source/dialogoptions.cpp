@@ -30,6 +30,8 @@ DialogOptions::DialogOptions(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions)
     this->pOptions=pOptions;
 
     ui->checkBoxStayOnTop->setChecked(pOptions->bStayOnTop);
+    ui->lineEditRootPath->setText(pOptions->sRootPath);
+    ui->lineEditJSONFile->setText(pOptions->sJSONFile);
 }
 
 DialogOptions::~DialogOptions()
@@ -42,6 +44,8 @@ void DialogOptions::loadOptions(XPLUGINMANAGER::OPTIONS *pOptions)
     QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"PluginManager.ini",QSettings::IniFormat);
 
     pOptions->bStayOnTop=settings.value("StayOnTop",false).toBool();
+    pOptions->sRootPath=settings.value("RootPath","").toString(); // TODO
+    pOptions->sJSONFile=settings.value("JSONFile","").toString(); // TODO!
 }
 
 void DialogOptions::saveOptions(XPLUGINMANAGER::OPTIONS *pOptions)
@@ -49,11 +53,15 @@ void DialogOptions::saveOptions(XPLUGINMANAGER::OPTIONS *pOptions)
     QSettings settings(QApplication::applicationDirPath()+QDir::separator()+"PluginManager.ini",QSettings::IniFormat);
 
     settings.setValue("StayOnTop",pOptions->bStayOnTop);
+    settings.setValue("RootPath",pOptions->sRootPath);
+    settings.setValue("JSONFile",pOptions->sJSONFile);
 }
 
 void DialogOptions::on_pushButtonOK_clicked()
 {
     pOptions->bStayOnTop=ui->checkBoxStayOnTop->isChecked();
+    pOptions->sRootPath=ui->lineEditRootPath->text();
+    pOptions->sJSONFile=ui->lineEditJSONFile->text();
 
     this->close();
 }
@@ -61,4 +69,9 @@ void DialogOptions::on_pushButtonOK_clicked()
 void DialogOptions::on_pushButtonCancel_clicked()
 {
     this->close();
+}
+
+void DialogOptions::on_toolButtonRootPath_clicked()
+{
+
 }

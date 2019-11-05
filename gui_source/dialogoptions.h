@@ -44,6 +44,7 @@ public:
 private slots:
     void on_pushButtonOK_clicked();
     void on_pushButtonCancel_clicked();
+    void on_toolButtonRootPath_clicked();
 
 private:
     Ui::DialogOptions *ui;
