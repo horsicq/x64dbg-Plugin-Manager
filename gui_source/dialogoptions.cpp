@@ -73,5 +73,10 @@ void DialogOptions::on_pushButtonCancel_clicked()
 
 void DialogOptions::on_toolButtonRootPath_clicked()
 {
+    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select root directory"),ui->lineEditRootPath->text());
 
+    if(sDirectoryName!="")
+    {
+        ui->lineEditRootPath->setText(sDirectoryName);
+    }
 }

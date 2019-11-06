@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QSettings>
 #include <QDir>
+#include <QFileDialog>
 #include "../global.h"
 
 namespace Ui {
@@ -48,7 +49,6 @@ private slots:
 
 private:
     Ui::DialogOptions *ui;
-
     XPLUGINMANAGER::OPTIONS *pOptions;
 };
 

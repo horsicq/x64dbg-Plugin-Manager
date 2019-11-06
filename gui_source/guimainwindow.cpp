@@ -30,6 +30,9 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
 
     DialogOptions::loadOptions(&options);
+
+    // TODO
+    // Dran and Drop plugins
 }
 
 GuiMainWindow::~GuiMainWindow()
@@ -48,7 +51,7 @@ void GuiMainWindow::on_actionCreate_triggered()
 
 void GuiMainWindow::on_pushButtonUpdateAll_clicked()
 {
-
+    // TODO
 }
 
 void GuiMainWindow::on_actionAbout_triggered()
@@ -60,7 +63,7 @@ void GuiMainWindow::on_actionAbout_triggered()
 
 void GuiMainWindow::on_actionOpen_triggered()
 {
-
+    // TODO
 }
 
 void GuiMainWindow::on_actionOptions_triggered()
