@@ -32,7 +32,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     DialogOptions::loadOptions(&options);
 
     // TODO
-    // Dran and Drop plugins
+    // Drag and Drop plugins
 }
 
 GuiMainWindow::~GuiMainWindow()

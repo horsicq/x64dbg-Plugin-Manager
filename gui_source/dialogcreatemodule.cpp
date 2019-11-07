@@ -40,12 +40,25 @@ void DialogCreateModule::on_pushButtonClose_clicked()
 
 void DialogCreateModule::on_pushButtonLoad_clicked()
 {
-    // TODO
+    QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString sFileName=QFileDialog::getOpenFileName(this,tr("Load project"),sInitDirectory,"*.pro.ini");
+
+    if(sFileName!="")
+    {
+        // TODO
+    }
 }
 
 void DialogCreateModule::on_pushButtonSave_clicked()
 {
     // TODO
+    QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString sFileName=QFileDialog::getSaveFileName(this,tr("Save project"),sInitDirectory,"*.pro.ini");
+
+    if(sFileName!="")
+    {
+        // TODO
+    }
 }
 
 void DialogCreateModule::on_pushButtonCreate_clicked()
