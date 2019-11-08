@@ -21,11 +21,13 @@
 #include "dialogreload.h"
 #include "ui_dialogreload.h"
 
-DialogReload::DialogReload(QWidget *parent) :
+DialogReload::DialogReload(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions) :
     QDialog(parent),
     ui(new Ui::DialogReload)
 {
     ui->setupUi(this);
+
+    this->pOptions=pOptions;
 }
 
 DialogReload::~DialogReload()

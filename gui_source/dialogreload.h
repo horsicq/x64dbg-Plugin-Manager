@@ -22,6 +22,7 @@
 #define DIALOGRELOAD_H
 
 #include <QDialog>
+#include "../global.h"
 
 namespace Ui {
 class DialogReload;
@@ -32,11 +33,12 @@ class DialogReload : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogReload(QWidget *parent=nullptr);
+    explicit DialogReload(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions);
     ~DialogReload();
 
 private:
     Ui::DialogReload *ui;
+    XPLUGINMANAGER::OPTIONS *pOptions;
 };
 
 #endif // DIALOGRELOAD_H

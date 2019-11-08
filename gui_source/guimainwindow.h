@@ -25,6 +25,7 @@
 #include "../global.h"
 #include "dialogcreatemodule.h"
 #include "dialogoptions.h"
+#include "dialogreload.h"
 #include "dialogabout.h"
 
 QT_BEGIN_NAMESPACE
