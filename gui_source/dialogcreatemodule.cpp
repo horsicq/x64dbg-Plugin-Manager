@@ -65,3 +65,14 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
 {
     // TODO
 }
+
+void DialogCreateModule::on_toolButtonRoot_clicked()
+{
+    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select plugin root directory"),ui->lineEditRoot->text());
+
+    if(sDirectoryName!="")
+    {
+        ui->lineEditRoot->setText(sDirectoryName);
+        // TODO
+    }
+}

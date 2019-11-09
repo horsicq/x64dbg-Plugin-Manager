@@ -43,6 +43,8 @@ private slots:
     void on_pushButtonSave_clicked();
     void on_pushButtonCreate_clicked();
 
+    void on_toolButtonRoot_clicked();
+
 private:
     Ui::DialogCreateModule *ui;
 };
