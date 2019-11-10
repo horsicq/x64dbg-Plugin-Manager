@@ -43,17 +43,14 @@ public:
 private slots:
     void on_actionCreate_triggered();
     void on_pushButtonUpdateAll_clicked();
-
     void on_actionAbout_triggered();
     void on_actionOpen_triggered();
     void on_actionOptions_triggered();
     void on_pushButtonReload_clicked();
-
     void on_actionExit_triggered();
 
 private:
     Ui::GuiMainWindow *ui;
-
     XPLUGINMANAGER::OPTIONS options;
 };
 #endif // GUIMAINWINDOW_H

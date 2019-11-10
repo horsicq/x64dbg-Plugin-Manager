@@ -42,7 +42,6 @@ private slots:
     void on_pushButtonLoad_clicked();
     void on_pushButtonSave_clicked();
     void on_pushButtonCreate_clicked();
-
     void on_toolButtonRoot_clicked();
 
 private:
