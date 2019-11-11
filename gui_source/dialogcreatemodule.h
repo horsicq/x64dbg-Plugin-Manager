@@ -44,6 +44,8 @@ private slots:
     void on_pushButtonCreate_clicked();
     void on_toolButtonRoot_clicked();
 
+    void on_lineEditRoot_textChanged(const QString &arg1);
+
 private:
     Ui::DialogCreateModule *ui;
 };

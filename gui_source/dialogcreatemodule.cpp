@@ -73,6 +73,10 @@ void DialogCreateModule::on_toolButtonRoot_clicked()
     if(sDirectoryName!="")
     {
         ui->lineEditRoot->setText(sDirectoryName);
-        // TODO
     }
+}
+
+void DialogCreateModule::on_lineEditRoot_textChanged(const QString &arg1)
+{
+    // TODO
 }
