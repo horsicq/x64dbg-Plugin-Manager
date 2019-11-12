@@ -51,7 +51,6 @@ void DialogCreateModule::on_pushButtonLoad_clicked()
 
 void DialogCreateModule::on_pushButtonSave_clicked()
 {
-    // TODO
     QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     QString sFileName=QFileDialog::getSaveFileName(this,tr("Save project"),sInitDirectory,"*.pro.ini");
 
@@ -76,7 +75,15 @@ void DialogCreateModule::on_toolButtonRoot_clicked()
     }
 }
 
-void DialogCreateModule::on_lineEditRoot_textChanged(const QString &arg1)
+void DialogCreateModule::on_lineEditRoot_textChanged(const QString &sDirectoryName)
 {
-    // TODO
+    if(sDirectoryName!="")
+    {
+        QDir dir(sDirectoryName);
+
+        if(dir.exists())
+        {
+            // TODO
+        }
+    }
 }
