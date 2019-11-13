@@ -28,9 +28,16 @@ DialogReload::DialogReload(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions) :
     ui->setupUi(this);
 
     this->pOptions=pOptions;
+
+    connect(&manager, SIGNAL(finished(QNetworkReply *)),SLOT(downloadFinished(QNetworkReply *)));
 }
 
 DialogReload::~DialogReload()
 {
     delete ui;
+}
+
+void DialogReload::downloadFinished(QNetworkReply *reply)
+{
+    // TODO
 }

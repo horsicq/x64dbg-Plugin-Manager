@@ -45,7 +45,7 @@ void DialogOptions::loadOptions(XPLUGINMANAGER::OPTIONS *pOptions)
 
     pOptions->bStayOnTop=settings.value("StayOnTop",false).toBool();
     pOptions->sRootPath=settings.value("RootPath","").toString(); // TODO
-    pOptions->sJSONFile=settings.value("JSONFile","").toString(); // TODO!
+    pOptions->sJSONFile=settings.value("JSONFile",X_JSON_DEFAULT).toString();
 }
 
 void DialogOptions::saveOptions(XPLUGINMANAGER::OPTIONS *pOptions)

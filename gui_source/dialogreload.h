@@ -22,6 +22,7 @@
 #define DIALOGRELOAD_H
 
 #include <QDialog>
+#include <QtNetwork>
 #include "../global.h"
 
 namespace Ui {
@@ -36,8 +37,12 @@ public:
     explicit DialogReload(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions);
     ~DialogReload();
 
+private slots:
+    void downloadFinished(QNetworkReply *reply);
+
 private:
     Ui::DialogReload *ui;
+    QNetworkAccessManager manager;
     XPLUGINMANAGER::OPTIONS *pOptions;
 };
 
