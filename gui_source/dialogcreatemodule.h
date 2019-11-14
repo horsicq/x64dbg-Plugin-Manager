@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include "../utils.h"
 
 namespace Ui {
 class DialogCreateModule;

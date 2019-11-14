@@ -10,6 +10,7 @@ TEMPLATE = app
 include(../build.pri)
 
 SOURCES += \
+    ../utils.cpp \
     dialogabout.cpp \
     dialogcreatemodule.cpp \
     dialoginstall.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 
 HEADERS += \
     ../global.h \
+    ../utils.h \
     dialogabout.h \
     dialogcreatemodule.h \
     dialoginstall.h \

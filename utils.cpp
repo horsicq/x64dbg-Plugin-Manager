@@ -24,3 +24,12 @@ Utils::Utils(QObject *parent) : QObject(parent)
 {
 
 }
+
+QList<Utils::RECORD> Utils::geRecords(QString sRootPath)
+{
+    QList<Utils::RECORD> listResult;
+
+    // TODO
+
+    return listResult;
+}

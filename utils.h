@@ -26,8 +26,18 @@
 class Utils : public QObject
 {
     Q_OBJECT
+
 public:
+    struct RECORD
+    {
+        QString sFullPath;
+        QString sPath;
+        bool bIsFile;
+    };
+
     explicit Utils(QObject *parent=nullptr);
+
+    QList<RECORD> geRecords(QString sRootPath);
 };
 
 #endif // UTILS_H
