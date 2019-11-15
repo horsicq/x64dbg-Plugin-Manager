@@ -83,7 +83,14 @@ void DialogCreateModule::on_lineEditRoot_textChanged(const QString &sDirectoryNa
 
         if(dir.exists())
         {
-            // TODO
+            QList<Utils::RECORD> listRecords=Utils::geRecords(sDirectoryName);
+
+            int nCount=listRecords.count();
+
+            for(int i=0;i<nCount;i++)
+            {
+
+            }
         }
     }
 }

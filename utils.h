@@ -22,6 +22,7 @@
 #define UTILS_H
 
 #include <QObject>
+#include <QFileInfo>
 
 class Utils : public QObject
 {
@@ -37,7 +38,10 @@ public:
 
     explicit Utils(QObject *parent=nullptr);
 
-    QList<RECORD> geRecords(QString sRootPath);
+    static QList<RECORD> geRecords(QString sRootPath);
+
+private:
+    static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
 };
 
 #endif // UTILS_H

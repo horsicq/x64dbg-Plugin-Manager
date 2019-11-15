@@ -29,7 +29,43 @@ QList<Utils::RECORD> Utils::geRecords(QString sRootPath)
 {
     QList<Utils::RECORD> listResult;
 
-    // TODO
+    QFileInfo fi(sRootPath);
+
+    sRootPath=fi.absoluteFilePath();
+
+    _getRecords(sRootPath,sRootPath,&listResult);
 
     return listResult;
+}
+
+void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)
+{
+    QFileInfo fi(sCurrentPath);
+
+    if(fi.isFile())
+    {
+        RECORD record={};
+
+        record.bIsFile=true;
+        record.sFullPath=fi.absoluteFilePath();
+        record.sPath=record.sFullPath; // TODO
+
+       // TODO
+    }
+//    else if(fi.isDir()&&((pFFOption->bSubdirectories)||(nLevel==0)))
+//    {
+////        QDir dir(sDirectoryName);
+
+////        QFileInfoList eil=dir.entryInfoList();
+
+////        for(int i=0; (i<eil.count())&&(!(*(pFFOption->pbIsStop))); i++)
+////        {
+////            QString sFN=eil.at(i).fileName();
+
+////            if((sFN!=".")&&(sFN!=".."))
+////            {
+////                findFiles(eil.at(i).absoluteFilePath(),pFFOption,nLevel+1);
+////            }
+////        }
+//    }
 }
