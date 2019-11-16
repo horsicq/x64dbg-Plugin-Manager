@@ -25,7 +25,7 @@ Utils::Utils(QObject *parent) : QObject(parent)
 
 }
 
-QList<Utils::RECORD> Utils::geRecords(QString sRootPath)
+QList<Utils::RECORD> Utils::getRecords(QString sRootPath)
 {
     QList<Utils::RECORD> listResult;
 
@@ -42,30 +42,30 @@ void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RE
 {
     QFileInfo fi(sCurrentPath);
 
-    if(fi.isFile())
+    RECORD record={};
+
+    record.bIsFile=true;
+    record.sFullPath=fi.absoluteFilePath();
+    record.sPath=record.sFullPath; // TODO
+    record.bIsFile=fi.isFile();
+
+    pListRecords->append(record);
+
+    if(!record.bIsFile)
     {
-        RECORD record={};
+        QDir dir(sCurrentPath);
+        QFileInfoList eil=dir.entryInfoList();
 
-        record.bIsFile=true;
-        record.sFullPath=fi.absoluteFilePath();
-        record.sPath=record.sFullPath; // TODO
+        int nCount=eil.count();
 
-       // TODO
+        for(int i=0;i<nCount;i++)
+        {
+            QString sFN=eil.at(i).fileName();
+
+            if((sFN!=".")&&(sFN!=".."))
+            {
+                _getRecords(sRootPath,eil.at(i).absoluteFilePath(),pListRecords);
+            }
+        }
     }
-//    else if(fi.isDir()&&((pFFOption->bSubdirectories)||(nLevel==0)))
-//    {
-////        QDir dir(sDirectoryName);
-
-////        QFileInfoList eil=dir.entryInfoList();
-
-////        for(int i=0; (i<eil.count())&&(!(*(pFFOption->pbIsStop))); i++)
-////        {
-////            QString sFN=eil.at(i).fileName();
-
-////            if((sFN!=".")&&(sFN!=".."))
-////            {
-////                findFiles(eil.at(i).absoluteFilePath(),pFFOption,nLevel+1);
-////            }
-////        }
-//    }
 }

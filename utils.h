@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QFileInfo>
+#include <QDir>
 
 class Utils : public QObject
 {
@@ -38,7 +39,7 @@ public:
 
     explicit Utils(QObject *parent=nullptr);
 
-    static QList<RECORD> geRecords(QString sRootPath);
+    static QList<RECORD> getRecords(QString sRootPath);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
