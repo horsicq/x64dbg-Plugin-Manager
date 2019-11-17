@@ -31,7 +31,7 @@ QList<Utils::RECORD> Utils::getRecords(QString sRootPath)
 
     QFileInfo fi(sRootPath);
 
-    sRootPath=fi.absoluteFilePath();
+    sRootPath=fi.absoluteDir().path();
 
     _getRecords(sRootPath,sRootPath,&listResult);
 

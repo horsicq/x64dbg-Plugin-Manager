@@ -190,9 +190,9 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBoxFiles">
+    <widget class="QGroupBox" name="groupBoxRecords">
      <property name="title">
-      <string>Files</string>
+      <string>Records</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_6">
       <property name="leftMargin">
@@ -208,7 +208,26 @@
        <number>1</number>
       </property>
       <item>
-       <widget class="QTableWidget" name="tableWidgetFiles"/>
+       <widget class="QTableWidget" name="tableWidgetRecords">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <attribute name="horizontalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderDefaultSectionSize">
+         <number>23</number>
+        </attribute>
+       </widget>
       </item>
      </layout>
     </widget>

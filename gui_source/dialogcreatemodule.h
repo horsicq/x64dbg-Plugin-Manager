@@ -49,6 +49,7 @@ private slots:
 
 private:
     Ui::DialogCreateModule *ui;
+    QList<Utils::RECORD> listRecords;
 };
 
 #endif // DIALOGCREATEMODULE_H
