@@ -31,7 +31,7 @@ QList<Utils::RECORD> Utils::getRecords(QString sRootPath)
 
     QFileInfo fi(sRootPath);
 
-    sRootPath=fi.absoluteDir().path();
+    sRootPath=fi.absoluteDir().path()+QDir::separator()+fi.fileName();
 
     _getRecords(sRootPath,sRootPath,&listResult);
 
@@ -46,10 +46,15 @@ void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RE
 
     record.bIsFile=true;
     record.sFullPath=fi.absoluteFilePath();
-    record.sPath=record.sFullPath; // TODO
+    record.sPath=record.sFullPath;
     record.bIsFile=fi.isFile();
 
-    pListRecords->append(record);
+    record.sPath=record.sPath.remove(0,sRootPath.size()+1);
+
+    if(record.sPath!="")
+    {
+        pListRecords->append(record);
+    }
 
     if(!record.bIsFile)
     {

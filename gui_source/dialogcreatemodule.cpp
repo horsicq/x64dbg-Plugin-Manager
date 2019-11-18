@@ -62,7 +62,20 @@ void DialogCreateModule::on_pushButtonSave_clicked()
 
 void DialogCreateModule::on_pushButtonCreate_clicked()
 {
-    // TODO
+    QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString sFileName=QFileDialog::getSaveFileName(this,tr("Save plugin bundle"),sInitDirectory,"*.zip");
+
+    if(sFileName!="")
+    {
+        // TODO
+        QFileInfo fi(sFileName);
+
+        QString sBundleName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".zip";
+        QString sJsonName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".json";
+
+        int z=0;
+        z++;
+    }
 }
 
 void DialogCreateModule::on_toolButtonRoot_clicked()

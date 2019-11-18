@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QFileInfo>
 #include <QDir>
+#include "QJsonDocument"
 
 class Utils : public QObject
 {
