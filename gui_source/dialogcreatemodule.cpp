@@ -73,8 +73,20 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
         QString sBundleName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".zip";
         QString sJsonName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".json";
 
-        int z=0;
-        z++;
+        int nCount=listRecords.count();
+
+        for(int i=0;i<nCount;i++)
+        {
+            QFile file;
+
+            file.setFileName(listRecords.at(i).sFullPath);
+
+            if(file.open(QIODevice::ReadOnly))
+            {
+                // TODO
+                file.close();
+            }
+        }
     }
 }
 
