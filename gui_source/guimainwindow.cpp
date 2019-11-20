@@ -46,6 +46,8 @@ void GuiMainWindow::on_actionCreate_triggered()
 {
     DialogCreateModule dialogCreateModule(this);
 
+    connect(&dialogCreateModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+
     dialogCreateModule.exec();
 }
 
@@ -98,4 +100,9 @@ void GuiMainWindow::on_pushButtonReload_clicked()
 void GuiMainWindow::on_actionExit_triggered()
 {
     this->close();
+}
+
+void GuiMainWindow::errorMessage(QString sMessage)
+{
+    QMessageBox::critical(this,tr("Error"),sMessage);
 }

@@ -40,6 +40,8 @@ public:
 private slots:
     void downloadFinished(QNetworkReply *reply);
 
+    void on_pushButtonCancel_clicked();
+
 private:
     Ui::DialogReload *ui;
     QNetworkAccessManager manager;

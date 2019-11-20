@@ -27,6 +27,7 @@
 #include "dialogoptions.h"
 #include "dialogreload.h"
 #include "dialogabout.h"
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GuiMainWindow; }
@@ -48,6 +49,7 @@ private slots:
     void on_actionOptions_triggered();
     void on_pushButtonReload_clicked();
     void on_actionExit_triggered();
+    void errorMessage(QString sMessage);
 
 private:
     Ui::GuiMainWindow *ui;

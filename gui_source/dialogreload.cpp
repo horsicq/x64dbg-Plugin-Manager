@@ -41,3 +41,8 @@ void DialogReload::downloadFinished(QNetworkReply *reply)
 {
     // TODO
 }
+
+void DialogReload::on_pushButtonCancel_clicked()
+{
+    this->close();
+}

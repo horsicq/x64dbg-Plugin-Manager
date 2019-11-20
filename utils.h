@@ -38,6 +38,12 @@ public:
         bool bIsFile;
     };
 
+    struct MDATA
+    {
+        QString sRoot;
+        QList<Utils::RECORD> listRecords;
+    };
+
     explicit Utils(QObject *parent=nullptr);
 
     static QList<RECORD> getRecords(QString sRootPath);

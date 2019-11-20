@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <dialogcreatemoduleprocess.h>
 #include "../utils.h"
 
 namespace Ui {
@@ -39,17 +40,19 @@ public:
     ~DialogCreateModule();
 
 private slots:
-    void on_pushButtonClose_clicked();
     void on_pushButtonLoad_clicked();
     void on_pushButtonSave_clicked();
     void on_pushButtonCreate_clicked();
     void on_toolButtonRoot_clicked();
-
     void on_lineEditRoot_textChanged(const QString &sDirectoryName);
+    void on_pushButtonCancel_clicked();
+
+signals:
+    void errorMessage(QString sMessage);
 
 private:
     Ui::DialogCreateModule *ui;
-    QList<Utils::RECORD> listRecords;
+    Utils::MDATA mdata;
 };
 
 #endif // DIALOGCREATEMODULE_H

@@ -26,16 +26,13 @@ DialogCreateModule::DialogCreateModule(QWidget *parent) :
     ui(new Ui::DialogCreateModule)
 {
     ui->setupUi(this);
+
+    mdata={};
 }
 
 DialogCreateModule::~DialogCreateModule()
 {
     delete ui;
-}
-
-void DialogCreateModule::on_pushButtonClose_clicked()
-{
-    this->close();
 }
 
 void DialogCreateModule::on_pushButtonLoad_clicked()
@@ -62,6 +59,8 @@ void DialogCreateModule::on_pushButtonSave_clicked()
 
 void DialogCreateModule::on_pushButtonCreate_clicked()
 {
+    // TODO Checks
+
     QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     QString sFileName=QFileDialog::getSaveFileName(this,tr("Save plugin bundle"),sInitDirectory,"*.zip");
 
@@ -73,13 +72,13 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
         QString sBundleName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".zip";
         QString sJsonName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".json";
 
-        int nCount=listRecords.count();
+        int nCount=mdata.listRecords.count();
 
         for(int i=0;i<nCount;i++)
         {
             QFile file;
 
-            file.setFileName(listRecords.at(i).sFullPath);
+            file.setFileName(mdata.listRecords.at(i).sFullPath);
 
             if(file.open(QIODevice::ReadOnly))
             {
@@ -87,6 +86,10 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
                 file.close();
             }
         }
+
+        DialogCreateModuleProcess dcmp(this,&mdata);
+
+        dcmp.exec();
     }
 }
 
@@ -102,24 +105,33 @@ void DialogCreateModule::on_toolButtonRoot_clicked()
 
 void DialogCreateModule::on_lineEditRoot_textChanged(const QString &sDirectoryName)
 {
+    mdata.sRoot="";
+
     if(sDirectoryName!="")
     {
         QDir dir(sDirectoryName);
 
         if(dir.exists())
         {
-            listRecords=Utils::getRecords(sDirectoryName);
+            mdata.sRoot=sDirectoryName;
 
-            int nCount=listRecords.count();
+            mdata.listRecords=Utils::getRecords(sDirectoryName);
+
+            int nCount=mdata.listRecords.count();
 
             ui->tableWidgetRecords->setColumnCount(1);
             ui->tableWidgetRecords->setRowCount(nCount);
 
             for(int i=0;i<nCount;i++)
             {
-                QTableWidgetItem *pItem=new QTableWidgetItem(listRecords.at(i).sPath);
+                QTableWidgetItem *pItem=new QTableWidgetItem(mdata.listRecords.at(i).sPath);
                 ui->tableWidgetRecords->setItem(i,0,pItem);
             }
         }
     }
+}
+
+void DialogCreateModule::on_pushButtonCancel_clicked()
+{
+    this->close();
 }

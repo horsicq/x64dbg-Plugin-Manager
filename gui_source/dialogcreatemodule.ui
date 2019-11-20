@@ -49,13 +49,6 @@
        </property>
       </spacer>
      </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonCreate">
-       <property name="text">
-        <string>Create</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -248,9 +241,16 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonClose">
+      <widget class="QPushButton" name="pushButtonCancel">
        <property name="text">
-        <string>Close</string>
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCreate">
+       <property name="text">
+        <string>Create</string>
        </property>
       </widget>
      </item>
