@@ -47,6 +47,10 @@ private slots:
     void on_lineEditRoot_textChanged(const QString &sDirectoryName);
     void on_pushButtonCancel_clicked();
 
+    void on_lineEditName_textChanged(const QString &sName);
+    void on_lineEditVersion_textChanged(const QString &sVersion);
+    void on_lineEditDate_textChanged(const QString &sDate);
+
 signals:
     void errorMessage(QString sMessage);
 

@@ -59,37 +59,45 @@ void DialogCreateModule::on_pushButtonSave_clicked()
 
 void DialogCreateModule::on_pushButtonCreate_clicked()
 {
-    // TODO Checks
+    QString sErrorString;
 
-    QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    QString sFileName=QFileDialog::getSaveFileName(this,tr("Save plugin bundle"),sInitDirectory,"*.zip");
-
-    if(sFileName!="")
+    if(Utils::checkMData(&mdata,&sErrorString))
     {
-        // TODO
-        QFileInfo fi(sFileName);
+        QString sFileName=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+QDir::separator()+Utils::createBundleName(&mdata)+".zip";
+        sFileName=QFileDialog::getSaveFileName(this,tr("Save plugin bundle"),sFileName,"*.zip");
 
-        QString sBundleName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".zip";
-        QString sJsonName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".json";
-
-        int nCount=mdata.listRecords.count();
-
-        for(int i=0;i<nCount;i++)
+        if(sFileName!="")
         {
-            QFile file;
+            // TODO
+            QFileInfo fi(sFileName);
+    //        QString sBundleName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".zip";
+    //        QString sJsonName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".json";
+            mdata.sBundleName=fi.baseName();
+            mdata.sBundlePath=fi.absoluteDir().path();
 
-            file.setFileName(mdata.listRecords.at(i).sFullPath);
+            int nCount=mdata.listRecords.count();
 
-            if(file.open(QIODevice::ReadOnly))
+            for(int i=0;i<nCount;i++)
             {
-                // TODO
-                file.close();
+                QFile file;
+
+                file.setFileName(mdata.listRecords.at(i).sFullPath);
+
+                if(file.open(QIODevice::ReadOnly))
+                {
+                    // TODO
+                    file.close();
+                }
             }
+
+            DialogCreateModuleProcess dcmp(this,&mdata);
+
+            dcmp.exec();
         }
-
-        DialogCreateModuleProcess dcmp(this,&mdata);
-
-        dcmp.exec();
+    }
+    else
+    {
+        emit errorMessage(sErrorString);
     }
 }
 
@@ -134,4 +142,30 @@ void DialogCreateModule::on_lineEditRoot_textChanged(const QString &sDirectoryNa
 void DialogCreateModule::on_pushButtonCancel_clicked()
 {
     this->close();
+}
+
+void DialogCreateModule::on_lineEditName_textChanged(const QString &sName)
+{
+    QSignalBlocker(ui->lineEditName);
+
+    QString _sName=sName;
+
+    if(_sName.contains(" ")) _sName.remove(" ");
+    // TODO more checks
+
+    ui->lineEditName->setText(_sName);
+
+    mdata.sName=_sName;
+}
+
+void DialogCreateModule::on_lineEditVersion_textChanged(const QString &sVersion)
+{
+    // TODO Checks
+    mdata.sVersion=sVersion;
+}
+
+void DialogCreateModule::on_lineEditDate_textChanged(const QString &sDate)
+{
+    // TODO Checks
+    mdata.sDate=sDate;
 }

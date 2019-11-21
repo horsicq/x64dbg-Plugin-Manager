@@ -38,6 +38,39 @@ QList<Utils::RECORD> Utils::getRecords(QString sRootPath)
     return listResult;
 }
 
+bool Utils::checkMData(Utils::MDATA *pMData, QString *psErrorString)
+{
+    bool bResult=true;
+
+    if(pMData->sName=="")
+    {
+        *psErrorString=tr("Invalid name");
+
+        bResult=false;
+    }
+    // TODO
+    return bResult;
+}
+
+QString Utils::createBundleName(Utils::MDATA *pMData)
+{
+    QString sResult;
+
+    sResult+=pMData->sName;
+
+    if(pMData->sVersion!="")
+    {
+        sResult+=QString("_%1").arg(pMData->sVersion);
+    }
+
+    if(pMData->sDate!="")
+    {
+        sResult+=QString("_%1").arg(pMData->sDate);
+    }
+
+    return sResult;
+}
+
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)
 {
     QFileInfo fi(sCurrentPath);

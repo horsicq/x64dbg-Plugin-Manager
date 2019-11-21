@@ -40,13 +40,20 @@ public:
 
     struct MDATA
     {
+        QString sName;
+        QString sVersion;
+        QString sDate;
         QString sRoot;
+        QString sBundleName;
+        QString sBundlePath;
         QList<Utils::RECORD> listRecords;
     };
 
     explicit Utils(QObject *parent=nullptr);
 
     static QList<RECORD> getRecords(QString sRootPath);
+    static bool checkMData(MDATA *pMData,QString *psErrorString);
+    static QString createBundleName(MDATA *pMData);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
