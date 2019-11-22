@@ -28,6 +28,8 @@ DialogCreateModule::DialogCreateModule(QWidget *parent) :
     ui->setupUi(this);
 
     mdata={};
+
+    ui->pushButtonSave->setEnabled(false);
 }
 
 DialogCreateModule::~DialogCreateModule()
@@ -42,17 +44,23 @@ void DialogCreateModule::on_pushButtonLoad_clicked()
 
     if(sFileName!="")
     {
+        QSettings settings(sFileName,QSettings::IniFormat);
+
+        ui->lineEditName->setText(settings.value("Name","").toString());
         // TODO
     }
 }
 
 void DialogCreateModule::on_pushButtonSave_clicked()
 {
-    QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    QString sFileName=QFileDialog::getSaveFileName(this,tr("Save project"),sInitDirectory,"*.pro.ini");
+    QString sFileName=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+QDir::separator()+ui->lineEditName->text()+".pro.ini";
+    sFileName=QFileDialog::getSaveFileName(this,tr("Save project"),sFileName,"*.pro.ini");
 
     if(sFileName!="")
     {
+        QSettings settings(sFileName,QSettings::IniFormat);
+
+        settings.setValue("Name",ui->lineEditName->text());
         // TODO
     }
 }
@@ -156,6 +164,8 @@ void DialogCreateModule::on_lineEditName_textChanged(const QString &sName)
     ui->lineEditName->setText(_sName);
 
     mdata.sName=_sName;
+
+    ui->pushButtonSave->setEnabled(_sName!="");
 }
 
 void DialogCreateModule::on_lineEditVersion_textChanged(const QString &sVersion)

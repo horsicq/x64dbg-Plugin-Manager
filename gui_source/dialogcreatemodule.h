@@ -24,7 +24,8 @@
 #include <QDialog>
 #include <QFileDialog>
 #include <QStandardPaths>
-#include <dialogcreatemoduleprocess.h>
+#include <QSettings>
+#include "dialogcreatemoduleprocess.h"
 #include "../utils.h"
 
 namespace Ui {

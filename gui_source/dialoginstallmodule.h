@@ -23,6 +23,7 @@
 
 #include <QDialog>
 
+
 namespace Ui {
 class DialogInstallModule;
 }

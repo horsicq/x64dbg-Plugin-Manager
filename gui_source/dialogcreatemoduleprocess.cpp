@@ -28,9 +28,47 @@ DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *parent, Utils::MDA
     ui->setupUi(this);
 
     this->pMData=pMData;
+
+    pCreateModuleProcess=new CreateModuleProcess;
+    pThread=new QThread;
+
+    pCreateModuleProcess->moveToThread(pThread);
+
+    connect(pThread, SIGNAL(started()), pCreateModuleProcess, SLOT(process()));
+    connect(pCreateModuleProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
+
+    bIsRun=false;
+
+    pTimer=new QTimer(this);
+    connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
+
+    pThread->start();
 }
 
 DialogCreateModuleProcess::~DialogCreateModuleProcess()
 {
     delete ui;
+}
+
+void DialogCreateModuleProcess::on_pushButtonCancel_clicked()
+{
+    if(bIsRun)
+    {
+        pCreateModuleProcess->stop();
+        pTimer->stop();
+        bIsRun=false;
+    }
+}
+
+void DialogCreateModuleProcess::onCompleted(qint64 nElapsed)
+{
+    Q_UNUSED(nElapsed)
+    // TODO
+    bIsRun=false;
+    this->close();
+}
+
+void DialogCreateModuleProcess::timerSlot()
+{
+    // TODO
 }

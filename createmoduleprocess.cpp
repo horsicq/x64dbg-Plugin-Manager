@@ -24,3 +24,14 @@ CreateModuleProcess::CreateModuleProcess(QObject *parent) : QObject(parent)
 {
 
 }
+
+void CreateModuleProcess::stop()
+{
+    // TODO
+}
+
+void CreateModuleProcess::process()
+{
+    // TODO
+    emit completed(0);
+}

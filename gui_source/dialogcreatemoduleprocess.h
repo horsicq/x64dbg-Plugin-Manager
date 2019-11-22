@@ -22,6 +22,9 @@
 #define DIALOGCREATEMODULEPROCESS_H
 
 #include <QDialog>
+#include <QThread>
+#include <QTimer>
+#include "../createmoduleprocess.h"
 #include "../utils.h"
 
 namespace Ui {
@@ -36,9 +39,19 @@ public:
     explicit DialogCreateModuleProcess(QWidget *parent,Utils::MDATA *pMData);
     ~DialogCreateModuleProcess();
 
+private slots:
+    void on_pushButtonCancel_clicked();
+    void onCompleted(qint64 nElapsed);
+    void timerSlot();
+
 private:
     Ui::DialogCreateModuleProcess *ui;
     Utils::MDATA *pMData;
+
+    CreateModuleProcess *pCreateModuleProcess;
+    QThread *pThread;
+    bool bIsRun;
+    QTimer *pTimer;
 };
 
 #endif // DIALOGCREATEMODULEPROCESS_H

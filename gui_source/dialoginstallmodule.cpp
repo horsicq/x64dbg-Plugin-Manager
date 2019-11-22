@@ -26,6 +26,8 @@ DialogInstallModule::DialogInstallModule(QWidget *parent) :
     ui(new Ui::DialogInstallModule)
 {
     ui->setupUi(this);
+
+
 }
 
 DialogInstallModule::~DialogInstallModule()

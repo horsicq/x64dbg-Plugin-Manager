@@ -28,10 +28,13 @@ class CreateModuleProcess : public QObject
     Q_OBJECT
 public:
     explicit CreateModuleProcess(QObject *parent = nullptr);
+    void stop();
 
 signals:
+    void completed(qint64 nElapsedTime);
 
 public slots:
+    void process();
 };
 
 #endif // CREATEMODULEPROCESS_H
