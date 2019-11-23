@@ -22,12 +22,15 @@
 #define CREATEMODULEPROCESS_H
 
 #include <QObject>
+#include "utils.h"
 
 class CreateModuleProcess : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit CreateModuleProcess(QObject *parent = nullptr);
+    explicit CreateModuleProcess(QObject *parent=nullptr);
+    void setData(Utils::MDATA *pMData);
     void stop();
 
 signals:
@@ -35,6 +38,11 @@ signals:
 
 public slots:
     void process();
+
+    // TODO stats
+
+private:
+    Utils::MDATA *pMData;
 };
 
 #endif // CREATEMODULEPROCESS_H

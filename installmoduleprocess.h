@@ -26,8 +26,9 @@
 class InstallModuleProcess : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit InstallModuleProcess(QObject *parent = nullptr);
+    explicit InstallModuleProcess(QObject *parent=nullptr);
 
 signals:
 

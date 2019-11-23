@@ -83,21 +83,6 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
             mdata.sBundleName=fi.baseName();
             mdata.sBundlePath=fi.absoluteDir().path();
 
-            int nCount=mdata.listRecords.count();
-
-            for(int i=0;i<nCount;i++)
-            {
-                QFile file;
-
-                file.setFileName(mdata.listRecords.at(i).sFullPath);
-
-                if(file.open(QIODevice::ReadOnly))
-                {
-                    // TODO
-                    file.close();
-                }
-            }
-
             DialogCreateModuleProcess dcmp(this,&mdata);
 
             dcmp.exec();

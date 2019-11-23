@@ -26,8 +26,9 @@
 class RemoveModuleProcess : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit RemoveModuleProcess(QObject *parent = nullptr);
+    explicit RemoveModuleProcess(QObject *parent=nullptr);
 
 signals:
 

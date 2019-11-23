@@ -42,6 +42,9 @@ DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *parent, Utils::MDA
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
+    pCreateModuleProcess->setData(pMData);
+
+    bIsRun=true;
     pThread->start();
 }
 

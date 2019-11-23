@@ -25,6 +25,11 @@ CreateModuleProcess::CreateModuleProcess(QObject *parent) : QObject(parent)
 
 }
 
+void CreateModuleProcess::setData(Utils::MDATA *pMData)
+{
+    this->pMData=pMData;
+}
+
 void CreateModuleProcess::stop()
 {
     // TODO
@@ -32,6 +37,21 @@ void CreateModuleProcess::stop()
 
 void CreateModuleProcess::process()
 {
+    int nCount=pMData->listRecords.count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        QFile file;
+
+        file.setFileName(pMData->listRecords.at(i).sFullPath);
+
+        if(file.open(QIODevice::ReadOnly))
+        {
+            // TODO
+            file.close();
+        }
+    }
+
     // TODO
     emit completed(0);
 }
