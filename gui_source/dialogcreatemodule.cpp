@@ -29,6 +29,7 @@ DialogCreateModule::DialogCreateModule(QWidget *parent) :
 
     mdata={};
 
+    _currentDate();
     ui->pushButtonSave->setEnabled(false);
 }
 
@@ -47,7 +48,10 @@ void DialogCreateModule::on_pushButtonLoad_clicked()
         QSettings settings(sFileName,QSettings::IniFormat);
 
         ui->lineEditName->setText(settings.value("Name","").toString());
-        // TODO
+        ui->lineEditVersion->setText(settings.value("Version","").toString());
+        ui->dateEdit->setDate(QDate::fromString(settings.value("Date",QDate::currentDate().toString("yyyy-MM-dd")).toString(),"yyyy-MM-dd"));
+        ui->lineEditInfo->setText(settings.value("Info","").toString());
+        ui->lineEditRoot->setText(settings.value("Root","").toString());
     }
 }
 
@@ -61,7 +65,10 @@ void DialogCreateModule::on_pushButtonSave_clicked()
         QSettings settings(sFileName,QSettings::IniFormat);
 
         settings.setValue("Name",ui->lineEditName->text());
-        // TODO
+        settings.setValue("Version",ui->lineEditVersion->text());
+        settings.setValue("Date",ui->dateEdit->date().toString("yyyy-MM-dd"));
+        settings.setValue("Info",ui->lineEditInfo->text());
+        settings.setValue("Root",ui->lineEditRoot->text());
     }
 }
 
@@ -163,4 +170,14 @@ void DialogCreateModule::on_lineEditDate_textChanged(const QString &sDate)
 {
     // TODO Checks
     mdata.sDate=sDate;
+}
+
+void DialogCreateModule::on_pushButtonCurrentDate_clicked()
+{
+    _currentDate();
+}
+
+void DialogCreateModule::_currentDate()
+{
+    ui->dateEdit->setDate(QDate::currentDate());
 }

@@ -25,6 +25,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QSettings>
+#include <QDate>
 #include "dialogcreatemoduleprocess.h"
 #include "../utils.h"
 
@@ -51,6 +52,9 @@ private slots:
     void on_lineEditName_textChanged(const QString &sName);
     void on_lineEditVersion_textChanged(const QString &sVersion);
     void on_lineEditDate_textChanged(const QString &sDate);
+    void on_pushButtonCurrentDate_clicked();
+
+    void _currentDate();
 
 signals:
     void errorMessage(QString sMessage);
