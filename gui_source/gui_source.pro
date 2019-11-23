@@ -55,6 +55,11 @@ FORMS += \
     dialogremovemoduleprocess.ui \
     guimainwindow.ui
 
+!contains(XCONFIG, xarchive) {
+    XCONFIG += xarchive
+    include(../XArchive/xarchive.pri)
+}
+
 win32 {
     RC_ICONS = ../icons/main.ico
 }
