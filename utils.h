@@ -49,6 +49,20 @@ public:
         QList<Utils::RECORD> listRecords;
     };
 
+    struct FILE_RECORD
+    {
+        QString sFullPath;
+        QString sPath;
+        QString sSHA1;
+        qint64 nSize;
+    };
+
+    struct DIRECTORY_RECORD
+    {
+        QString sFullPath;
+        QString sPath;
+    };
+
     explicit Utils(QObject *parent=nullptr);
 
     static QList<RECORD> getRecords(QString sRootPath);

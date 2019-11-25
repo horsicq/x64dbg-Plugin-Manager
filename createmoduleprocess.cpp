@@ -37,21 +37,47 @@ void CreateModuleProcess::stop()
 
 void CreateModuleProcess::process()
 {
+    QElapsedTimer elapsedTimer;
+    elapsedTimer.start();
+
+    QList<Utils::FILE_RECORD> listFileRecords;
+    QList<Utils::DIRECTORY_RECORD> listDirectoryRecords;
+
     int nCount=pMData->listRecords.count();
 
     for(int i=0;i<nCount;i++)
     {
-        QFile file;
-
-        file.setFileName(pMData->listRecords.at(i).sFullPath);
-
-        if(file.open(QIODevice::ReadOnly))
+        if(pMData->listRecords.at(i).bIsFile)
         {
-            // TODO
-            file.close();
+            QFile file;
+
+            file.setFileName(pMData->listRecords.at(i).sFullPath);
+
+            if(file.open(QIODevice::ReadOnly))
+            {
+                Utils::FILE_RECORD fileRecord={};
+
+                fileRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
+                fileRecord.sPath=pMData->listRecords.at(i).sPath;
+                fileRecord.nSize=file.size();
+                fileRecord.sSHA1=XBinary::getHash(XBinary::HASH_SHA1,&file);
+
+                listFileRecords.append(fileRecord);
+                // TODO
+                file.close();
+            }
+        }
+        else
+        {
+            Utils::DIRECTORY_RECORD directoryRecord={};
+
+            directoryRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
+            directoryRecord.sPath=pMData->listRecords.at(i).sPath;
+
+            listDirectoryRecords.append(directoryRecord);
         }
     }
 
     // TODO
-    emit completed(0);
+    emit completed(elapsedTimer.elapsed());
 }

@@ -22,7 +22,9 @@
 #define CREATEMODULEPROCESS_H
 
 #include <QObject>
+#include <QElapsedTimer>
 #include "utils.h"
+#include "xarchive.h"
 
 class CreateModuleProcess : public QObject
 {
