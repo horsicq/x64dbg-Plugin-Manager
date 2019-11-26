@@ -44,6 +44,9 @@ private slots:
     void onCompleted(qint64 nElapsed);
     void timerSlot();
 
+signals:
+    void errorMessage(QString sMessage);
+
 private:
     Ui::DialogCreateModuleProcess *ui;
     Utils::MDATA *pMData;

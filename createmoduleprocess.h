@@ -36,6 +36,7 @@ public:
     void stop();
 
 signals:
+    void errorMessage(QString sMessage);
     void completed(qint64 nElapsedTime);
 
 public slots:

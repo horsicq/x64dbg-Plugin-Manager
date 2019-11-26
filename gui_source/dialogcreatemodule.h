@@ -48,13 +48,12 @@ private slots:
     void on_toolButtonRoot_clicked();
     void on_lineEditRoot_textChanged(const QString &sDirectoryName);
     void on_pushButtonCancel_clicked();
-
     void on_lineEditName_textChanged(const QString &sName);
     void on_lineEditVersion_textChanged(const QString &sVersion);
-    void on_lineEditDate_textChanged(const QString &sDate);
     void on_pushButtonCurrentDate_clicked();
-
     void _currentDate();
+    void on_dateEdit_dateChanged(const QDate &date);
+    void on_lineEditInfo_textChanged(const QString &sInfo);
 
 signals:
     void errorMessage(QString sMessage);

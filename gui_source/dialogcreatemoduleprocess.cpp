@@ -36,6 +36,7 @@ DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *parent, Utils::MDA
 
     connect(pThread, SIGNAL(started()), pCreateModuleProcess, SLOT(process()));
     connect(pCreateModuleProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
+    connect(pCreateModuleProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
     bIsRun=false;
 

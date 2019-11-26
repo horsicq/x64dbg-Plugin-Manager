@@ -92,6 +92,8 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
 
             DialogCreateModuleProcess dcmp(this,&mdata);
 
+            connect(&dcmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
             dcmp.exec();
         }
     }
@@ -166,12 +168,6 @@ void DialogCreateModule::on_lineEditVersion_textChanged(const QString &sVersion)
     mdata.sVersion=sVersion;
 }
 
-void DialogCreateModule::on_lineEditDate_textChanged(const QString &sDate)
-{
-    // TODO Checks
-    mdata.sDate=sDate;
-}
-
 void DialogCreateModule::on_pushButtonCurrentDate_clicked()
 {
     _currentDate();
@@ -180,4 +176,14 @@ void DialogCreateModule::on_pushButtonCurrentDate_clicked()
 void DialogCreateModule::_currentDate()
 {
     ui->dateEdit->setDate(QDate::currentDate());
+}
+
+void DialogCreateModule::on_dateEdit_dateChanged(const QDate &date)
+{
+    mdata.sDate=date.toString("yyyy-MM-dd");
+}
+
+void DialogCreateModule::on_lineEditInfo_textChanged(const QString &sInfo)
+{
+    mdata.sInfo=sInfo;
 }

@@ -43,6 +43,7 @@ public:
         QString sName;
         QString sVersion;
         QString sDate;
+        QString sInfo;
         QString sRoot;
         QString sBundleName;
         QString sBundlePath;

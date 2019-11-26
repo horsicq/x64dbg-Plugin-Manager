@@ -45,36 +45,68 @@ void CreateModuleProcess::process()
 
     int nCount=pMData->listRecords.count();
 
-    for(int i=0;i<nCount;i++)
+    qint64 nTotalSize=0;
+
+    QString sBundleFileName=pMData->sBundlePath+QDir::separator()+pMData->sBundleName+".zip";
+
+    bool bSuccess=true;
+
+    if(XBinary::isFileExists(sBundleFileName))
     {
-        if(pMData->listRecords.at(i).bIsFile)
+        bSuccess=XBinary::removeFile(sBundleFileName);
+
+        if(!bSuccess)
         {
-            QFile file;
-
-            file.setFileName(pMData->listRecords.at(i).sFullPath);
-
-            if(file.open(QIODevice::ReadOnly))
-            {
-                Utils::FILE_RECORD fileRecord={};
-
-                fileRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
-                fileRecord.sPath=pMData->listRecords.at(i).sPath;
-                fileRecord.nSize=file.size();
-                fileRecord.sSHA1=XBinary::getHash(XBinary::HASH_SHA1,&file);
-
-                listFileRecords.append(fileRecord);
-                // TODO
-                file.close();
-            }
+            emit errorMessage(tr("Cannot remove: %1").arg(sBundleFileName));
         }
-        else
+    }
+
+    if(bSuccess)
+    {
+        QFile fileResult;
+
+        fileResult.setFileName(sBundleFileName);
+
+        if(fileResult.open(QIODevice::ReadWrite))
         {
-            Utils::DIRECTORY_RECORD directoryRecord={};
+            for(int i=0;i<nCount;i++)
+            {
+                if(pMData->listRecords.at(i).bIsFile)
+                {
+                    QFile file;
 
-            directoryRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
-            directoryRecord.sPath=pMData->listRecords.at(i).sPath;
+                    file.setFileName(pMData->listRecords.at(i).sFullPath);
 
-            listDirectoryRecords.append(directoryRecord);
+                    if(file.open(QIODevice::ReadOnly))
+                    {
+                        Utils::FILE_RECORD fileRecord={};
+
+                        fileRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
+                        fileRecord.sPath=pMData->listRecords.at(i).sPath;
+                        fileRecord.nSize=file.size();
+                        fileRecord.sSHA1=XBinary::getHash(XBinary::HASH_SHA1,&file);
+
+                        listFileRecords.append(fileRecord);
+
+                        XArchive::compress(XArchive::COMPRESS_METHOD_DEFLATE,&file,&fileResult);
+                        // TODO
+                        file.close();
+
+                        nTotalSize+=fileRecord.nSize;
+                    }
+                }
+                else
+                {
+                    Utils::DIRECTORY_RECORD directoryRecord={};
+
+                    directoryRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
+                    directoryRecord.sPath=pMData->listRecords.at(i).sPath;
+
+                    listDirectoryRecords.append(directoryRecord);
+                }
+            }
+
+            fileResult.close();
         }
     }
 
