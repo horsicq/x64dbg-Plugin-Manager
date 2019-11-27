@@ -40,7 +40,9 @@ DialogCreateModule::~DialogCreateModule()
 
 void DialogCreateModule::on_pushButtonLoad_clicked()
 {
-    QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+//    QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString sInitDirectory;
+
     QString sFileName=QFileDialog::getOpenFileName(this,tr("Load project"),sInitDirectory,"*.pro.ini");
 
     if(sFileName!="")
@@ -57,7 +59,9 @@ void DialogCreateModule::on_pushButtonLoad_clicked()
 
 void DialogCreateModule::on_pushButtonSave_clicked()
 {
-    QString sFileName=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+QDir::separator()+ui->lineEditName->text()+".pro.ini";
+//    QString sFileName=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+QDir::separator()+ui->lineEditName->text()+".pro.ini";
+    QString sFileName;
+
     sFileName=QFileDialog::getSaveFileName(this,tr("Save project"),sFileName,"*.pro.ini");
 
     if(sFileName!="")
@@ -78,7 +82,8 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
 
     if(Utils::checkMData(&mdata,&sErrorString))
     {
-        QString sFileName=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+QDir::separator()+Utils::createBundleName(&mdata)+".zip";
+        //QString sFileName=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+QDir::separator()+Utils::createBundleName(&mdata)+".zip";
+        QString sFileName=Utils::createBundleName(&mdata)+".zip";
         sFileName=QFileDialog::getSaveFileName(this,tr("Save plugin bundle"),sFileName,"*.zip");
 
         if(sFileName!="")
@@ -87,7 +92,7 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
             QFileInfo fi(sFileName);
     //        QString sBundleName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".zip";
     //        QString sJsonName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".json";
-            mdata.sBundleName=fi.baseName();
+            mdata.sBundleName=fi.completeBaseName();
             mdata.sBundlePath=fi.absoluteDir().path();
 
             DialogCreateModuleProcess dcmp(this,&mdata);

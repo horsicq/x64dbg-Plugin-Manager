@@ -24,7 +24,7 @@
 #include <QObject>
 #include <QElapsedTimer>
 #include "utils.h"
-#include "xarchive.h"
+#include "xzip.h"
 
 class CreateModuleProcess : public QObject
 {

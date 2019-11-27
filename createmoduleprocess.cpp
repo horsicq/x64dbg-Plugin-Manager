@@ -43,7 +43,7 @@ void CreateModuleProcess::process()
     QList<Utils::FILE_RECORD> listFileRecords;
     QList<Utils::DIRECTORY_RECORD> listDirectoryRecords;
 
-    int nCount=pMData->listRecords.count();
+    int nRecordsCount=pMData->listRecords.count();
 
     qint64 nTotalSize=0;
 
@@ -69,7 +69,9 @@ void CreateModuleProcess::process()
 
         if(fileResult.open(QIODevice::ReadWrite))
         {
-            for(int i=0;i<nCount;i++)
+            QList<XZip::ZIPFILE_RECORD> listZipFiles;
+
+            for(int i=0;i<nRecordsCount;i++)
             {
                 if(pMData->listRecords.at(i).bIsFile)
                 {
@@ -83,14 +85,22 @@ void CreateModuleProcess::process()
 
                         fileRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
                         fileRecord.sPath=pMData->listRecords.at(i).sPath;
-                        fileRecord.nSize=file.size();
                         fileRecord.sSHA1=XBinary::getHash(XBinary::HASH_SHA1,&file);
 
-                        listFileRecords.append(fileRecord);
+                        XZip::ZIPFILE_RECORD zipFileRecord={};
 
-                        XArchive::compress(XArchive::COMPRESS_METHOD_DEFLATE,&file,&fileResult);
-                        // TODO
+                        zipFileRecord.sFileName=fileRecord.sPath;
+                        zipFileRecord.method=XZip::METHOD_DEFLATE;
+
+                        XZip::addLocalFileRecord(&file,&fileResult,&zipFileRecord); // TODO handle errors
+
+                        fileRecord.nSize=zipFileRecord.nUncompressedSize;
+                        fileRecord.nCompressedSize=zipFileRecord.nUncompressedSize;
+
                         file.close();
+
+                        listFileRecords.append(fileRecord);
+                        listZipFiles.append(zipFileRecord);
 
                         nTotalSize+=fileRecord.nSize;
                     }
@@ -105,6 +115,12 @@ void CreateModuleProcess::process()
                     listDirectoryRecords.append(directoryRecord);
                 }
             }
+
+            // TODO info file
+
+            XZip::addCentralDirectory(&fileResult,&listZipFiles);
+
+            // TODO
 
             fileResult.close();
         }

@@ -56,6 +56,7 @@ public:
         QString sPath;
         QString sSHA1;
         qint64 nSize;
+        qint64 nCompressedSize;
     };
 
     struct DIRECTORY_RECORD
