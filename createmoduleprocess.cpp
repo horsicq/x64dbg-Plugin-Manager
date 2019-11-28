@@ -22,7 +22,8 @@
 
 CreateModuleProcess::CreateModuleProcess(QObject *parent) : QObject(parent)
 {
-
+    bIsStop=false;
+    currentStats={};
 }
 
 void CreateModuleProcess::setData(Utils::MDATA *pMData)
@@ -32,7 +33,12 @@ void CreateModuleProcess::setData(Utils::MDATA *pMData)
 
 void CreateModuleProcess::stop()
 {
-    // TODO
+    bIsStop=true;
+}
+
+CreateModuleProcess::STATS CreateModuleProcess::getCurrentStats()
+{
+    return currentStats;
 }
 
 void CreateModuleProcess::process()
@@ -40,10 +46,12 @@ void CreateModuleProcess::process()
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 
+    bIsStop=false;
+
     QList<Utils::FILE_RECORD> listFileRecords;
     QList<Utils::DIRECTORY_RECORD> listDirectoryRecords;
 
-    int nRecordsCount=pMData->listRecords.count();
+    currentStats.nTotal=pMData->listRecords.count();
 
     qint64 nTotalSize=0;
 
@@ -71,10 +79,12 @@ void CreateModuleProcess::process()
         {
             QList<XZip::ZIPFILE_RECORD> listZipFiles;
 
-            for(int i=0;i<nRecordsCount;i++)
-            {
+            for(int i=0;(i<currentStats.nTotal)&&(!bIsStop);i++)
+            {       
                 if(pMData->listRecords.at(i).bIsFile)
                 {
+                    currentStats.sStatus=QString("%1: %2").arg(tr("Add file")).arg(pMData->listRecords.at(i).sPath);
+
                     QFile file;
 
                     file.setFileName(pMData->listRecords.at(i).sFullPath);
@@ -107,6 +117,8 @@ void CreateModuleProcess::process()
                 }
                 else
                 {
+                    currentStats.sStatus=QString("%1: %2").arg(tr("Add directory")).arg(pMData->listRecords.at(i).sPath);
+
                     Utils::DIRECTORY_RECORD directoryRecord={};
 
                     directoryRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
@@ -114,11 +126,18 @@ void CreateModuleProcess::process()
 
                     listDirectoryRecords.append(directoryRecord);
                 }
+
+                currentStats.nCurrent=i+1;
             }
 
             // TODO info file
 
-            XZip::addCentralDirectory(&fileResult,&listZipFiles);
+            if(!bIsStop)
+            {
+                currentStats.sStatus=tr("Add central directory");
+
+                XZip::addCentralDirectory(&fileResult,&listZipFiles,QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
+            }
 
             // TODO
 

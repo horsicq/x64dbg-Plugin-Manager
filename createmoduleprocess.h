@@ -31,9 +31,17 @@ class CreateModuleProcess : public QObject
     Q_OBJECT
 
 public:
+    struct STATS
+    {
+        qint32 nTotal;
+        qint32 nCurrent;
+        QString sStatus;
+    };
+
     explicit CreateModuleProcess(QObject *parent=nullptr);
     void setData(Utils::MDATA *pMData);
     void stop();
+    STATS getCurrentStats();
 
 signals:
     void errorMessage(QString sMessage);
@@ -46,6 +54,8 @@ public slots:
 
 private:
     Utils::MDATA *pMData;
+    bool bIsStop;
+    STATS currentStats;
 };
 
 #endif // CREATEMODULEPROCESS_H

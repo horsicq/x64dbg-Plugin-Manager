@@ -46,7 +46,12 @@ DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *parent, Utils::MDA
     pCreateModuleProcess->setData(pMData);
 
     bIsRun=true;
+
+    ui->progressBar->setMaximum(100);
+    ui->progressBar->setValue(0);
+
     pThread->start();
+    pTimer->start(1000); // 1 sec
 }
 
 DialogCreateModuleProcess::~DialogCreateModuleProcess()
@@ -74,5 +79,12 @@ void DialogCreateModuleProcess::onCompleted(qint64 nElapsed)
 
 void DialogCreateModuleProcess::timerSlot()
 {
-    // TODO
+    CreateModuleProcess::STATS stats=pCreateModuleProcess->getCurrentStats();
+
+    ui->labelInfo->setText(stats.sStatus);
+
+    if(stats.nTotal)
+    {
+        ui->progressBar->setValue((int)((stats.nCurrent*100)/stats.nTotal));
+    }
 }
