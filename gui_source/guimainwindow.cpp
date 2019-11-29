@@ -65,7 +65,22 @@ void GuiMainWindow::on_actionAbout_triggered()
 
 void GuiMainWindow::on_actionOpen_triggered()
 {
-    // TODO
+    QString sInitDirectory; // TODO
+
+    QString sFileName=QFileDialog::getOpenFileName(this,tr("Open plugin"),sInitDirectory,"*.zip");
+
+    if(sFileName!="")
+    {
+        if(Utils::isPluginValid(sFileName))
+        {
+            qDebug("VALID");
+            // TODO
+        }
+        else
+        {
+            errorMessage(tr("Invalid plugin file"));
+        }
+    }
 }
 
 void GuiMainWindow::on_actionOptions_triggered()

@@ -71,6 +71,31 @@ QString Utils::createBundleName(Utils::MDATA *pMData)
     return sResult;
 }
 
+bool Utils::isPluginValid(QString sFileName)
+{
+    bool bResult=false;
+
+    QFile file;
+
+    file.setFileName(sFileName);
+
+    if(file.open(QIODevice::ReadOnly))
+    {
+        XZip xzip(&file);
+
+        if(xzip.isVaild())
+        {
+            QList<XArchive::RECORD> listRecords=xzip.getRecords();
+
+            bResult=XArchive::isArchiveRecordPresent("plugin_info.json",&listRecords);
+        }
+
+        file.close();
+    }
+
+    return bResult;
+}
+
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)
 {
     QFileInfo fi(sCurrentPath);

@@ -26,6 +26,7 @@
 #include <QDir>
 #include "QJsonDocument"
 #include "global.h"
+#include "xzip.h"
 
 class Utils : public QObject
 {
@@ -71,6 +72,7 @@ public:
     static QList<RECORD> getRecords(QString sRootPath);
     static bool checkMData(MDATA *pMData,QString *psErrorString);
     static QString createBundleName(MDATA *pMData);
+    static bool isPluginValid(QString sFileName);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
