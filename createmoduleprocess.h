@@ -43,14 +43,15 @@ public:
     void stop();
     STATS getCurrentStats();
 
+private:
+    QByteArray createInfo(Utils::MDATA *pMData,QList<Utils::FILE_RECORD> *pListFileRecords,QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords);
+
 signals:
     void errorMessage(QString sMessage);
     void completed(qint64 nElapsedTime);
 
 public slots:
     void process();
-
-    // TODO stats
 
 private:
     Utils::MDATA *pMData;

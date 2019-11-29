@@ -86,6 +86,8 @@ void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RE
 
     if(record.sPath!="")
     {
+        record.sPath=QString("files")+QDir::separator()+record.sPath;
+
         pListRecords->append(record);
     }
 

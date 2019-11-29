@@ -41,6 +41,15 @@ CreateModuleProcess::STATS CreateModuleProcess::getCurrentStats()
     return currentStats;
 }
 
+QByteArray CreateModuleProcess::createInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords)
+{
+    QByteArray baResult;
+
+    baResult.append("Test");
+
+    return baResult;
+}
+
 void CreateModuleProcess::process()
 {
     QElapsedTimer elapsedTimer;
@@ -131,6 +140,23 @@ void CreateModuleProcess::process()
             }
 
             // TODO info file
+            QByteArray baInfoFile=createInfo(pMData,&listFileRecords,&listDirectoryRecords);
+
+            QBuffer bufferInfoFile(&baInfoFile);
+
+            if(bufferInfoFile.open(QIODevice::ReadOnly))
+            {
+                XZip::ZIPFILE_RECORD zipFileRecord={};
+
+                zipFileRecord.sFileName="plugin_info.json";
+                zipFileRecord.method=XZip::METHOD_DEFLATE;
+
+                XZip::addLocalFileRecord(&bufferInfoFile,&fileResult,&zipFileRecord);
+
+                listZipFiles.append(zipFileRecord);
+
+                bufferInfoFile.close();
+            }
 
             if(!bIsStop)
             {
