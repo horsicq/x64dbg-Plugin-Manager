@@ -24,7 +24,8 @@
 #include <QObject>
 #include <QFileInfo>
 #include <QDir>
-#include "QJsonDocument"
+#include <QJsonDocument>
+#include <QJsonObject>
 #include "global.h"
 #include "xzip.h"
 

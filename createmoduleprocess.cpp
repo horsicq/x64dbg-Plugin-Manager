@@ -45,7 +45,14 @@ QByteArray CreateModuleProcess::createInfo(Utils::MDATA *pMData, QList<Utils::FI
 {
     QByteArray baResult;
 
-    baResult.append("Test");
+    QJsonObject recordObject;
+    recordObject.insert("Name",QJsonValue::fromVariant(pMData->sName));
+    recordObject.insert("Version", QJsonValue::fromVariant(pMData->sVersion));
+    recordObject.insert("Date", QJsonValue::fromVariant(pMData->sDate));
+    recordObject.insert("Info", QJsonValue::fromVariant(pMData->sInfo));
+
+    QJsonDocument doc(recordObject);
+    baResult.append(doc.toJson());
 
     return baResult;
 }
@@ -108,7 +115,7 @@ void CreateModuleProcess::process()
 
                         XZip::ZIPFILE_RECORD zipFileRecord={};
 
-                        zipFileRecord.sFileName=fileRecord.sPath;
+                        zipFileRecord.sFileName=QString("files/")+fileRecord.sPath;
                         zipFileRecord.method=XZip::METHOD_DEFLATE;
 
                         XZip::addLocalFileRecord(&file,&fileResult,&zipFileRecord); // TODO handle errors
