@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include "global.h"
 #include "xzip.h"
 
@@ -51,6 +52,8 @@ public:
         QString sBundleName;
         QString sBundlePath;
         QList<Utils::RECORD> listRecords;
+        qint64 nSize;
+        qint64 nCompressedSize;
     };
 
     struct FILE_RECORD
@@ -58,8 +61,8 @@ public:
         QString sFullPath;
         QString sPath;
         QString sSHA1;
-        qint64 nSize;
-        qint64 nCompressedSize;
+//        qint64 nSize;
+//        qint64 nCompressedSize;
     };
 
     struct DIRECTORY_RECORD

@@ -41,15 +41,69 @@ CreateModuleProcess::STATS CreateModuleProcess::getCurrentStats()
     return currentStats;
 }
 
-QByteArray CreateModuleProcess::createInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords)
+QByteArray CreateModuleProcess::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords)
 {
     QByteArray baResult;
 
+    int nFilesCount=pListFileRecords->count();
+    int nDirectoriesCount=pListDirectoryRecords->count();
+
     QJsonObject recordObject;
-    recordObject.insert("Name",QJsonValue::fromVariant(pMData->sName));
-    recordObject.insert("Version", QJsonValue::fromVariant(pMData->sVersion));
-    recordObject.insert("Date", QJsonValue::fromVariant(pMData->sDate));
-    recordObject.insert("Info", QJsonValue::fromVariant(pMData->sInfo));
+    recordObject.insert("Name",             QJsonValue::fromVariant(pMData->sName));
+    recordObject.insert("Version",          QJsonValue::fromVariant(pMData->sVersion));
+    recordObject.insert("Date",             QJsonValue::fromVariant(pMData->sDate));
+    recordObject.insert("Info",             QJsonValue::fromVariant(pMData->sInfo));
+    recordObject.insert("Size",             QJsonValue::fromVariant(pMData->nSize));
+    recordObject.insert("CompressedSize",   QJsonValue::fromVariant(pMData->nCompressedSize));
+
+    QJsonArray installArray;
+
+    for(int i=0;i<nDirectoriesCount;i++)
+    {
+        QJsonObject record;
+
+        record.insert("Path",       pListDirectoryRecords->at(i).sPath);
+        record.insert("Action",     "make_directory");
+
+        installArray.append(record);
+    }
+
+    for(int i=0;i<nFilesCount;i++)
+    {
+        QJsonObject record;
+
+        record.insert("Path",       pListFileRecords->at(i).sPath);
+        record.insert("Action",     "copy_file");
+        record.insert("SHA1",       pListFileRecords->at(i).sSHA1);
+
+        installArray.append(record);
+    }
+
+    recordObject.insert("Install",  installArray);
+
+    QJsonArray removeArray;
+
+    for(int i=0;i<nFilesCount;i++)
+    {
+        QJsonObject record;
+
+        record.insert("Path",       pListFileRecords->at(i).sPath);
+        record.insert("Action",     "remove_file");
+
+        removeArray.append(record);
+    }
+
+    for(int i=0;i<nDirectoriesCount;i++)
+    {
+        QJsonObject record;
+
+        record.insert("Path",       pListDirectoryRecords->at(i).sPath);
+        record.insert("Action",     "remove_directory_if_empty");
+
+        removeArray.append(record);
+    }
+
+    recordObject.insert("Remove",   removeArray);
 
     QJsonDocument doc(recordObject);
     baResult.append(doc.toJson());
@@ -69,9 +123,7 @@ void CreateModuleProcess::process()
 
     currentStats.nTotal=pMData->listRecords.count();
 
-    qint64 nTotalSize=0;
-
-    QString sBundleFileName=pMData->sBundlePath+QDir::separator()+pMData->sBundleName+".zip";
+    QString sBundleFileName=pMData->sBundlePath+QDir::separator()+pMData->sBundleName+".x64dbg.zip";
 
     bool bSuccess=true;
 
@@ -84,6 +136,9 @@ void CreateModuleProcess::process()
             emit errorMessage(tr("Cannot remove: %1").arg(sBundleFileName));
         }
     }
+
+    pMData->nSize=0;
+    pMData->nCompressedSize=0;
 
     if(bSuccess)
     {
@@ -120,15 +175,13 @@ void CreateModuleProcess::process()
 
                         XZip::addLocalFileRecord(&file,&fileResult,&zipFileRecord); // TODO handle errors
 
-                        fileRecord.nSize=zipFileRecord.nUncompressedSize;
-                        fileRecord.nCompressedSize=zipFileRecord.nUncompressedSize;
+                        pMData->nSize+=zipFileRecord.nUncompressedSize;
+                        pMData->nCompressedSize+=zipFileRecord.nUncompressedSize;
 
                         file.close();
 
                         listFileRecords.append(fileRecord);
                         listZipFiles.append(zipFileRecord);
-
-                        nTotalSize+=fileRecord.nSize;
                     }
                 }
                 else
@@ -147,7 +200,7 @@ void CreateModuleProcess::process()
             }
 
             // TODO info file
-            QByteArray baInfoFile=createInfo(pMData,&listFileRecords,&listDirectoryRecords);
+            QByteArray baInfoFile=createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords);
 
             QBuffer bufferInfoFile(&baInfoFile);
 
@@ -159,6 +212,9 @@ void CreateModuleProcess::process()
                 zipFileRecord.method=XZip::METHOD_DEFLATE;
 
                 XZip::addLocalFileRecord(&bufferInfoFile,&fileResult,&zipFileRecord);
+
+                pMData->nSize+=zipFileRecord.nUncompressedSize;
+                pMData->nCompressedSize+=zipFileRecord.nUncompressedSize;
 
                 listZipFiles.append(zipFileRecord);
 

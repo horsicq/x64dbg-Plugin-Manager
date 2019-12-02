@@ -83,8 +83,8 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
     if(Utils::checkMData(&mdata,&sErrorString))
     {
         //QString sFileName=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+QDir::separator()+Utils::createBundleName(&mdata)+".zip";
-        QString sFileName=Utils::createBundleName(&mdata)+".zip";
-        sFileName=QFileDialog::getSaveFileName(this,tr("Save plugin bundle"),sFileName,"*.zip");
+        QString sFileName=Utils::createBundleName(&mdata)+".x64dbg.zip";
+        sFileName=QFileDialog::getSaveFileName(this,tr("Save plugin bundle"),sFileName,"*.x64dbg.zip");
 
         if(sFileName!="")
         {

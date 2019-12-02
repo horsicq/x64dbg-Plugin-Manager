@@ -44,7 +44,7 @@ public:
     STATS getCurrentStats();
 
 private:
-    QByteArray createInfo(Utils::MDATA *pMData,QList<Utils::FILE_RECORD> *pListFileRecords,QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords);
+    QByteArray createPluginInfo(Utils::MDATA *pMData,QList<Utils::FILE_RECORD> *pListFileRecords,QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords);
 
 signals:
     void errorMessage(QString sMessage);

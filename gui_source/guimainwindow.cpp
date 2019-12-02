@@ -67,7 +67,7 @@ void GuiMainWindow::on_actionOpen_triggered()
 {
     QString sInitDirectory; // TODO
 
-    QString sFileName=QFileDialog::getOpenFileName(this,tr("Open plugin"),sInitDirectory,"*.zip");
+    QString sFileName=QFileDialog::getOpenFileName(this,tr("Open plugin"),sInitDirectory,"*.x64dbg.zip");
 
     if(sFileName!="")
     {
