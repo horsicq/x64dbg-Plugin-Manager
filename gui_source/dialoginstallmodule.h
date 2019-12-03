@@ -22,7 +22,7 @@
 #define DIALOGINSTALLMODULE_H
 
 #include <QDialog>
-
+#include "../utils.h"
 
 namespace Ui {
 class DialogInstallModule;
@@ -33,11 +33,17 @@ class DialogInstallModule : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstallModule(QWidget *parent=nullptr);
+    explicit DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QIODevice *pDevice);
     ~DialogInstallModule();
+
+private slots:
+    void on_pushButtonCancel_clicked();
+    void on_pushButtonOK_clicked();
 
 private:
     Ui::DialogInstallModule *ui;
+    XPLUGINMANAGER::OPTIONS *pOptions;
+    QIODevice *pDevice;
 };
 
 #endif // DIALOGINSTALLMODULE_H

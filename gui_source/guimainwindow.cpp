@@ -71,14 +71,24 @@ void GuiMainWindow::on_actionOpen_triggered()
 
     if(sFileName!="")
     {
-        if(Utils::isPluginValid(sFileName))
+        QFile file;
+
+        file.setFileName(sFileName);
+
+        if(file.open(QIODevice::ReadOnly))
         {
-            qDebug("VALID");
-            // TODO
-        }
-        else
-        {
-            errorMessage(tr("Invalid plugin file"));
+            if(Utils::isPluginValid(&file))
+            {
+                DialogInstallModule dialogInstallModule(this,&options,&file);
+
+                dialogInstallModule.exec();
+            }
+            else
+            {
+                errorMessage(tr("Invalid plugin file"));
+            }
+
+            file.close();
         }
     }
 }

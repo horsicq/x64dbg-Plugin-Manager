@@ -81,16 +81,25 @@ bool Utils::isPluginValid(QString sFileName)
 
     if(file.open(QIODevice::ReadOnly))
     {
-        XZip xzip(&file);
-
-        if(xzip.isVaild())
-        {
-            QList<XArchive::RECORD> listRecords=xzip.getRecords();
-
-            bResult=XArchive::isArchiveRecordPresent("plugin_info.json",&listRecords);
-        }
+        bResult=isPluginValid(&file);
 
         file.close();
+    }
+
+    return bResult;
+}
+
+bool Utils::isPluginValid(QIODevice *pDevice)
+{
+    bool bResult=false;
+
+    XZip xzip(pDevice);
+
+    if(xzip.isVaild())
+    {
+        QList<XArchive::RECORD> listRecords=xzip.getRecords();
+
+        bResult=XArchive::isArchiveRecordPresent("plugin_info.json",&listRecords);
     }
 
     return bResult;

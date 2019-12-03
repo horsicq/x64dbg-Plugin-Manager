@@ -77,6 +77,7 @@ public:
     static bool checkMData(MDATA *pMData,QString *psErrorString);
     static QString createBundleName(MDATA *pMData);
     static bool isPluginValid(QString sFileName);
+    static bool isPluginValid(QIODevice *pDevice);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);

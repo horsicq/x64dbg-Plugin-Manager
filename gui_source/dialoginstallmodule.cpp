@@ -21,16 +21,27 @@
 #include "dialoginstallmodule.h"
 #include "ui_dialoginstallmodule.h"
 
-DialogInstallModule::DialogInstallModule(QWidget *parent) :
+DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions,QIODevice *pDevice) :
     QDialog(parent),
     ui(new Ui::DialogInstallModule)
 {
     ui->setupUi(this);
 
-
+    this->pOptions=pOptions;
+    this->pDevice=pDevice;
 }
 
 DialogInstallModule::~DialogInstallModule()
 {
     delete ui;
+}
+
+void DialogInstallModule::on_pushButtonCancel_clicked()
+{
+    this->close();
+}
+
+void DialogInstallModule::on_pushButtonOK_clicked()
+{
+    // TODO
 }

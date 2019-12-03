@@ -24,6 +24,7 @@
 #include <QMainWindow>
 #include "../global.h"
 #include "dialogcreatemodule.h"
+#include "dialoginstallmodule.h"
 #include "dialogoptions.h"
 #include "dialogreload.h"
 #include "dialogabout.h"

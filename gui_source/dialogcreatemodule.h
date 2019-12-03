@@ -38,7 +38,7 @@ class DialogCreateModule : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogCreateModule(QWidget *parent=nullptr);
+    explicit DialogCreateModule(QWidget *parent);
     ~DialogCreateModule();
 
 private slots:
