@@ -42,8 +42,7 @@ private slots:
 
 private:
     Ui::DialogInstallModule *ui;
-    XPLUGINMANAGER::OPTIONS *pOptions;
-    QIODevice *pDevice;
+    Utils::MDATA mdata;
 };
 
 #endif // DIALOGINSTALLMODULE_H

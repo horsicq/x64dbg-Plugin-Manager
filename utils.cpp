@@ -105,6 +105,122 @@ bool Utils::isPluginValid(QIODevice *pDevice)
     return bResult;
 }
 
+QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords)
+{
+    QByteArray baResult;
+
+    int nFilesCount=pListFileRecords->count();
+    int nDirectoriesCount=pListDirectoryRecords->count();
+
+    QJsonObject recordObject;
+    recordObject.insert("Name",             QJsonValue::fromVariant(pMData->sName));
+    recordObject.insert("Version",          QJsonValue::fromVariant(pMData->sVersion));
+    recordObject.insert("Date",             QJsonValue::fromVariant(pMData->sDate));
+    recordObject.insert("Info",             QJsonValue::fromVariant(pMData->sInfo));
+    recordObject.insert("Size",             QJsonValue::fromVariant(pMData->nSize));
+    recordObject.insert("CompressedSize",   QJsonValue::fromVariant(pMData->nCompressedSize));
+
+    QJsonArray installArray;
+
+    for(int i=0;i<nDirectoriesCount;i++)
+    {
+        QJsonObject record;
+
+        record.insert("Path",       pListDirectoryRecords->at(i).sPath);
+        record.insert("Action",     "make_directory");
+
+        installArray.append(record);
+    }
+
+    for(int i=0;i<nFilesCount;i++)
+    {
+        QJsonObject record;
+
+        record.insert("Path",       pListFileRecords->at(i).sPath);
+        record.insert("Action",     "copy_file");
+        record.insert("SHA1",       pListFileRecords->at(i).sSHA1);
+
+        installArray.append(record);
+    }
+
+    recordObject.insert("Install",  installArray);
+
+    QJsonArray removeArray;
+
+    for(int i=0;i<nFilesCount;i++)
+    {
+        QJsonObject record;
+
+        record.insert("Path",       pListFileRecords->at(i).sPath);
+        record.insert("Action",     "remove_file");
+
+        removeArray.append(record);
+    }
+
+    for(int i=0;i<nDirectoriesCount;i++)
+    {
+        QJsonObject record;
+
+        record.insert("Path",       pListDirectoryRecords->at(i).sPath);
+        record.insert("Action",     "remove_directory_if_empty");
+
+        removeArray.append(record);
+    }
+
+    recordObject.insert("Remove",   removeArray);
+
+    QJsonDocument doc(recordObject);
+    baResult.append(doc.toJson());
+
+    return baResult;
+}
+
+Utils::MDATA Utils::getMDataFromJSON(QIODevice *pDevice, QString sRootPath)
+{
+    Utils::MDATA result={};
+
+    result.sRoot=sRootPath;
+
+    XZip xzip(pDevice);
+
+    if(xzip.isVaild())
+    {
+        QList<XArchive::RECORD> listRecords=xzip.getRecords();
+
+        XArchive::RECORD pluginInfoRecord=XArchive::getArchiveRecord("plugin_info.json",&listRecords);
+
+        QByteArray baData=xzip.decompress(&pluginInfoRecord);
+
+        QJsonDocument jsDoc=QJsonDocument::fromJson(baData);
+
+        QJsonObject rootObj=jsDoc.object();
+
+        result.sName            =rootObj.value("Name").toString();
+        result.sVersion         =rootObj.value("Version").toString();
+        result.sDate            =rootObj.value("Date").toString();
+        result.sInfo            =rootObj.value("Info").toString();
+        result.nSize            =rootObj.value("Size").toInt();
+        result.nCompressedSize  =rootObj.value("CompressedSize").toInt();
+
+        QJsonArray installArray=rootObj.value("Install").toArray();
+
+        int nCount=installArray.count();
+
+        for(int i=0;i<nCount;i++)
+        {
+            QJsonObject recordObj=installArray.at(i).toObject();
+            RECORD record={};
+
+            record.sPath=recordObj.value("Path").toString();
+            record.sFullPath="files/"+record.sPath;
+
+            result.listRecords.append(record);
+        }
+    }
+
+    return result;
+}
+
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)
 {
     QFileInfo fi(sCurrentPath);

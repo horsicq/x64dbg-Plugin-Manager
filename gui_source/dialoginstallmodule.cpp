@@ -27,8 +27,7 @@ DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTION
 {
     ui->setupUi(this);
 
-    this->pOptions=pOptions;
-    this->pDevice=pDevice;
+    mdata=Utils::getMDataFromJSON(pDevice,pOptions->sRootPath);
 }
 
 DialogInstallModule::~DialogInstallModule()

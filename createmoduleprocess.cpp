@@ -41,76 +41,6 @@ CreateModuleProcess::STATS CreateModuleProcess::getCurrentStats()
     return currentStats;
 }
 
-QByteArray CreateModuleProcess::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords)
-{
-    QByteArray baResult;
-
-    int nFilesCount=pListFileRecords->count();
-    int nDirectoriesCount=pListDirectoryRecords->count();
-
-    QJsonObject recordObject;
-    recordObject.insert("Name",             QJsonValue::fromVariant(pMData->sName));
-    recordObject.insert("Version",          QJsonValue::fromVariant(pMData->sVersion));
-    recordObject.insert("Date",             QJsonValue::fromVariant(pMData->sDate));
-    recordObject.insert("Info",             QJsonValue::fromVariant(pMData->sInfo));
-    recordObject.insert("Size",             QJsonValue::fromVariant(pMData->nSize));
-    recordObject.insert("CompressedSize",   QJsonValue::fromVariant(pMData->nCompressedSize));
-
-    QJsonArray installArray;
-
-    for(int i=0;i<nDirectoriesCount;i++)
-    {
-        QJsonObject record;
-
-        record.insert("Path",       pListDirectoryRecords->at(i).sPath);
-        record.insert("Action",     "make_directory");
-
-        installArray.append(record);
-    }
-
-    for(int i=0;i<nFilesCount;i++)
-    {
-        QJsonObject record;
-
-        record.insert("Path",       pListFileRecords->at(i).sPath);
-        record.insert("Action",     "copy_file");
-        record.insert("SHA1",       pListFileRecords->at(i).sSHA1);
-
-        installArray.append(record);
-    }
-
-    recordObject.insert("Install",  installArray);
-
-    QJsonArray removeArray;
-
-    for(int i=0;i<nFilesCount;i++)
-    {
-        QJsonObject record;
-
-        record.insert("Path",       pListFileRecords->at(i).sPath);
-        record.insert("Action",     "remove_file");
-
-        removeArray.append(record);
-    }
-
-    for(int i=0;i<nDirectoriesCount;i++)
-    {
-        QJsonObject record;
-
-        record.insert("Path",       pListDirectoryRecords->at(i).sPath);
-        record.insert("Action",     "remove_directory_if_empty");
-
-        removeArray.append(record);
-    }
-
-    recordObject.insert("Remove",   removeArray);
-
-    QJsonDocument doc(recordObject);
-    baResult.append(doc.toJson());
-
-    return baResult;
-}
-
 void CreateModuleProcess::process()
 {
     QElapsedTimer elapsedTimer;
@@ -176,7 +106,7 @@ void CreateModuleProcess::process()
                         XZip::addLocalFileRecord(&file,&fileResult,&zipFileRecord); // TODO handle errors
 
                         pMData->nSize+=zipFileRecord.nUncompressedSize;
-                        pMData->nCompressedSize+=zipFileRecord.nUncompressedSize;
+                        pMData->nCompressedSize+=zipFileRecord.nCompressedSize;
 
                         file.close();
 
@@ -200,7 +130,7 @@ void CreateModuleProcess::process()
             }
 
             // TODO info file
-            QByteArray baInfoFile=createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords);
+            QByteArray baInfoFile=Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords);
 
             QBuffer bufferInfoFile(&baInfoFile);
 
@@ -214,7 +144,7 @@ void CreateModuleProcess::process()
                 XZip::addLocalFileRecord(&bufferInfoFile,&fileResult,&zipFileRecord);
 
                 pMData->nSize+=zipFileRecord.nUncompressedSize;
-                pMData->nCompressedSize+=zipFileRecord.nUncompressedSize;
+                pMData->nCompressedSize+=zipFileRecord.nCompressedSize;
 
                 listZipFiles.append(zipFileRecord);
 

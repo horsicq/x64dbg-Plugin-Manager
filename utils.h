@@ -79,6 +79,9 @@ public:
     static bool isPluginValid(QString sFileName);
     static bool isPluginValid(QIODevice *pDevice);
 
+    static QByteArray createPluginInfo(Utils::MDATA *pMData,QList<Utils::FILE_RECORD> *pListFileRecords,QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords);
+    static MDATA getMDataFromJSON(QIODevice *pDevice,QString sRootPath);
+
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
 };
