@@ -36,7 +36,7 @@ void CreateModuleProcess::stop()
     bIsStop=true;
 }
 
-CreateModuleProcess::STATS CreateModuleProcess::getCurrentStats()
+Utils::STATS CreateModuleProcess::getCurrentStats()
 {
     return currentStats;
 }
@@ -158,12 +158,9 @@ void CreateModuleProcess::process()
                 XZip::addCentralDirectory(&fileResult,&listZipFiles,QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
             }
 
-            // TODO
-
             fileResult.close();
         }
     }
 
-    // TODO
     emit completed(elapsedTimer.elapsed());
 }

@@ -22,5 +22,31 @@
 
 InstallModuleProcess::InstallModuleProcess(QObject *parent) : QObject(parent)
 {
+    bIsStop=false;
+    currentStats={};
+}
 
+void InstallModuleProcess::setData(Utils::MDATA *pMData)
+{
+    this->pMData=pMData;
+}
+
+void InstallModuleProcess::stop()
+{
+    bIsStop=true;
+}
+
+Utils::STATS InstallModuleProcess::getCurrentStats()
+{
+    return currentStats;
+}
+
+void InstallModuleProcess::process()
+{
+    QElapsedTimer elapsedTimer;
+    elapsedTimer.start();
+
+    bIsStop=false;
+
+    emit completed(elapsedTimer.elapsed());
 }

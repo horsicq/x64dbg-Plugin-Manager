@@ -35,6 +35,13 @@ class Utils : public QObject
     Q_OBJECT
 
 public:
+    struct STATS
+    {
+        qint32 nTotal;
+        qint32 nCurrent;
+        QString sStatus;
+    };
+
     struct RECORD
     {
         QString sFullPath;

@@ -79,7 +79,7 @@ void DialogCreateModuleProcess::onCompleted(qint64 nElapsed)
 
 void DialogCreateModuleProcess::timerSlot()
 {
-    CreateModuleProcess::STATS stats=pCreateModuleProcess->getCurrentStats();
+    Utils::STATS stats=pCreateModuleProcess->getCurrentStats();
 
     ui->labelInfo->setText(stats.sStatus);
 

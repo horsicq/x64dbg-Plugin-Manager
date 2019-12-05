@@ -22,6 +22,10 @@
 #define DIALOGINSTALLMODULEPROCESS_H
 
 #include <QDialog>
+#include <QThread>
+#include <QTimer>
+#include "../installmoduleprocess.h"
+#include "../utils.h"
 
 namespace Ui {
 class DialogInstallModuleProcess;
@@ -32,11 +36,25 @@ class DialogInstallModuleProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstallModuleProcess(QWidget *parent = nullptr);
+    explicit DialogInstallModuleProcess(QWidget *parent=nullptr);
     ~DialogInstallModuleProcess();
+
+private slots:
+    void on_pushButtonCancel_clicked();
+    void onCompleted(qint64 nElapsed);
+    void timerSlot();
+
+signals:
+    void errorMessage(QString sMessage);
 
 private:
     Ui::DialogInstallModuleProcess *ui;
+    Utils::MDATA *pMData;
+
+    InstallModuleProcess *pInstallModuleProcess;
+    QThread *pThread;
+    bool bIsRun;
+    QTimer *pTimer;
 };
 
 #endif // DIALOGINSTALLMODULEPROCESS_H

@@ -212,7 +212,7 @@ Utils::MDATA Utils::getMDataFromJSON(QIODevice *pDevice, QString sRootPath)
             RECORD record={};
 
             record.sPath=recordObj.value("Path").toString();
-            record.sFullPath="files/"+record.sPath;
+            record.sFullPath=sRootPath+QDir::separator()+record.sPath;
 
             result.listRecords.append(record);
         }

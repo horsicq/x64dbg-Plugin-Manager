@@ -22,6 +22,9 @@
 #define INSTALLMODULEPROCESS_H
 
 #include <QObject>
+#include <QElapsedTimer>
+#include "utils.h"
+#include "xzip.h"
 
 class InstallModuleProcess : public QObject
 {
@@ -29,10 +32,21 @@ class InstallModuleProcess : public QObject
 
 public:
     explicit InstallModuleProcess(QObject *parent=nullptr);
+    void setData(Utils::MDATA *pMData);
+    void stop();
+    Utils::STATS getCurrentStats();
 
 signals:
+    void errorMessage(QString sMessage);
+    void completed(qint64 nElapsedTime);
 
 public slots:
+    void process();
+
+private:
+    Utils::MDATA *pMData;
+    bool bIsStop;
+    Utils::STATS currentStats;
 };
 
 #endif // INSTALLMODULEPROCESS_H
