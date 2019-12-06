@@ -49,7 +49,31 @@ void InstallModuleProcess::process()
 
     bIsStop=false;
 
-    // TODO
+    XZip zip(pDevice);
+
+    QList<XArchive::RECORD> listZipRecords=zip.getRecords();
+
+    int nCount=pMData->listRecords.count();
+
+    for(int i=0;(i<nCount)&&(!bIsStop);i++)
+    {
+        Utils::RECORD record=pMData->listRecords.at(i);
+
+        if(record.bIsFile)
+        {
+            XArchive::RECORD archiveRecord=XArchive::getArchiveRecord(record.sPath,&listZipRecords);
+            XArchive::decompressToFile(&archiveRecord,record.sFullPath);
+
+            if(XBinary::getHash(XBinary::HASH_SHA1,record.sFullPath)!=record.sSHA1)
+            {
+                qDebug("INVALID HASH"); // TODO
+            }
+        }
+        else
+        {
+            QDir::mkdir(record.sFullPath);
+        }
+    }
 
     emit completed(elapsedTimer.elapsed());
 }
