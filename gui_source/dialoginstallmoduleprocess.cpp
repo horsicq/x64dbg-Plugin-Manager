@@ -21,7 +21,7 @@
 #include "dialoginstallmoduleprocess.h"
 #include "ui_dialoginstallmoduleprocess.h"
 
-DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent) :
+DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, Utils::MDATA *pMData, QIODevice *pDevice) :
     QDialog(parent),
     ui(new Ui::DialogInstallModuleProcess)
 {
@@ -43,7 +43,7 @@ DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent) :
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pInstallModuleProcess->setData(pMData);
+    pInstallModuleProcess->setData(pMData,pDevice);
 
     bIsRun=true;
 

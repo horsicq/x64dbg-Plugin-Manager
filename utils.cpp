@@ -211,8 +211,16 @@ Utils::MDATA Utils::getMDataFromJSON(QIODevice *pDevice, QString sRootPath)
             QJsonObject recordObj=installArray.at(i).toObject();
             RECORD record={};
 
-            record.sPath=recordObj.value("Path").toString();
-            record.sFullPath=sRootPath+QDir::separator()+record.sPath;
+            record.sPath        =recordObj.value("Path").toString();
+            record.sFullPath    =sRootPath+QDir::separator()+record.sPath;
+            record.sSHA1        =recordObj.value("SHA1").toString();
+
+            QString sAction=recordObj.value("Action").toString();
+
+            if(sAction=="copy_file")
+            {
+                record.bIsFile=true;
+            }
 
             result.listRecords.append(record);
         }

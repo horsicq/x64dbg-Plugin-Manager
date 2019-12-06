@@ -27,6 +27,8 @@ DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTION
 {
     ui->setupUi(this);
 
+    this->pDevice=pDevice;
+
     mdata=Utils::getMDataFromJSON(pDevice,pOptions->sRootPath);
 
     int nCount=mdata.listRecords.count();
@@ -53,5 +55,9 @@ void DialogInstallModule::on_pushButtonCancel_clicked()
 
 void DialogInstallModule::on_pushButtonOK_clicked()
 {
-    // TODO
+    DialogInstallModuleProcess dimp(this,&mdata,pDevice);
+
+    connect(&dimp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+    dimp.exec();
 }

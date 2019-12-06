@@ -22,6 +22,7 @@
 #define DIALOGINSTALLMODULE_H
 
 #include <QDialog>
+#include "dialoginstallmoduleprocess.h"
 #include "../utils.h"
 
 namespace Ui {
@@ -40,9 +41,13 @@ private slots:
     void on_pushButtonCancel_clicked();
     void on_pushButtonOK_clicked();
 
+signals:
+    void errorMessage(QString sMessage);
+
 private:
     Ui::DialogInstallModule *ui;
     Utils::MDATA mdata;
+    QIODevice *pDevice;
 };
 
 #endif // DIALOGINSTALLMODULE_H

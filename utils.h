@@ -47,6 +47,7 @@ public:
         QString sFullPath;
         QString sPath;
         bool bIsFile;
+        QString sSHA1;
     };
 
     struct MDATA

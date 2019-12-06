@@ -36,7 +36,7 @@ class DialogInstallModuleProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstallModuleProcess(QWidget *parent=nullptr);
+    explicit DialogInstallModuleProcess(QWidget *parent, Utils::MDATA *pMData,QIODevice *pDevice);
     ~DialogInstallModuleProcess();
 
 private slots:

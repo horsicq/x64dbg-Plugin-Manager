@@ -26,9 +26,10 @@ InstallModuleProcess::InstallModuleProcess(QObject *parent) : QObject(parent)
     currentStats={};
 }
 
-void InstallModuleProcess::setData(Utils::MDATA *pMData)
+void InstallModuleProcess::setData(Utils::MDATA *pMData, QIODevice *pDevice)
 {
     this->pMData=pMData;
+    this->pDevice=pDevice;
 }
 
 void InstallModuleProcess::stop()
@@ -47,6 +48,8 @@ void InstallModuleProcess::process()
     elapsedTimer.start();
 
     bIsStop=false;
+
+    // TODO
 
     emit completed(elapsedTimer.elapsed());
 }
