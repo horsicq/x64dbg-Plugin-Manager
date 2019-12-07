@@ -62,7 +62,7 @@ void InstallModuleProcess::process()
         if(record.bIsFile)
         {
             XArchive::RECORD archiveRecord=XArchive::getArchiveRecord(record.sPath,&listZipRecords);
-            XArchive::decompressToFile(&archiveRecord,record.sFullPath);
+            zip.decompressToFile(&archiveRecord,record.sFullPath);
 
             if(XBinary::getHash(XBinary::HASH_SHA1,record.sFullPath)!=record.sSHA1)
             {
@@ -71,7 +71,7 @@ void InstallModuleProcess::process()
         }
         else
         {
-            QDir::mkdir(record.sFullPath);
+            QDir().mkdir(record.sFullPath);
         }
     }
 

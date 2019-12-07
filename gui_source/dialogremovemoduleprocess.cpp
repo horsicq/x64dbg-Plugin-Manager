@@ -21,14 +21,31 @@
 #include "dialogremovemoduleprocess.h"
 #include "ui_dialogremovemoduleprocess.h"
 
-DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent) :
+DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, Utils::MDATA *pMData) :
     QDialog(parent),
     ui(new Ui::DialogRemoveModuleProcess)
 {
     ui->setupUi(this);
+
+    this->pMData=pMData;
 }
 
 DialogRemoveModuleProcess::~DialogRemoveModuleProcess()
 {
     delete ui;
+}
+
+void DialogRemoveModuleProcess::on_pushButtonCancel_clicked()
+{
+
+}
+
+void DialogRemoveModuleProcess::onCompleted(qint64 nElapsed)
+{
+
+}
+
+void DialogRemoveModuleProcess::timerSlot()
+{
+
 }

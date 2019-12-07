@@ -22,6 +22,8 @@
 #define DIALOGREMOVEMODULE_H
 
 #include <QDialog>
+#include "dialogremovemoduleprocess.h"
+#include "../utils.h"
 
 namespace Ui {
 class DialogRemoveModule;

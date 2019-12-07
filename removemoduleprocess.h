@@ -22,6 +22,8 @@
 #define REMOVEMODULEPROCESS_H
 
 #include <QObject>
+#include <QElapsedTimer>
+#include "utils.h"
 
 class RemoveModuleProcess : public QObject
 {
@@ -29,10 +31,21 @@ class RemoveModuleProcess : public QObject
 
 public:
     explicit RemoveModuleProcess(QObject *parent=nullptr);
+    void setData(Utils::MDATA *pMData);
+    void stop();
+    Utils::STATS getCurrentStats();
 
 signals:
+    void errorMessage(QString sMessage);
+    void completed(qint64 nElapsedTime);
 
 public slots:
+    void process();
+
+private:
+    Utils::MDATA *pMData;
+    bool bIsStop;
+    Utils::STATS currentStats;
 };
 
 #endif // REMOVEMODULEPROCESS_H

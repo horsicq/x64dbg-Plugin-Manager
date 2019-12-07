@@ -22,5 +22,39 @@
 
 RemoveModuleProcess::RemoveModuleProcess(QObject *parent) : QObject(parent)
 {
+    bIsStop=false;
+    currentStats={};
+}
 
+void RemoveModuleProcess::setData(Utils::MDATA *pMData)
+{
+    this->pMData=pMData;
+}
+
+void RemoveModuleProcess::stop()
+{
+    bIsStop=true;
+}
+
+Utils::STATS RemoveModuleProcess::getCurrentStats()
+{
+    return currentStats;
+}
+
+void RemoveModuleProcess::process()
+{
+    QElapsedTimer elapsedTimer;
+    elapsedTimer.start();
+
+    bIsStop=false;
+
+
+    int nCount=pMData->listRecords.count();
+
+    for(int i=0;(i<nCount)&&(!bIsStop);i++)
+    {
+        // TODO
+    }
+
+    emit completed(elapsedTimer.elapsed());
 }
