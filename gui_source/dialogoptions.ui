@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>462</width>
-    <height>194</height>
+    <width>463</width>
+    <height>221</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,6 +50,37 @@
       </item>
       <item>
        <widget class="QToolButton" name="toolButtonRootPath">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBoxDataPath">
+     <property name="title">
+      <string>Data path</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <property name="leftMargin">
+       <number>1</number>
+      </property>
+      <property name="topMargin">
+       <number>1</number>
+      </property>
+      <property name="rightMargin">
+       <number>1</number>
+      </property>
+      <property name="bottomMargin">
+       <number>1</number>
+      </property>
+      <item>
+       <widget class="QLineEdit" name="lineEditDataPath"/>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButtonDataPath">
         <property name="text">
          <string>...</string>
         </property>

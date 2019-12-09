@@ -31,6 +31,7 @@ DialogOptions::DialogOptions(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions)
 
     ui->checkBoxStayOnTop->setChecked(pOptions->bStayOnTop);
     ui->lineEditRootPath->setText(pOptions->sRootPath);
+    ui->lineEditDataPath->setText(pOptions->sDataPath);
     ui->lineEditJSONFile->setText(pOptions->sJSONFile);
 }
 
@@ -45,6 +46,7 @@ void DialogOptions::loadOptions(XPLUGINMANAGER::OPTIONS *pOptions)
 
     pOptions->bStayOnTop=settings.value("StayOnTop",false).toBool();
     pOptions->sRootPath=settings.value("RootPath","").toString(); // TODO
+    pOptions->sDataPath=settings.value("DataPath","$app/data").toString();
     pOptions->sJSONFile=settings.value("JSONFile",X_JSON_DEFAULT).toString();
 }
 
@@ -54,6 +56,7 @@ void DialogOptions::saveOptions(XPLUGINMANAGER::OPTIONS *pOptions)
 
     settings.setValue("StayOnTop",pOptions->bStayOnTop);
     settings.setValue("RootPath",pOptions->sRootPath);
+    settings.setValue("DataPath",pOptions->sDataPath);
     settings.setValue("JSONFile",pOptions->sJSONFile);
 }
 
@@ -61,6 +64,7 @@ void DialogOptions::on_pushButtonOK_clicked()
 {
     pOptions->bStayOnTop=ui->checkBoxStayOnTop->isChecked();
     pOptions->sRootPath=ui->lineEditRootPath->text();
+    pOptions->sDataPath=ui->lineEditDataPath->text();
     pOptions->sJSONFile=ui->lineEditJSONFile->text();
 
     this->close();
@@ -78,5 +82,15 @@ void DialogOptions::on_toolButtonRootPath_clicked()
     if(sDirectoryName!="")
     {
         ui->lineEditRootPath->setText(sDirectoryName);
+    }
+}
+
+void DialogOptions::on_toolButtonDataPath_clicked()
+{
+    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select data directory"),ui->lineEditDataPath->text());
+
+    if(sDirectoryName!="")
+    {
+        ui->lineEditDataPath->setText(sDirectoryName);
     }
 }

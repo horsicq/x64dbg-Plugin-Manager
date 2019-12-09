@@ -31,6 +31,32 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     DialogOptions::loadOptions(&options);
 
+    if(!XBinary::isDirectoryExists(options.sRootPath))
+    {
+        options.sRootPath="";
+    }
+
+    if(options.sRootPath=="")
+    {
+        QMessageBox::information(this,tr("Information"),tr("Please select a root directory for x64dbg"));
+
+        QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select root directory"));
+
+        if(sDirectoryName!="")
+        {
+            options.sRootPath=sDirectoryName;
+        }
+        else
+        {
+            exit(1);
+        }
+    }
+
+    if(options.sRootPath=="")
+    {
+        exit(1);
+    }
+
     // TODO
     // Drag and Drop plugins
 }

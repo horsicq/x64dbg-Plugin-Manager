@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include "../global.h"
+#include "../utils.h"
 
 namespace Ui {
 class DialogOptions;
@@ -46,6 +47,7 @@ private slots:
     void on_pushButtonOK_clicked();
     void on_pushButtonCancel_clicked();
     void on_toolButtonRootPath_clicked();
+    void on_toolButtonDataPath_clicked();
 
 private:
     Ui::DialogOptions *ui;

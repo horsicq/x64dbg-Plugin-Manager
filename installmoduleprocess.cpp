@@ -71,7 +71,7 @@ void InstallModuleProcess::process()
         }
         else
         {
-            QDir().mkdir(record.sFullPath);
+            XBinary::createDirectory(record.sFullPath);
         }
     }
 
