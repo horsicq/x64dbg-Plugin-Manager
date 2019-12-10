@@ -54,6 +54,8 @@ private slots:
     void _currentDate();
     void on_dateEdit_dateChanged(const QDate &date);
     void on_lineEditInfo_textChanged(const QString &sInfo);
+    void on_lineEditAuthor_textChanged(const QString &sAuthor);
+    void on_lineEditBugreport_textChanged(const QString &sBugreport);
 
 signals:
     void errorMessage(QString sMessage);

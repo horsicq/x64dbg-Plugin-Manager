@@ -61,7 +61,7 @@ void InstallModuleProcess::process()
 
         if(record.bIsFile)
         {
-            XArchive::RECORD archiveRecord=XArchive::getArchiveRecord(record.sPath,&listZipRecords);
+            XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("files/"+record.sPath,&listZipRecords);
             zip.decompressToFile(&archiveRecord,record.sFullPath);
 
             if(XBinary::getHash(XBinary::HASH_SHA1,record.sFullPath)!=record.sSHA1)

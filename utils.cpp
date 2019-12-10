@@ -116,6 +116,8 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
     recordObject.insert("Name",             QJsonValue::fromVariant(pMData->sName));
     recordObject.insert("Version",          QJsonValue::fromVariant(pMData->sVersion));
     recordObject.insert("Date",             QJsonValue::fromVariant(pMData->sDate));
+    recordObject.insert("Author",           QJsonValue::fromVariant(pMData->sAuthor));
+    recordObject.insert("Bugreport",        QJsonValue::fromVariant(pMData->sBugreport));
     recordObject.insert("Info",             QJsonValue::fromVariant(pMData->sInfo));
     recordObject.insert("Size",             QJsonValue::fromVariant(pMData->nSize));
     recordObject.insert("CompressedSize",   QJsonValue::fromVariant(pMData->nCompressedSize));
@@ -198,6 +200,8 @@ Utils::MDATA Utils::getMDataFromJSON(QIODevice *pDevice, QString sRootPath)
         result.sName            =rootObj.value("Name").toString();
         result.sVersion         =rootObj.value("Version").toString();
         result.sDate            =rootObj.value("Date").toString();
+        result.sAuthor          =rootObj.value("Author").toString();
+        result.sBugreport       =rootObj.value("Bugreport").toString();
         result.sInfo            =rootObj.value("Info").toString();
         result.nSize            =rootObj.value("Size").toInt();
         result.nCompressedSize  =rootObj.value("CompressedSize").toInt();

@@ -51,7 +51,7 @@
    <item>
     <widget class="QGroupBox" name="groupBoxRecords">
      <property name="title">
-      <string>Records</string>
+      <string>Files</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_6">
       <property name="leftMargin">

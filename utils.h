@@ -55,6 +55,8 @@ public:
         QString sName;
         QString sVersion;
         QString sDate;
+        QString sAuthor;
+        QString sBugreport;
         QString sInfo;
         QString sRoot;
         QString sBundleName;

@@ -52,6 +52,8 @@ void DialogCreateModule::on_pushButtonLoad_clicked()
         ui->lineEditName->setText(settings.value("Name","").toString());
         ui->lineEditVersion->setText(settings.value("Version","").toString());
         ui->dateEdit->setDate(QDate::fromString(settings.value("Date",QDate::currentDate().toString("yyyy-MM-dd")).toString(),"yyyy-MM-dd"));
+        ui->lineEditAuthor->setText(settings.value("Author","").toString());
+        ui->lineEditBugreport->setText(settings.value("Bugreport","").toString());
         ui->lineEditInfo->setText(settings.value("Info","").toString());
         ui->lineEditRoot->setText(settings.value("Root","").toString());
     }
@@ -71,6 +73,8 @@ void DialogCreateModule::on_pushButtonSave_clicked()
         settings.setValue("Name",ui->lineEditName->text());
         settings.setValue("Version",ui->lineEditVersion->text());
         settings.setValue("Date",ui->dateEdit->date().toString("yyyy-MM-dd"));
+        settings.setValue("Author",ui->lineEditAuthor->text());
+        settings.setValue("Bugreport",ui->lineEditBugreport->text());
         settings.setValue("Info",ui->lineEditInfo->text());
         settings.setValue("Root",ui->lineEditRoot->text());
     }
@@ -191,4 +195,14 @@ void DialogCreateModule::on_dateEdit_dateChanged(const QDate &date)
 void DialogCreateModule::on_lineEditInfo_textChanged(const QString &sInfo)
 {
     mdata.sInfo=sInfo;
+}
+
+void DialogCreateModule::on_lineEditAuthor_textChanged(const QString &sAuthor)
+{
+    mdata.sAuthor=sAuthor;
+}
+
+void DialogCreateModule::on_lineEditBugreport_textChanged(const QString &sBugreport)
+{
+    mdata.sBugreport=sBugreport;
 }
