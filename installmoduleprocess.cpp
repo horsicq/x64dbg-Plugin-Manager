@@ -26,10 +26,11 @@ InstallModuleProcess::InstallModuleProcess(QObject *parent) : QObject(parent)
     currentStats={};
 }
 
-void InstallModuleProcess::setData(Utils::MDATA *pMData, QIODevice *pDevice)
+void InstallModuleProcess::setData(Utils::MDATA *pMData, QIODevice *pDevice, QString sDataPath)
 {
     this->pMData=pMData;
     this->pDevice=pDevice;
+    this->sDataPath=sDataPath;
 }
 
 void InstallModuleProcess::stop()
@@ -74,6 +75,13 @@ void InstallModuleProcess::process()
             XBinary::createDirectory(record.sFullPath);
         }
     }
+
+    // TODO save info
+
+    QString sInfoFileName=XBinary::convertPathName(sDataPath)+QDir::separator()+pMData->sName+".json";
+
+    XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("plugin_info.json",&listZipRecords);
+    zip.decompressToFile(&archiveRecord,sInfoFileName);
 
     emit completed(elapsedTimer.elapsed());
 }

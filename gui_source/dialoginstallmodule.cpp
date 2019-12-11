@@ -28,6 +28,7 @@ DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTION
     ui->setupUi(this);
 
     this->pDevice=pDevice;
+    this->pOptions=pOptions;
 
     mdata=Utils::getMDataFromJSON(pDevice,pOptions->sRootPath);
 
@@ -55,7 +56,7 @@ void DialogInstallModule::on_pushButtonCancel_clicked()
 
 void DialogInstallModule::on_pushButtonOK_clicked()
 {
-    DialogInstallModuleProcess dimp(this,&mdata,pDevice);
+    DialogInstallModuleProcess dimp(this,&mdata,pDevice,pOptions->sDataPath);
 
     connect(&dimp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 

@@ -48,6 +48,7 @@ private:
     Ui::DialogInstallModule *ui;
     Utils::MDATA mdata;
     QIODevice *pDevice;
+    XPLUGINMANAGER::OPTIONS *pOptions;
 };
 
 #endif // DIALOGINSTALLMODULE_H

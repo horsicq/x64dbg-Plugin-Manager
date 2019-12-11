@@ -57,6 +57,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
         exit(1);
     }
 
+    XBinary::createDirectory(XBinary::convertPathName(options.sDataPath));
+
     // TODO
     // Drag and Drop plugins
 }

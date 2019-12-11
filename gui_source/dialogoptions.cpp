@@ -77,7 +77,7 @@ void DialogOptions::on_pushButtonCancel_clicked()
 
 void DialogOptions::on_toolButtonRootPath_clicked()
 {
-    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select root directory"),ui->lineEditRootPath->text());
+    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select root directory"),XBinary::convertPathName(ui->lineEditRootPath->text()));
 
     if(sDirectoryName!="")
     {
@@ -87,7 +87,7 @@ void DialogOptions::on_toolButtonRootPath_clicked()
 
 void DialogOptions::on_toolButtonDataPath_clicked()
 {
-    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select data directory"),ui->lineEditDataPath->text());
+    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select data directory"),XBinary::convertPathName(ui->lineEditDataPath->text()));
 
     if(sDirectoryName!="")
     {

@@ -54,6 +54,7 @@ void CreateModuleProcess::process()
     currentStats.nTotal=pMData->listRecords.count();
 
     QString sBundleFileName=pMData->sBundlePath+QDir::separator()+pMData->sBundleName+".x64dbg.zip";
+    QString sBundleInfoFileName=pMData->sBundlePath+QDir::separator()+pMData->sBundleName+".x64dbg.json";
 
     bool bSuccess=true;
 
@@ -129,7 +130,6 @@ void CreateModuleProcess::process()
                 currentStats.nCurrent=i+1;
             }
 
-            // TODO info file
             QByteArray baInfoFile=Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords);
 
             QBuffer bufferInfoFile(&baInfoFile);
@@ -150,6 +150,8 @@ void CreateModuleProcess::process()
 
                 bufferInfoFile.close();
             }
+
+            XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords,true)); // TODO errors
 
             if(!bIsStop)
             {
