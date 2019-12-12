@@ -54,14 +54,20 @@ void InstallModuleProcess::process()
 
     QList<XArchive::RECORD> listZipRecords=zip.getRecords();
 
-    int nCount=pMData->listRecords.count();
+    currentStats.nTotal=pMData->listRecords.count();
 
-    for(int i=0;(i<nCount)&&(!bIsStop);i++)
+    for(qint32 i=0;(i<currentStats.nTotal)&&(!bIsStop);i++)
     {
         Utils::RECORD record=pMData->listRecords.at(i);
 
         if(record.bIsFile)
         {
+            if(XBinary::isFileExists(record.sFullPath))
+            {
+                XBinary::removeFile(record.sFullPath);
+                // TODO handle errors
+            }
+
             XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("files/"+record.sPath,&listZipRecords);
             zip.decompressToFile(&archiveRecord,record.sFullPath);
 
@@ -74,11 +80,17 @@ void InstallModuleProcess::process()
         {
             XBinary::createDirectory(record.sFullPath);
         }
+
+        currentStats.nCurrent=i+1;
     }
 
-    // TODO save info
+    QString sInfoFileName=XBinary::convertPathName(sDataPath)+QDir::separator()+"installed"+QDir::separator()+pMData->sName+".json";
 
-    QString sInfoFileName=XBinary::convertPathName(sDataPath)+QDir::separator()+pMData->sName+".json";
+    if(XBinary::isFileExists(sInfoFileName))
+    {
+        XBinary::removeFile(sInfoFileName);
+        // TODO handle errors
+    }
 
     XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("plugin_info.json",&listZipRecords);
     zip.decompressToFile(&archiveRecord,sInfoFileName);

@@ -68,6 +68,16 @@ void CreateModuleProcess::process()
         }
     }
 
+    if(XBinary::isFileExists(sBundleInfoFileName))
+    {
+        bSuccess=XBinary::removeFile(sBundleInfoFileName);
+
+        if(!bSuccess)
+        {
+            emit errorMessage(tr("Cannot remove: %1").arg(sBundleFileName));
+        }
+    }
+
     pMData->nSize=0;
     pMData->nCompressedSize=0;
 
@@ -130,7 +140,7 @@ void CreateModuleProcess::process()
                 currentStats.nCurrent=i+1;
             }
 
-            QByteArray baInfoFile=Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords);
+            QByteArray baInfoFile=Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords,"");
 
             QBuffer bufferInfoFile(&baInfoFile);
 
@@ -151,7 +161,9 @@ void CreateModuleProcess::process()
                 bufferInfoFile.close();
             }
 
-            XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords,true)); // TODO errors
+            QString sSHA1=XBinary::getHash(XBinary::HASH_SHA1,sBundleFileName);
+
+            XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords,sSHA1)); // TODO errors
 
             if(!bIsStop)
             {

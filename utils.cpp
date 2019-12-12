@@ -105,7 +105,7 @@ bool Utils::isPluginValid(QIODevice *pDevice)
     return bResult;
 }
 
-QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords,bool bShort)
+QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords, QString sSHA1)
 {
     QByteArray baResult;
 
@@ -119,7 +119,7 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
     recordObject.insert("Size",             QJsonValue::fromVariant(pMData->nSize));
     recordObject.insert("CompressedSize",   QJsonValue::fromVariant(pMData->nCompressedSize));
 
-    if(!bShort)
+    if(sSHA1=="") // In zip
     {
         int nFilesCount=pListFileRecords->count();
         int nDirectoriesCount=pListDirectoryRecords->count();
@@ -172,6 +172,10 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
         }
 
         recordObject.insert("Remove",   removeArray);
+    }
+    else
+    {
+        recordObject.insert("SHA1",         QJsonValue::fromVariant(sSHA1));
     }
 
     QJsonDocument doc(recordObject);
