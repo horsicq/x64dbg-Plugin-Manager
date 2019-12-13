@@ -58,6 +58,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     }
 
     XBinary::createDirectory(XBinary::convertPathName(options.sDataPath));
+    XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"installed");
+    XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules");
 
     // TODO
     // Drag and Drop plugins

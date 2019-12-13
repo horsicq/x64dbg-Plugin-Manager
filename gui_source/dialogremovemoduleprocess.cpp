@@ -21,13 +21,37 @@
 #include "dialogremovemoduleprocess.h"
 #include "ui_dialogremovemoduleprocess.h"
 
-DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, Utils::MDATA *pMData) :
+DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, QString sModuleFileName) :
     QDialog(parent),
     ui(new Ui::DialogRemoveModuleProcess)
 {
     ui->setupUi(this);
 
-    this->pMData=pMData;
+    this->sModuleFileName=sModuleFileName;
+
+    pRemoveModuleProcess=new RemoveModuleProcess;
+    pThread=new QThread;
+
+    pRemoveModuleProcess->moveToThread(pThread);
+
+    connect(pThread, SIGNAL(started()), pRemoveModuleProcess, SLOT(process()));
+    connect(pRemoveModuleProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
+    connect(pRemoveModuleProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+    bIsRun=false;
+
+    pTimer=new QTimer(this);
+    connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
+
+    pRemoveModuleProcess->setData(sModuleFileName);
+
+    bIsRun=true;
+
+    ui->progressBar->setMaximum(100);
+    ui->progressBar->setValue(0);
+
+    pThread->start();
+    pTimer->start(1000); // 1 sec
 }
 
 DialogRemoveModuleProcess::~DialogRemoveModuleProcess()
@@ -37,15 +61,30 @@ DialogRemoveModuleProcess::~DialogRemoveModuleProcess()
 
 void DialogRemoveModuleProcess::on_pushButtonCancel_clicked()
 {
-
+    if(bIsRun)
+    {
+        pRemoveModuleProcess->stop();
+        pTimer->stop();
+        bIsRun=false;
+    }
 }
 
 void DialogRemoveModuleProcess::onCompleted(qint64 nElapsed)
 {
-
+    Q_UNUSED(nElapsed)
+    // TODO
+    bIsRun=false;
+    this->close();
 }
 
 void DialogRemoveModuleProcess::timerSlot()
 {
+    Utils::STATS stats=pRemoveModuleProcess->getCurrentStats();
 
+    ui->labelInfo->setText(stats.sStatus);
+
+    if(stats.nTotal)
+    {
+        ui->progressBar->setValue((int)((stats.nCurrent*100)/stats.nTotal));
+    }
 }

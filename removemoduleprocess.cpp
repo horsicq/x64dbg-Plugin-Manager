@@ -26,9 +26,9 @@ RemoveModuleProcess::RemoveModuleProcess(QObject *parent) : QObject(parent)
     currentStats={};
 }
 
-void RemoveModuleProcess::setData(Utils::MDATA *pMData)
+void RemoveModuleProcess::setData(QString sModuleFileName)
 {
-    this->pMData=pMData;
+    this->sModuleFileName=sModuleFileName;
 }
 
 void RemoveModuleProcess::stop()
@@ -48,13 +48,14 @@ void RemoveModuleProcess::process()
 
     bIsStop=false;
 
+//    currentStats.nTotal=pMData->listRecords.count();
 
-    int nCount=pMData->listRecords.count();
+//    for(qint32 i=0;(i<currentStats.nTotal)&&(!bIsStop);i++)
+//    {
+//        // TODO
 
-    for(int i=0;(i<nCount)&&(!bIsStop);i++)
-    {
-        // TODO
-    }
+//        currentStats.nCurrent=i+1;
+//    }
 
     emit completed(elapsedTimer.elapsed());
 }
