@@ -21,14 +21,26 @@
 #include "dialogremovemodule.h"
 #include "ui_dialogremovemodule.h"
 
-DialogRemoveModule::DialogRemoveModule(QWidget *parent) :
+DialogRemoveModule::DialogRemoveModule(QWidget *parent,QString sModuleFileName) :
     QDialog(parent),
     ui(new Ui::DialogRemoveModule)
 {
     ui->setupUi(this);
+
+    this->sModuleFileName=sModuleFileName;
 }
 
 DialogRemoveModule::~DialogRemoveModule()
 {
     delete ui;
+}
+
+void DialogRemoveModule::on_pushButtonCancel_clicked()
+{
+    this->close();
+}
+
+void DialogRemoveModule::on_pushButtonOK_clicked()
+{
+    // TODO
 }

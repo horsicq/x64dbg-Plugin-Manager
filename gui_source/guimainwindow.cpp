@@ -61,6 +61,11 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"installed");
     XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules");
 
+    // list.json -> main list
+
+    getModules();
+
+
     // TODO
     // Drag and Drop plugins
 }
@@ -160,4 +165,11 @@ void GuiMainWindow::on_actionExit_triggered()
 void GuiMainWindow::errorMessage(QString sMessage)
 {
     QMessageBox::critical(this,tr("Error"),sMessage);
+}
+
+void GuiMainWindow::getModules()
+{
+    // TODO
+    // Load list from installed
+    // If empty make request
 }

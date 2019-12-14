@@ -240,6 +240,15 @@ Utils::MDATA Utils::getMDataFromJSON(QIODevice *pDevice, QString sRootPath)
     return result;
 }
 
+QList<Utils::MDATA> Utils::getModules(QString sDataPath)
+{
+    QList<Utils::MDATA> listResult;
+
+    // TODO
+
+    return listResult;
+}
+
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)
 {
     QFileInfo fi(sCurrentPath);

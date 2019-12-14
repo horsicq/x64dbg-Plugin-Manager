@@ -51,6 +51,7 @@ private slots:
     void on_pushButtonReload_clicked();
     void on_actionExit_triggered();
     void errorMessage(QString sMessage);
+    void getModules();
 
 private:
     Ui::GuiMainWindow *ui;

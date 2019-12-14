@@ -92,6 +92,8 @@ public:
     static QByteArray createPluginInfo(Utils::MDATA *pMData,QList<Utils::FILE_RECORD> *pListFileRecords,QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords,QString sSHA1);
     static MDATA getMDataFromJSON(QIODevice *pDevice,QString sRootPath);
 
+    static QList<MDATA> getModules(QString sDataPath);
+
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
 };

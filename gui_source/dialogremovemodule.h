@@ -34,11 +34,16 @@ class DialogRemoveModule : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogRemoveModule(QWidget *parent=nullptr);
+    explicit DialogRemoveModule(QWidget *parent, QString sModuleFileName);
     ~DialogRemoveModule();
+
+private slots:
+    void on_pushButtonCancel_clicked();
+    void on_pushButtonOK_clicked();
 
 private:
     Ui::DialogRemoveModule *ui;
+    QString sModuleFileName;
 };
 
 #endif // DIALOGREMOVEMODULE_H
