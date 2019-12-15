@@ -61,13 +61,16 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"installed");
     XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules");
 
-    // list.json -> main list
+    setAcceptDrops(true);
+
+    if(QCoreApplication::arguments().count()>1)
+    {
+        QString sFileName=QCoreApplication::arguments().at(1);
+
+        openPlugin(sFileName);
+    }
 
     getModules();
-
-
-    // TODO
-    // Drag and Drop plugins
 }
 
 GuiMainWindow::~GuiMainWindow()
@@ -106,25 +109,7 @@ void GuiMainWindow::on_actionOpen_triggered()
 
     if(sFileName!="")
     {
-        QFile file;
-
-        file.setFileName(sFileName);
-
-        if(file.open(QIODevice::ReadOnly))
-        {
-            if(Utils::isPluginValid(&file))
-            {
-                DialogInstallModule dialogInstallModule(this,&options,&file);
-
-                dialogInstallModule.exec();
-            }
-            else
-            {
-                errorMessage(tr("Invalid plugin file"));
-            }
-
-            file.close();
-        }
+        openPlugin(sFileName);
     }
 }
 
@@ -172,4 +157,28 @@ void GuiMainWindow::getModules()
     // TODO
     // Load list from installed
     // If empty make request
+    // list.json -> main list
+}
+
+void GuiMainWindow::openPlugin(QString sFileName)
+{
+    QFile file;
+
+    file.setFileName(sFileName);
+
+    if(file.open(QIODevice::ReadOnly))
+    {
+        if(Utils::isPluginValid(&file))
+        {
+            DialogInstallModule dialogInstallModule(this,&options,&file);
+
+            dialogInstallModule.exec();
+        }
+        else
+        {
+            errorMessage(tr("Invalid plugin file"));
+        }
+
+        file.close();
+    }
 }

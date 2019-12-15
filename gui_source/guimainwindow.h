@@ -52,6 +52,7 @@ private slots:
     void on_actionExit_triggered();
     void errorMessage(QString sMessage);
     void getModules();
+    void openPlugin(QString sFileName);
 
 private:
     Ui::GuiMainWindow *ui;
