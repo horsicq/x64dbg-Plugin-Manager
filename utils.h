@@ -90,9 +90,10 @@ public:
     static bool isPluginValid(QIODevice *pDevice);
 
     static QByteArray createPluginInfo(Utils::MDATA *pMData,QList<Utils::FILE_RECORD> *pListFileRecords,QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords,QString sSHA1);
-    static MDATA getMDataFromJSON(QIODevice *pDevice,QString sRootPath);
+    static MDATA getMDataFromZip(QIODevice *pDevice,QString sRootPath);
+    static MDATA getMDataFromData(QByteArray baData, QString sRootPath);
 
-    static QList<MDATA> getModules(QString sDataPath);
+    static QList<MDATA> getInstalledModules(QString sDataPath,QString sRootPath);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);

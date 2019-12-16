@@ -38,7 +38,7 @@ public:
     ~DialogReload();
 
 private slots:
-    void downloadFinished(QNetworkReply *reply);
+    void downloadFinished(QNetworkReply *pReply);
 
     void on_pushButtonCancel_clicked();
 

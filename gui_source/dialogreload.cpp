@@ -37,12 +37,18 @@ DialogReload::~DialogReload()
     delete ui;
 }
 
-void DialogReload::downloadFinished(QNetworkReply *reply)
+void DialogReload::downloadFinished(QNetworkReply *pReply)
 {
-    // TODO
+    QByteArray data=pReply->readAll();
+
+    // TODO write data to file;
+
+    this->close();
 }
 
 void DialogReload::on_pushButtonCancel_clicked()
 {
+    // TODO flag
+    // TODO cancel request
     this->close();
 }

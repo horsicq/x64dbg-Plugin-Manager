@@ -31,7 +31,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     DialogOptions::loadOptions(&options);
 
-    if(!XBinary::isDirectoryExists(options.sRootPath))
+    if(!XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath)))
     {
         options.sRootPath="";
     }
@@ -154,10 +154,15 @@ void GuiMainWindow::errorMessage(QString sMessage)
 
 void GuiMainWindow::getModules()
 {
+    QList<Utils::MDATA> listModules=Utils::getInstalledModules(XBinary::convertPathName(options.sDataPath),XBinary::convertPathName(options.sRootPath));
+
+    int nCount=listModules.count();
     // TODO
     // Load list from installed
     // If empty make request
     // list.json -> main list
+
+    // TODO modules from List
 }
 
 void GuiMainWindow::openPlugin(QString sFileName)

@@ -30,7 +30,7 @@ DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTION
     this->pDevice=pDevice;
     this->pOptions=pOptions;
 
-    mdata=Utils::getMDataFromJSON(pDevice,pOptions->sRootPath);
+    mdata=Utils::getMDataFromZip(pDevice,XBinary::convertPathName(pOptions->sRootPath));
 
     int nCount=mdata.listRecords.count();
 

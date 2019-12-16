@@ -175,6 +175,7 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
     }
     else
     {
+        recordObject.insert("Src",          "");
         recordObject.insert("SHA1",         QJsonValue::fromVariant(sSHA1));
     }
 
@@ -184,7 +185,7 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
     return baResult;
 }
 
-Utils::MDATA Utils::getMDataFromJSON(QIODevice *pDevice, QString sRootPath)
+Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath)
 {
     Utils::MDATA result={};
 
@@ -200,51 +201,84 @@ Utils::MDATA Utils::getMDataFromJSON(QIODevice *pDevice, QString sRootPath)
 
         QByteArray baData=xzip.decompress(&pluginInfoRecord);
 
-        QJsonDocument jsDoc=QJsonDocument::fromJson(baData);
-
-        QJsonObject rootObj=jsDoc.object();
-
-        result.sName            =rootObj.value("Name").toString();
-        result.sVersion         =rootObj.value("Version").toString();
-        result.sDate            =rootObj.value("Date").toString();
-        result.sAuthor          =rootObj.value("Author").toString();
-        result.sBugreport       =rootObj.value("Bugreport").toString();
-        result.sInfo            =rootObj.value("Info").toString();
-        result.nSize            =rootObj.value("Size").toInt();
-        result.nCompressedSize  =rootObj.value("CompressedSize").toInt();
-
-        QJsonArray installArray=rootObj.value("Install").toArray();
-
-        int nCount=installArray.count();
-
-        for(int i=0;i<nCount;i++)
-        {
-            QJsonObject recordObj=installArray.at(i).toObject();
-            RECORD record={};
-
-            record.sPath        =recordObj.value("Path").toString();
-            record.sFullPath    =sRootPath+QDir::separator()+record.sPath;
-            record.sSHA1        =recordObj.value("SHA1").toString();
-
-            QString sAction=recordObj.value("Action").toString();
-
-            if(sAction=="copy_file")
-            {
-                record.bIsFile=true;
-            }
-
-            result.listRecords.append(record);
-        }
+        result=getMDataFromData(baData,sRootPath);
     }
 
     return result;
 }
 
-QList<Utils::MDATA> Utils::getModules(QString sDataPath)
+Utils::MDATA Utils::getMDataFromData(QByteArray baData, QString sRootPath)
+{
+    Utils::MDATA result={};
+
+    QJsonDocument jsDoc=QJsonDocument::fromJson(baData);
+
+    QJsonObject rootObj=jsDoc.object();
+
+    result.sName            =rootObj.value("Name").toString();
+    result.sVersion         =rootObj.value("Version").toString();
+    result.sDate            =rootObj.value("Date").toString();
+    result.sAuthor          =rootObj.value("Author").toString();
+    result.sBugreport       =rootObj.value("Bugreport").toString();
+    result.sInfo            =rootObj.value("Info").toString();
+    result.nSize            =rootObj.value("Size").toInt();
+    result.nCompressedSize  =rootObj.value("CompressedSize").toInt();
+
+    QJsonArray installArray=rootObj.value("Install").toArray();
+
+    int nCount=installArray.count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        QJsonObject recordObj=installArray.at(i).toObject();
+        RECORD record={};
+
+        record.sPath        =recordObj.value("Path").toString();
+        record.sFullPath    =sRootPath+QDir::separator()+record.sPath;
+        record.sSHA1        =recordObj.value("SHA1").toString();
+
+        QString sAction=recordObj.value("Action").toString();
+
+        if(sAction=="copy_file")
+        {
+            record.bIsFile=true;
+        }
+
+        result.listRecords.append(record);
+    }
+
+    return result;
+}
+
+QList<Utils::MDATA> Utils::getInstalledModules(QString sDataPath, QString sRootPath)
 {
     QList<Utils::MDATA> listResult;
 
-    // TODO
+    QDir dir(sDataPath+QDir::separator()+"installed");
+
+    QStringList listFiles=dir.entryList(QStringList()<<"*.json",QDir::Files|QDir::NoSymLinks,QDir::Name);
+
+    int nCount=listFiles.count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        QString sBundleName=listFiles.at(i);
+
+        QFile file;
+        file.setFileName(sBundleName);
+
+        if(file.open(QIODevice::ReadOnly))
+        {
+            QByteArray baData=file.readAll();
+
+            Utils::MDATA record=getMDataFromData(baData,sRootPath);
+            record.sBundlePath=sBundleName;
+
+            listResult.append(record);
+
+            file.close();
+        }
+    }
 
     return listResult;
 }
