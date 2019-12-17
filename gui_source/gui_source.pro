@@ -10,6 +10,7 @@ TEMPLATE = app
 include(../build.pri)
 
 SOURCES += \
+    ../getfilefromserverprocess.cpp \
     ../installmoduleprocess.cpp \
     ../removemoduleprocess.cpp \
     ../utils.cpp \
@@ -17,16 +18,17 @@ SOURCES += \
     dialogabout.cpp \
     dialogcreatemodule.cpp \
     dialogcreatemoduleprocess.cpp \
+    dialoggetfilefromserver.cpp \
     dialoginstallmodule.cpp \
     dialoginstallmoduleprocess.cpp \
     dialogoptions.cpp \
-    dialogreload.cpp \
     dialogremovemodule.cpp \
     dialogremovemoduleprocess.cpp \
     guimainwindow.cpp \
     main_gui.cpp
 
 HEADERS += \
+    ../getfilefromserverprocess.h \
     ../global.h \
     ../installmoduleprocess.h \
     ../removemoduleprocess.h \
@@ -35,10 +37,10 @@ HEADERS += \
     dialogabout.h \
     dialogcreatemodule.h \
     dialogcreatemoduleprocess.h \
+    dialoggetfilefromserver.h \
     dialoginstallmodule.h \
     dialoginstallmoduleprocess.h \
     dialogoptions.h \
-    dialogreload.h \
     dialogremovemodule.h \
     dialogremovemoduleprocess.h \
     guimainwindow.h
@@ -47,6 +49,7 @@ FORMS += \
     dialogabout.ui \
     dialogcreatemodule.ui \
     dialogcreatemoduleprocess.ui \
+    dialoggetfilefromserver.ui \
     dialoginstallmodule.ui \
     dialoginstallmoduleprocess.ui \
     dialogoptions.ui \

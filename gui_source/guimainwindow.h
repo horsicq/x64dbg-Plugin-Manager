@@ -26,7 +26,7 @@
 #include "dialogcreatemodule.h"
 #include "dialoginstallmodule.h"
 #include "dialogoptions.h"
-#include "dialogreload.h"
+#include "dialoggetfilefromserver.h".h"
 #include "dialogabout.h"
 #include <QMessageBox>
 

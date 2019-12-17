@@ -69,6 +69,10 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
         openPlugin(sFileName);
     }
+    else
+    {
+        // TODO if list.json not exist reload
+    }
 
     getModules();
 }
@@ -137,9 +141,11 @@ void GuiMainWindow::on_actionOptions_triggered()
 
 void GuiMainWindow::on_pushButtonReload_clicked()
 {
-    DialogReload dialogReload(this,&options);
+    DialogGetFileFromServer dialogGetFileFromServer(this,options.sJSONFile,XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json");
 
-    dialogReload.exec();
+    dialogGetFileFromServer.exec();
+
+    getModules();
 }
 
 void GuiMainWindow::on_actionExit_triggered()
