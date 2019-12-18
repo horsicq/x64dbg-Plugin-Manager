@@ -71,7 +71,10 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     }
     else
     {
-        // TODO if list.json not exist reload
+        if(!XBinary::isFileExists(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json"))
+        {
+            updateJsonList();
+        }
     }
 
     getModules();
@@ -141,9 +144,7 @@ void GuiMainWindow::on_actionOptions_triggered()
 
 void GuiMainWindow::on_pushButtonReload_clicked()
 {
-    DialogGetFileFromServer dialogGetFileFromServer(this,options.sJSONFile,XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json");
-
-    dialogGetFileFromServer.exec();
+    updateJsonList();
 
     getModules();
 }
@@ -160,9 +161,9 @@ void GuiMainWindow::errorMessage(QString sMessage)
 
 void GuiMainWindow::getModules()
 {
-    QList<Utils::MDATA> listModules=Utils::getInstalledModules(XBinary::convertPathName(options.sDataPath),XBinary::convertPathName(options.sRootPath));
+    QList<Utils::MDATA> listInstalledModules=Utils::getInstalledModules(XBinary::convertPathName(options.sDataPath),XBinary::convertPathName(options.sRootPath));
 
-    int nCount=listModules.count();
+    int nCount=listInstalledModules.count();
     // TODO
     // Load list from installed
     // If empty make request
@@ -192,4 +193,11 @@ void GuiMainWindow::openPlugin(QString sFileName)
 
         file.close();
     }
+}
+
+void GuiMainWindow::updateJsonList()
+{
+    DialogGetFileFromServer dialogGetFileFromServer(this,options.sJSONFile,XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json");
+
+    dialogGetFileFromServer.exec();
 }

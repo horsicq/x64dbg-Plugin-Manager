@@ -20,7 +20,7 @@
       <item>
        <widget class="QPushButton" name="pushButtonReload">
         <property name="text">
-         <string>Reload</string>
+         <string>Get list from server</string>
         </property>
        </widget>
       </item>

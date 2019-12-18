@@ -22,7 +22,7 @@
 
 GetFileFromServerProcess::GetFileFromServerProcess(QObject *parent) : QObject(parent)
 {
-
+    reply=0;
 }
 
 void GetFileFromServerProcess::setData(QString sLink, QString sFileName)
@@ -33,22 +33,39 @@ void GetFileFromServerProcess::setData(QString sLink, QString sFileName)
 
 void GetFileFromServerProcess::stop()
 {
-
+    if(reply)
+    {
+        reply->abort();
+    }
 }
 
 void GetFileFromServerProcess::process()
 {
+    QElapsedTimer elapsedTimer;
+    elapsedTimer.start();
+
     QNetworkAccessManager nam;
     QNetworkRequest *pRequest=new QNetworkRequest(QUrl(sLink));
-    QNetworkReply *reply=nam.get(*pRequest);
+    reply=nam.get(*pRequest);
     QEventLoop loop;
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
 
     if(reply->bytesAvailable())
     {
-        reply->readAll();
+        QByteArray baData=reply->readAll();
+
+        if(XBinary::isFileExists(sFileName))
+        {
+            XBinary::removeFile(sFileName);
+            // TODO handle errors
+        }
+
+        XBinary::writeToFile(sFileName,baData); // TODO handle errors
     }
 
+    reply->deleteLater();
     delete pRequest;
+
+    emit completed(elapsedTimer.elapsed());
 }

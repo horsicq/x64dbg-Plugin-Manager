@@ -28,7 +28,7 @@
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 
-#define X_JSON_DEFAULT "https://github.com/x64dbg/PluginManager/blob/master/plugins/root.json"
+#define X_JSON_DEFAULT "https://raw.githubusercontent.com/x64dbg/PluginManager/master/plugins/root.json"
 
 namespace XPLUGINMANAGER
 {

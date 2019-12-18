@@ -26,7 +26,7 @@
 #include "dialogcreatemodule.h"
 #include "dialoginstallmodule.h"
 #include "dialogoptions.h"
-#include "dialoggetfilefromserver.h".h"
+#include "dialoggetfilefromserver.h"
 #include "dialogabout.h"
 #include <QMessageBox>
 
@@ -53,6 +53,7 @@ private slots:
     void errorMessage(QString sMessage);
     void getModules();
     void openPlugin(QString sFileName);
+    void updateJsonList();
 
 private:
     Ui::GuiMainWindow *ui;

@@ -47,6 +47,7 @@ private:
     bool bIsStop;
     QString sLink;
     QString sFileName;
+    QNetworkReply *reply;
 };
 
 #endif // GETFILEFROMSERVERPROCESS_H
