@@ -77,6 +77,36 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
         }
     }
 
+    ui->tableWidgetPlugins->setColumnCount(CN_size);
+    ui->tableWidgetPlugins->setRowCount(0);
+
+    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_NAME,            new QTableWidgetItem(tr("Name")));
+    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_INFO,            new QTableWidgetItem(tr("Information")));
+    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_32,              new QTableWidgetItem(tr("32")));
+    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_64,              new QTableWidgetItem(tr("64")));
+    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_CURRENTVERSION,  new QTableWidgetItem(tr("Current")));
+    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_LASTVERSION,     new QTableWidgetItem(tr("Last")));
+    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_INSTALL,         new QTableWidgetItem(""));
+    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_REMOVE,          new QTableWidgetItem(""));
+
+    ui->tableWidgetPlugins->setColumnWidth(CN_NAME,                     100);
+    ui->tableWidgetPlugins->setColumnWidth(CN_INFO,                     300);
+    ui->tableWidgetPlugins->setColumnWidth(CN_32,                       8);
+    ui->tableWidgetPlugins->setColumnWidth(CN_64,                       8);
+    ui->tableWidgetPlugins->setColumnWidth(CN_CURRENTVERSION,           80);
+    ui->tableWidgetPlugins->setColumnWidth(CN_LASTVERSION,              80);
+    ui->tableWidgetPlugins->setColumnWidth(CN_INSTALL,                  60);
+    ui->tableWidgetPlugins->setColumnWidth(CN_REMOVE,                   60);
+
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_NAME,           QHeaderView::Interactive);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_INFO,           QHeaderView::Stretch);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_32,             QHeaderView::Interactive);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_64,             QHeaderView::Interactive);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_CURRENTVERSION, QHeaderView::Interactive);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_LASTVERSION,    QHeaderView::Interactive);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_INSTALL,        QHeaderView::Interactive);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_REMOVE,         QHeaderView::Interactive);
+
     getModules();
 }
 
@@ -162,14 +192,17 @@ void GuiMainWindow::errorMessage(QString sMessage)
 void GuiMainWindow::getModules()
 {
     QList<Utils::MDATA> listInstalledModules=Utils::getInstalledModules(XBinary::convertPathName(options.sDataPath),XBinary::convertPathName(options.sRootPath));
+    QList<Utils::MDATA> listModulesFromJSON=Utils::getModulesFromJSONFile(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json");
+    QList<Utils::MDATA> listModules=Utils::mergeMData(&listInstalledModules,&listModulesFromJSON);
 
-    int nCount=listInstalledModules.count();
-    // TODO
-    // Load list from installed
-    // If empty make request
-    // list.json -> main list
+    int nCount=listModules.count();
 
-    // TODO modules from List
+    ui->tableWidgetPlugins->setRowCount(nCount);
+
+    for(int i=0;i<nCount;i++)
+    {
+
+    }
 }
 
 void GuiMainWindow::openPlugin(QString sFileName)

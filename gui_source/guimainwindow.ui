@@ -47,7 +47,14 @@
      </layout>
     </item>
     <item>
-     <widget class="QTableWidget" name="tableWidgetPlugins"/>
+     <widget class="QTableWidget" name="tableWidgetPlugins">
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderDefaultSectionSize">
+       <number>23</number>
+      </attribute>
+     </widget>
     </item>
    </layout>
   </widget>

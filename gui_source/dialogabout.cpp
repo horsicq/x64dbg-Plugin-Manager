@@ -26,7 +26,10 @@ DialogAbout::DialogAbout(QWidget *parent) :
     ui(new Ui::DialogAbout)
 {
     ui->setupUi(this);
-    // TODO
+
+    ui->labelVersion->setText(QString("<span style=\" font-weight:600;\">%1 %2</span>")
+                                  .arg(QApplication::applicationName())
+                                  .arg(QApplication::applicationVersion()));
 }
 
 DialogAbout::~DialogAbout()

@@ -53,7 +53,10 @@ public:
     struct MDATA
     {
         QString sName;
-        QString sVersion;
+        QString sCurrentVersion;
+        QString sLastVersion;
+        bool bIs32;
+        bool bIs64;
         QString sDate;
         QString sAuthor;
         QString sBugreport;
@@ -94,6 +97,9 @@ public:
     static MDATA getMDataFromData(QByteArray baData, QString sRootPath);
 
     static QList<MDATA> getInstalledModules(QString sDataPath,QString sRootPath);
+    static QList<MDATA> getModulesFromJSONFile(QString sJSONFilePath);
+
+    static QList<MDATA> mergeMData(QList<MDATA> *pList1,QList<MDATA> *pList2);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);

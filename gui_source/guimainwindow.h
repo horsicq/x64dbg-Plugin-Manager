@@ -38,6 +38,19 @@ class GuiMainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    enum CN
+    {
+        CN_NAME=0,
+        CN_INFO,
+        CN_32,
+        CN_64,
+        CN_CURRENTVERSION,
+        CN_LASTVERSION,
+        CN_INSTALL,
+        CN_REMOVE,
+        CN_size
+    };
+
 public:
     GuiMainWindow(QWidget *parent=nullptr);
     ~GuiMainWindow();

@@ -174,7 +174,7 @@ void DialogCreateModule::on_lineEditName_textChanged(const QString &sName)
 void DialogCreateModule::on_lineEditVersion_textChanged(const QString &sVersion)
 {
     // TODO Checks
-    mdata.sVersion=sVersion;
+    mdata.sCurrentVersion=sVersion;
 }
 
 void DialogCreateModule::on_pushButtonCurrentDate_clicked()
