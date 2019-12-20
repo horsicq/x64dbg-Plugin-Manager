@@ -48,11 +48,26 @@
     </item>
     <item>
      <widget class="QTableWidget" name="tableWidgetPlugins">
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
       <attribute name="horizontalHeaderStretchLastSection">
        <bool>false</bool>
       </attribute>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderMinimumSectionSize">
+       <number>20</number>
+      </attribute>
       <attribute name="verticalHeaderDefaultSectionSize">
-       <number>23</number>
+       <number>20</number>
       </attribute>
      </widget>
     </item>
@@ -64,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>659</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

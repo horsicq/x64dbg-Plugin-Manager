@@ -57,7 +57,8 @@ public:
         QString sLastVersion;
         bool bIs32;
         bool bIs64;
-        QString sDate;
+        QString sCurrentDate;
+        QString sLastDate;
         QString sAuthor;
         QString sBugreport;
         QString sInfo;

@@ -71,5 +71,6 @@ private slots:
 private:
     Ui::GuiMainWindow *ui;
     XPLUGINMANAGER::OPTIONS options;
+    QList<Utils::MDATA> _listModules;
 };
 #endif // GUIMAINWINDOW_H

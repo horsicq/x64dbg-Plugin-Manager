@@ -193,15 +193,30 @@ void GuiMainWindow::getModules()
 {
     QList<Utils::MDATA> listInstalledModules=Utils::getInstalledModules(XBinary::convertPathName(options.sDataPath),XBinary::convertPathName(options.sRootPath));
     QList<Utils::MDATA> listModulesFromJSON=Utils::getModulesFromJSONFile(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json");
-    QList<Utils::MDATA> listModules=Utils::mergeMData(&listInstalledModules,&listModulesFromJSON);
+    _listModules=Utils::mergeMData(&listInstalledModules,&listModulesFromJSON);
 
-    int nCount=listModules.count();
+    int nCount=_listModules.count();
 
     ui->tableWidgetPlugins->setRowCount(nCount);
 
     for(int i=0;i<nCount;i++)
     {
+        QTableWidgetItem *pItemName=new QTableWidgetItem;
+        pItemName->setText(_listModules.at(i).sName);
+        pItemName->setData(Qt::UserRole,i);
+        ui->tableWidgetPlugins->setItem(i,CN_NAME,pItemName);
 
+        QTableWidgetItem *pItemInfo=new QTableWidgetItem;
+        pItemInfo->setText(_listModules.at(i).sInfo);
+        ui->tableWidgetPlugins->setItem(i,CN_INFO,pItemInfo);
+
+        QTableWidgetItem *pItemCurrentVersion=new QTableWidgetItem;
+        pItemCurrentVersion->setText(_listModules.at(i).sCurrentVersion);
+        ui->tableWidgetPlugins->setItem(i,CN_CURRENTVERSION,pItemCurrentVersion);
+
+        QTableWidgetItem *pItemLastVersion=new QTableWidgetItem;
+        pItemLastVersion->setText(_listModules.at(i).sLastVersion);
+        ui->tableWidgetPlugins->setItem(i,CN_LASTVERSION,pItemLastVersion);
     }
 }
 

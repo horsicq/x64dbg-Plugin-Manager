@@ -189,7 +189,7 @@ void DialogCreateModule::_currentDate()
 
 void DialogCreateModule::on_dateEdit_dateChanged(const QDate &date)
 {
-    mdata.sDate=date.toString("yyyy-MM-dd");
+    mdata.sCurrentDate=date.toString("yyyy-MM-dd");
 }
 
 void DialogCreateModule::on_lineEditInfo_textChanged(const QString &sInfo)

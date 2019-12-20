@@ -63,9 +63,9 @@ QString Utils::createBundleName(Utils::MDATA *pMData)
         sResult+=QString("_%1").arg(pMData->sCurrentVersion);
     }
 
-    if(pMData->sDate!="")
+    if(pMData->sCurrentDate!="")
     {
-        sResult+=QString("_%1").arg(pMData->sDate);
+        sResult+=QString("_%1").arg(pMData->sCurrentDate);
     }
 
     return sResult;
@@ -112,7 +112,7 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
     QJsonObject recordObject;
     recordObject.insert("Name",             QJsonValue::fromVariant(pMData->sName));
     recordObject.insert("Version",          QJsonValue::fromVariant(pMData->sCurrentVersion));
-    recordObject.insert("Date",             QJsonValue::fromVariant(pMData->sDate));
+    recordObject.insert("Date",             QJsonValue::fromVariant(pMData->sCurrentDate));
     recordObject.insert("Author",           QJsonValue::fromVariant(pMData->sAuthor));
     recordObject.insert("Bugreport",        QJsonValue::fromVariant(pMData->sBugreport));
     recordObject.insert("Info",             QJsonValue::fromVariant(pMData->sInfo));
@@ -217,7 +217,7 @@ Utils::MDATA Utils::getMDataFromData(QByteArray baData, QString sRootPath)
 
     result.sName            =rootObj.value("Name").toString();
     result.sCurrentVersion         =rootObj.value("Version").toString();
-    result.sDate            =rootObj.value("Date").toString();
+    result.sCurrentDate            =rootObj.value("Date").toString();
     result.sAuthor          =rootObj.value("Author").toString();
     result.sBugreport       =rootObj.value("Bugreport").toString();
     result.sInfo            =rootObj.value("Info").toString();
