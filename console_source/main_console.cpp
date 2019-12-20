@@ -19,10 +19,40 @@
 // SOFTWARE.
 //
 #include <QCoreApplication>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+#include "../global.h"
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setOrganizationName(X_ORGANIZATIONNAME);
+    QCoreApplication::setOrganizationDomain(X_ORGANIZATIONDOMAIN);
+    QCoreApplication::setApplicationName(X_APPLICATIONNAME);
+    QCoreApplication::setApplicationVersion(X_APPLICATIONVERSION);
+
     QCoreApplication a(argc, argv);
 
-    return a.exec();
+    QCommandLineParser parser;
+    QString sDescription;
+    sDescription.append(QString("%1 v%2\n").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
+    sDescription.append(QString("%1\n").arg("Copyright(C) 2019 hors<horsicq@gmail.com> Web: http://ntinfo.biz"));
+    parser.setApplicationDescription(sDescription);
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    parser.addPositionalArgument("plugin","The plugin to open.");
+
+    QCommandLineOption clGlobalRoot     (QStringList()<<"g"<<"globalroot",      "A path of global root path.");
+    QCommandLineOption clRoot           (QStringList()<<"r"<<"root",            "A path of root path.");
+
+    parser.addOption(clGlobalRoot);
+    parser.addOption(clRoot);
+
+    parser.process(app);
+
+    QList<QString> listArgs=parser.positionalArguments();
+
+    // TODO
+
+    return 0;
 }
