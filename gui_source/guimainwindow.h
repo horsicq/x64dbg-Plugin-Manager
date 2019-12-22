@@ -25,10 +25,13 @@
 #include "../global.h"
 #include "dialogcreatemodule.h"
 #include "dialoginstallmodule.h"
+#include "dialogremovemodule.h"
 #include "dialogoptions.h"
 #include "dialoggetfilefromserver.h"
 #include "dialogabout.h"
 #include <QMessageBox>
+#include <QCheckBox>
+#include <QToolButton>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GuiMainWindow; }
@@ -67,6 +70,8 @@ private slots:
     void getModules();
     void openPlugin(QString sFileName);
     void updateJsonList();
+    void installButtonSlot();
+    void removeButtonSlot();
 
 private:
     Ui::GuiMainWindow *ui;
