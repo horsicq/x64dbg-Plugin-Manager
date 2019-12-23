@@ -21,12 +21,13 @@
 #include "dialogremovemoduleprocess.h"
 #include "ui_dialogremovemoduleprocess.h"
 
-DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, QString sModuleFileName) :
+DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName) :
     QDialog(parent),
     ui(new Ui::DialogRemoveModuleProcess)
 {
     ui->setupUi(this);
 
+    this->pOptions=pOptions;
     this->sModuleFileName=sModuleFileName;
 
     pRemoveModuleProcess=new RemoveModuleProcess;
@@ -43,12 +44,15 @@ DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, QString sM
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pRemoveModuleProcess->setData(sModuleFileName);
+    pRemoveModuleProcess->setData(pOptions,sModuleFileName);
 
     bIsRun=true;
 
-    ui->progressBar->setMaximum(100);
-    ui->progressBar->setValue(0);
+    ui->progressBarFile->setMaximum(100);
+    ui->progressBarFile->setValue(0);
+
+    ui->progressBarModule->setMaximum(100);
+    ui->progressBarModule->setValue(0);
 
     pThread->start();
     pTimer->start(1000); // 1 sec
@@ -81,10 +85,17 @@ void DialogRemoveModuleProcess::timerSlot()
 {
     Utils::STATS stats=pRemoveModuleProcess->getCurrentStats();
 
-    ui->labelInfo->setText(stats.sFile);
+    ui->labelInfoFile->setText(stats.sFile);
 
     if(stats.nTotalFile)
     {
-        ui->progressBar->setValue((int)((stats.nCurrentFile*100)/stats.nTotalFile));
+        ui->progressBarFile->setValue((int)((stats.nCurrentFile*100)/stats.nTotalFile));
+    }
+
+    ui->labelInfoModule->setText(stats.sModule);
+
+    if(stats.nTotalModule)
+    {
+        ui->progressBarModule->setValue((int)((stats.nCurrentModule*100)/stats.nTotalModule));
     }
 }

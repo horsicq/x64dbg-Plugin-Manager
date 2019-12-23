@@ -127,6 +127,16 @@ void CreateModuleProcess::process()
                 }
                 else
                 {
+                    if(pMData->listRecords.at(i).sPath.toLower()=="x32")
+                    {
+                        pMData->bIs32=true;
+                    }
+
+                    if(pMData->listRecords.at(i).sPath.toLower()=="x64")
+                    {
+                        pMData->bIs64=true;
+                    }
+
                     currentStats.sFile=QString("%1: %2").arg(tr("Add directory")).arg(pMData->listRecords.at(i).sPath);
 
                     Utils::DIRECTORY_RECORD directoryRecord={};

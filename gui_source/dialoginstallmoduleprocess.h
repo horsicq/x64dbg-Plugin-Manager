@@ -51,7 +51,6 @@ private:
     Ui::DialogInstallModuleProcess *ui;
     XPLUGINMANAGER::OPTIONS *pOptions;
     QString sModuleFileName;
-
     InstallModuleProcess *pInstallModuleProcess;
     QThread *pThread;
     bool bIsRun;

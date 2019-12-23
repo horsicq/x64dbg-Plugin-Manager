@@ -26,8 +26,9 @@ RemoveModuleProcess::RemoveModuleProcess(QObject *parent) : QObject(parent)
     currentStats={};
 }
 
-void RemoveModuleProcess::setData(QString sModuleFileName)
+void RemoveModuleProcess::setData(XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName)
 {
+    this->pOptions=pOptions;
     this->sModuleFileName=sModuleFileName;
 }
 

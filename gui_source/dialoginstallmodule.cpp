@@ -21,16 +21,16 @@
 #include "dialoginstallmodule.h"
 #include "ui_dialoginstallmodule.h"
 
-DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleName) :
+DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName) :
     QDialog(parent),
     ui(new Ui::DialogInstallModule)
 {
     ui->setupUi(this);
 
-    this->sModuleName=sModuleName;
     this->pOptions=pOptions;
+    this->sModuleFileName=sModuleFileName;
 
-    mdata=Utils::getMDataFromZip(sModuleName,XBinary::convertPathName(pOptions->sRootPath));
+    mdata=Utils::getMDataFromZip(sModuleFileName,XBinary::convertPathName(pOptions->sRootPath));
 
     int nCount=mdata.listRecords.count();
 
@@ -56,9 +56,11 @@ void DialogInstallModule::on_pushButtonCancel_clicked()
 
 void DialogInstallModule::on_pushButtonOK_clicked()
 {
-    DialogInstallModuleProcess dimp(this,pOptions,sModuleName);
+    DialogInstallModuleProcess dimp(this,pOptions,sModuleFileName);
 
     connect(&dimp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
     dimp.exec();
+
+    this->close();
 }

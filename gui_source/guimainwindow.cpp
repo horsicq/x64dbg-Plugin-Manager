@@ -212,12 +212,12 @@ void GuiMainWindow::getModules()
 
         QCheckBox *pCheckBoxIs32=new QCheckBox(this);
         pCheckBoxIs32->setEnabled(false);
-        pCheckBoxIs32->setChecked(true);
+        pCheckBoxIs32->setChecked(_listModules.at(i).bIs32);
         ui->tableWidgetPlugins->setCellWidget(i,CN_32,pCheckBoxIs32);
 
         QCheckBox *pCheckBoxIs64=new QCheckBox(this);
         pCheckBoxIs64->setEnabled(false);
-        pCheckBoxIs64->setChecked(true);
+        pCheckBoxIs64->setChecked(_listModules.at(i).bIs64);
         ui->tableWidgetPlugins->setCellWidget(i,CN_64,pCheckBoxIs64);
 
         QTableWidgetItem *pItemCurrentVersion=new QTableWidgetItem;
@@ -302,7 +302,7 @@ void GuiMainWindow::removeButtonSlot()
     {
         Utils::MDATA mdata=_listModules.at(nID);
 
-        DialogRemoveModule dialogRemoveModule(this,mdata.sName);
+        DialogRemoveModule dialogRemoveModule(this,&options,mdata.sName);
 
         dialogRemoveModule.exec();
     }
