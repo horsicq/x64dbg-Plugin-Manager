@@ -81,10 +81,10 @@ void DialogCreateModuleProcess::timerSlot()
 {
     Utils::STATS stats=pCreateModuleProcess->getCurrentStats();
 
-    ui->labelInfo->setText(stats.sStatus);
+    ui->labelInfo->setText(stats.sFile);
 
-    if(stats.nTotal)
+    if(stats.nTotalFile)
     {
-        ui->progressBar->setValue((int)((stats.nCurrent*100)/stats.nTotal));
+        ui->progressBar->setValue((int)((stats.nCurrentFile*100)/stats.nTotalFile));
     }
 }

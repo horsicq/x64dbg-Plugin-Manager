@@ -185,6 +185,24 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
     return baResult;
 }
 
+Utils::MDATA Utils::getMDataFromZip(QString sFileName, QString sRootPath)
+{
+    Utils::MDATA result={};
+
+    QFile file;
+
+    file.setFileName(sFileName);
+
+    if(file.open(QIODevice::ReadOnly))
+    {
+        result=getMDataFromZip(&file,sRootPath);
+
+        file.close();
+    }
+
+    return result;
+}
+
 Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath)
 {
     Utils::MDATA result={};

@@ -23,6 +23,7 @@
 GetFileFromServerProcess::GetFileFromServerProcess(QObject *parent) : QObject(parent)
 {
     reply=0;
+    stats={};
 }
 
 void GetFileFromServerProcess::setData(QString sLink, QString sFileName)

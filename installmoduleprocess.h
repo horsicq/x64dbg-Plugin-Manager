@@ -32,7 +32,7 @@ class InstallModuleProcess : public QObject
 
 public:
     explicit InstallModuleProcess(QObject *parent=nullptr);
-    void setData(Utils::MDATA *pMData, QIODevice *pDevice,QString sDataPath);
+    void setData(XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName);
     void stop();
     Utils::STATS getCurrentStats();
 
@@ -44,9 +44,8 @@ public slots:
     void process();
 
 private:
-    Utils::MDATA *pMData;
-    QIODevice *pDevice;
-    QString sDataPath;
+    XPLUGINMANAGER::OPTIONS *pOptions;
+    QString sModuleFileName;
     bool bIsStop;
     Utils::STATS currentStats;
 };

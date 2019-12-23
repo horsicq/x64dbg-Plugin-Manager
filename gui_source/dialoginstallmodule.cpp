@@ -21,16 +21,16 @@
 #include "dialoginstallmodule.h"
 #include "ui_dialoginstallmodule.h"
 
-DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions,QIODevice *pDevice) :
+DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleName) :
     QDialog(parent),
     ui(new Ui::DialogInstallModule)
 {
     ui->setupUi(this);
 
-    this->pDevice=pDevice;
+    this->sModuleName=sModuleName;
     this->pOptions=pOptions;
 
-    mdata=Utils::getMDataFromZip(pDevice,XBinary::convertPathName(pOptions->sRootPath));
+    mdata=Utils::getMDataFromZip(sModuleName,XBinary::convertPathName(pOptions->sRootPath));
 
     int nCount=mdata.listRecords.count();
 
@@ -56,7 +56,7 @@ void DialogInstallModule::on_pushButtonCancel_clicked()
 
 void DialogInstallModule::on_pushButtonOK_clicked()
 {
-    DialogInstallModuleProcess dimp(this,&mdata,pDevice,pOptions->sDataPath);
+    DialogInstallModuleProcess dimp(this,pOptions,sModuleName);
 
     connect(&dimp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 

@@ -244,24 +244,28 @@ void GuiMainWindow::getModules()
 
 void GuiMainWindow::openPlugin(QString sFileName)
 {
-    QFile file;
-
-    file.setFileName(sFileName);
-
-    if(file.open(QIODevice::ReadOnly))
+    if(Utils::isPluginValid(sFileName))
     {
-        if(Utils::isPluginValid(&file))
+        QFileInfo fi(sFileName);
+        QString sDestFile=XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules"+QDir::separator()+fi.fileName();
+
+        if(XBinary::isFileExists(sDestFile))
         {
-            DialogInstallModule dialogInstallModule(this,&options,&file);
+            XBinary::removeFile(sDestFile); // TODO handle errors
+        }
+
+        if(XBinary::copyFile(sFileName,sDestFile))
+        {
+            DialogInstallModule dialogInstallModule(this,&options,sDestFile);
 
             dialogInstallModule.exec();
-        }
-        else
-        {
-            errorMessage(tr("Invalid plugin file"));
-        }
 
-        file.close();
+            getModules();
+        }
+    }
+    else
+    {
+        errorMessage(tr("Invalid plugin file"));
     }
 }
 
@@ -274,7 +278,7 @@ void GuiMainWindow::updateJsonList()
 
 void GuiMainWindow::installButtonSlot()
 {
-    QPushButton *pPushButton=qobject_cast<QPushButton *>(sender());
+    QToolButton *pPushButton=qobject_cast<QToolButton *>(sender());
     qint32 nID=pPushButton->property("ID").toInt();
 
     if(nID<_listModules.count())
@@ -291,7 +295,7 @@ void GuiMainWindow::installButtonSlot()
 
 void GuiMainWindow::removeButtonSlot()
 {
-    QPushButton *pPushButton=qobject_cast<QPushButton *>(sender());
+    QToolButton *pPushButton=qobject_cast<QToolButton *>(sender());
     qint32 nID=pPushButton->property("ID").toInt();
 
     if(nID<_listModules.count())

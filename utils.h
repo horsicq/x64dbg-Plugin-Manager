@@ -37,9 +37,12 @@ class Utils : public QObject
 public:
     struct STATS
     {
-        qint32 nTotal;
-        qint32 nCurrent;
-        QString sStatus;
+        QString sModule;
+        qint32 nTotalModule;
+        qint32 nCurrentModule;
+        QString sFile;
+        qint32 nTotalFile;
+        qint32 nCurrentFile;
     };
 
     struct RECORD
@@ -94,6 +97,7 @@ public:
     static bool isPluginValid(QIODevice *pDevice);
 
     static QByteArray createPluginInfo(Utils::MDATA *pMData,QList<Utils::FILE_RECORD> *pListFileRecords,QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords,QString sSHA1);
+    static MDATA getMDataFromZip(QString sFileName,QString sRootPath);
     static MDATA getMDataFromZip(QIODevice *pDevice,QString sRootPath);
     static MDATA getMDataFromData(QByteArray baData, QString sRootPath);
 

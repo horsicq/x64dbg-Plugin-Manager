@@ -21,13 +21,14 @@
 #include "dialoginstallmoduleprocess.h"
 #include "ui_dialoginstallmoduleprocess.h"
 
-DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, Utils::MDATA *pMData, QIODevice *pDevice, QString sDataPath) :
+DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName) :
     QDialog(parent),
     ui(new Ui::DialogInstallModuleProcess)
 {
     ui->setupUi(this);
 
-    this->pMData=pMData;
+    this->pOptions=pOptions;
+    this->sModuleFileName=sModuleFileName;
 
     pInstallModuleProcess=new InstallModuleProcess;
     pThread=new QThread;
@@ -43,12 +44,15 @@ DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, Utils::M
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pInstallModuleProcess->setData(pMData,pDevice,sDataPath);
+    pInstallModuleProcess->setData(pOptions,sModuleFileName);
 
     bIsRun=true;
 
-    ui->progressBar->setMaximum(100);
-    ui->progressBar->setValue(0);
+    ui->progressBarFile->setMaximum(100);
+    ui->progressBarFile->setValue(0);
+
+    ui->progressBarModule->setMaximum(100);
+    ui->progressBarModule->setValue(0);
 
     pThread->start();
     pTimer->start(1000); // 1 sec
@@ -81,10 +85,17 @@ void DialogInstallModuleProcess::timerSlot()
 {
     Utils::STATS stats=pInstallModuleProcess->getCurrentStats();
 
-    ui->labelInfo->setText(stats.sStatus);
+    ui->labelInfoFile->setText(stats.sFile);
 
-    if(stats.nTotal)
+    if(stats.nTotalFile)
     {
-        ui->progressBar->setValue((int)((stats.nCurrent*100)/stats.nTotal));
+        ui->progressBarFile->setValue((int)((stats.nCurrentFile*100)/stats.nTotalFile));
+    }
+
+    ui->labelInfoModule->setText(stats.sModule);
+
+    if(stats.nTotalModule)
+    {
+        ui->progressBarModule->setValue((int)((stats.nCurrentModule*100)/stats.nTotalModule));
     }
 }

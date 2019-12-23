@@ -48,6 +48,7 @@ private:
     QString sLink;
     QString sFileName;
     QNetworkReply *reply;
+    Utils::STATS stats;
 };
 
 #endif // GETFILEFROMSERVERPROCESS_H

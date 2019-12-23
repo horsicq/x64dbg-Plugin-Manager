@@ -26,11 +26,10 @@ InstallModuleProcess::InstallModuleProcess(QObject *parent) : QObject(parent)
     currentStats={};
 }
 
-void InstallModuleProcess::setData(Utils::MDATA *pMData, QIODevice *pDevice, QString sDataPath)
+void InstallModuleProcess::setData(XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName)
 {
-    this->pMData=pMData;
-    this->pDevice=pDevice;
-    this->sDataPath=sDataPath;
+    this->pOptions=pOptions;
+    this->sModuleFileName=sModuleFileName;
 }
 
 void InstallModuleProcess::stop()
@@ -50,50 +49,61 @@ void InstallModuleProcess::process()
 
     bIsStop=false;
 
-    XZip zip(pDevice);
+    QFile file;
+    file.setFileName(sModuleFileName);
 
-    QList<XArchive::RECORD> listZipRecords=zip.getRecords();
-
-    currentStats.nTotal=pMData->listRecords.count();
-
-    for(qint32 i=0;(i<currentStats.nTotal)&&(!bIsStop);i++)
+    if(file.open(QIODevice::ReadOnly))
     {
-        Utils::RECORD record=pMData->listRecords.at(i);
+        Utils::MDATA mdata=Utils::getMDataFromZip(&file,XBinary::convertPathName(pOptions->sRootPath));
 
-        if(record.bIsFile)
+        XZip zip(&file);
+
+        QList<XArchive::RECORD> listZipRecords=zip.getRecords();
+
+        currentStats.nTotalFile=mdata.listRecords.count();
+
+        for(qint32 i=0;(i<currentStats.nTotalFile)&&(!bIsStop);i++)
         {
-            if(XBinary::isFileExists(record.sFullPath))
+            Utils::RECORD record=mdata.listRecords.at(i);
+
+            if(record.bIsFile)
             {
-                XBinary::removeFile(record.sFullPath);
-                // TODO handle errors
+                if(XBinary::isFileExists(record.sFullPath))
+                {
+                    XBinary::removeFile(record.sFullPath);
+                    // TODO handle errors
+                }
+
+                XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("files/"+record.sPath,&listZipRecords);
+                zip.decompressToFile(&archiveRecord,record.sFullPath);
+
+                if(XBinary::getHash(XBinary::HASH_SHA1,record.sFullPath)!=record.sSHA1)
+                {
+                    qDebug("INVALID HASH"); // TODO
+                }
+            }
+            else
+            {
+                XBinary::createDirectory(record.sFullPath);
             }
 
-            XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("files/"+record.sPath,&listZipRecords);
-            zip.decompressToFile(&archiveRecord,record.sFullPath);
-
-            if(XBinary::getHash(XBinary::HASH_SHA1,record.sFullPath)!=record.sSHA1)
-            {
-                qDebug("INVALID HASH"); // TODO
-            }
+            currentStats.sFile=record.sPath;
+            currentStats.nCurrentFile=i+1;
         }
-        else
+
+        QString sInfoFileName=XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"installed"+QDir::separator()+mdata.sName+".json";
+
+        if(XBinary::isFileExists(sInfoFileName))
         {
-            XBinary::createDirectory(record.sFullPath);
+            XBinary::removeFile(sInfoFileName);
+            // TODO handle errors
         }
 
-        currentStats.nCurrent=i+1;
+        XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("plugin_info.json",&listZipRecords);
+        zip.decompressToFile(&archiveRecord,sInfoFileName);
+
+        file.close();
     }
-
-    QString sInfoFileName=XBinary::convertPathName(sDataPath)+QDir::separator()+"installed"+QDir::separator()+pMData->sName+".json";
-
-    if(XBinary::isFileExists(sInfoFileName))
-    {
-        XBinary::removeFile(sInfoFileName);
-        // TODO handle errors
-    }
-
-    XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("plugin_info.json",&listZipRecords);
-    zip.decompressToFile(&archiveRecord,sInfoFileName);
 
     emit completed(elapsedTimer.elapsed());
 }
