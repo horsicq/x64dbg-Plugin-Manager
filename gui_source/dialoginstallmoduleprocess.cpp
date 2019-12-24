@@ -21,14 +21,14 @@
 #include "dialoginstallmoduleprocess.h"
 #include "ui_dialoginstallmoduleprocess.h"
 
-DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName) :
+DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QList<QString> listModuleFileNames) :
     QDialog(parent),
     ui(new Ui::DialogInstallModuleProcess)
 {
     ui->setupUi(this);
 
     this->pOptions=pOptions;
-    this->sModuleFileName=sModuleFileName;
+    this->listModuleFileNames=listModuleFileNames;
 
     pInstallModuleProcess=new InstallModuleProcess;
     pThread=new QThread;
@@ -44,7 +44,7 @@ DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, XPLUGINM
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pInstallModuleProcess->setData(pOptions,sModuleFileName);
+    pInstallModuleProcess->setData(pOptions,listModuleFileNames);
 
     bIsRun=true;
 

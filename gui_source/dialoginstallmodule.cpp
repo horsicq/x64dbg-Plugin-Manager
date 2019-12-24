@@ -56,7 +56,7 @@ void DialogInstallModule::on_pushButtonCancel_clicked()
 
 void DialogInstallModule::on_pushButtonOK_clicked()
 {
-    DialogInstallModuleProcess dimp(this,pOptions,sModuleFileName);
+    DialogInstallModuleProcess dimp(this,pOptions,QList<QString>()<<sModuleFileName);
 
     connect(&dimp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 

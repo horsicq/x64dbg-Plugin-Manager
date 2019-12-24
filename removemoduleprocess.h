@@ -31,7 +31,7 @@ class RemoveModuleProcess : public QObject
 
 public:
     explicit RemoveModuleProcess(QObject *parent=nullptr);
-    void setData(XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName);
+    void setData(XPLUGINMANAGER::OPTIONS *pOptions, QList<QString> listModuleNames);
     void stop();
     Utils::STATS getCurrentStats();
 
@@ -44,7 +44,7 @@ public slots:
 
 private:
     XPLUGINMANAGER::OPTIONS *pOptions;
-    QString sModuleFileName;
+    QList<QString> listModuleNames;
     bool bIsStop;
     Utils::STATS currentStats;
 };

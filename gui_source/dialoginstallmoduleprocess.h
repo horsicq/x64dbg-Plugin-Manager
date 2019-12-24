@@ -36,7 +36,7 @@ class DialogInstallModuleProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstallModuleProcess(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName);
+    explicit DialogInstallModuleProcess(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QList<QString> listModuleFileNames);
     ~DialogInstallModuleProcess();
 
 private slots:
@@ -50,7 +50,7 @@ signals:
 private:
     Ui::DialogInstallModuleProcess *ui;
     XPLUGINMANAGER::OPTIONS *pOptions;
-    QString sModuleFileName;
+    QList<QString> listModuleFileNames;
     InstallModuleProcess *pInstallModuleProcess;
     QThread *pThread;
     bool bIsRun;

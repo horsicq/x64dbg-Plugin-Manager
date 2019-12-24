@@ -290,6 +290,8 @@ void GuiMainWindow::installButtonSlot()
 //        DialogInstallModule dialogInstallModule(this,mdata.sName);
 
 //        dialogRemoveModule.exec();
+
+        getModules();
     }
 }
 
@@ -305,5 +307,7 @@ void GuiMainWindow::removeButtonSlot()
         DialogRemoveModule dialogRemoveModule(this,&options,mdata.sName);
 
         dialogRemoveModule.exec();
+
+        getModules();
     }
 }

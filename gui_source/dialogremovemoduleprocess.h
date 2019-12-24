@@ -16,7 +16,7 @@ class DialogRemoveModuleProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogRemoveModuleProcess(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName);
+    explicit DialogRemoveModuleProcess(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QList<QString> listModuleNames);
     ~DialogRemoveModuleProcess();
 
 private slots:
@@ -30,7 +30,7 @@ signals:
 private:
     Ui::DialogRemoveModuleProcess *ui;
     XPLUGINMANAGER::OPTIONS *pOptions;
-    QString sModuleFileName;
+    QList<QString> listModuleNames;
     RemoveModuleProcess *pRemoveModuleProcess;
     QThread *pThread;
     bool bIsRun;

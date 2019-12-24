@@ -21,14 +21,14 @@
 #include "dialogremovemodule.h"
 #include "ui_dialogremovemodule.h"
 
-DialogRemoveModule::DialogRemoveModule(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName) :
+DialogRemoveModule::DialogRemoveModule(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleName) :
     QDialog(parent),
     ui(new Ui::DialogRemoveModule)
 {
     ui->setupUi(this);
 
     this->pOptions=pOptions;
-    this->sModuleFileName=sModuleFileName;
+    this->sModuleName=sModuleName;
 
     // TODO Widget
 }
@@ -45,7 +45,7 @@ void DialogRemoveModule::on_pushButtonCancel_clicked()
 
 void DialogRemoveModule::on_pushButtonOK_clicked()
 {
-    DialogRemoveModuleProcess drmp(this,pOptions,sModuleFileName);
+    DialogRemoveModuleProcess drmp(this,pOptions,QList<QString>()<<sModuleName);
 
     connect(&drmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 

@@ -21,14 +21,14 @@
 #include "dialogremovemoduleprocess.h"
 #include "ui_dialogremovemoduleprocess.h"
 
-DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName) :
+DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QList<QString> listModuleNames) :
     QDialog(parent),
     ui(new Ui::DialogRemoveModuleProcess)
 {
     ui->setupUi(this);
 
     this->pOptions=pOptions;
-    this->sModuleFileName=sModuleFileName;
+    this->listModuleNames=listModuleNames;
 
     pRemoveModuleProcess=new RemoveModuleProcess;
     pThread=new QThread;
@@ -44,7 +44,7 @@ DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, XPLUGINMAN
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pRemoveModuleProcess->setData(pOptions,sModuleFileName);
+    pRemoveModuleProcess->setData(pOptions,listModuleNames);
 
     bIsRun=true;
 
