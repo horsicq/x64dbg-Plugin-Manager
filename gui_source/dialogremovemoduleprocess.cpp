@@ -39,8 +39,6 @@ DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, XPLUGINMAN
     connect(pRemoveModuleProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
     connect(pRemoveModuleProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
-    bIsRun=false;
-
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
@@ -60,7 +58,20 @@ DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, XPLUGINMAN
 
 DialogRemoveModuleProcess::~DialogRemoveModuleProcess()
 {
+    if(bIsRun)
+    {
+        pRemoveModuleProcess->stop();
+    }
+
+    pTimer->stop();
+
+    pThread->quit();
+    pThread->wait();
+
     delete ui;
+
+    delete pThread;
+    delete pRemoveModuleProcess;
 }
 
 void DialogRemoveModuleProcess::on_pushButtonCancel_clicked()

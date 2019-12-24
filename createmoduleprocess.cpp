@@ -51,7 +51,7 @@ void CreateModuleProcess::process()
     QList<Utils::FILE_RECORD> listFileRecords;
     QList<Utils::DIRECTORY_RECORD> listDirectoryRecords;
 
-    currentStats.nTotalFile=pMData->listRecords.count();
+    QList<Utils::RECORD> listRecords=Utils::getRecords(pMData->sRoot);
 
     QString sBundleFileName=pMData->sBundlePath+QDir::separator()+pMData->sBundleName+".x64dbg.zip";
     QString sBundleInfoFileName=pMData->sBundlePath+QDir::separator()+pMData->sBundleName+".x64dbg.json";
@@ -93,20 +93,20 @@ void CreateModuleProcess::process()
 
             for(int i=0;(i<currentStats.nTotalFile)&&(!bIsStop);i++)
             {       
-                if(pMData->listRecords.at(i).bIsFile)
+                if(listRecords.at(i).bIsFile)
                 {
-                    currentStats.sFile=QString("%1: %2").arg(tr("Add file")).arg(pMData->listRecords.at(i).sPath);
+                    currentStats.sFile=QString("%1: %2").arg(tr("Add file")).arg(listRecords.at(i).sPath);
 
                     QFile file;
 
-                    file.setFileName(pMData->listRecords.at(i).sFullPath);
+                    file.setFileName(listRecords.at(i).sFullPath);
 
                     if(file.open(QIODevice::ReadOnly))
                     {
                         Utils::FILE_RECORD fileRecord={};
 
-                        fileRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
-                        fileRecord.sPath=pMData->listRecords.at(i).sPath;
+                        fileRecord.sFullPath=listRecords.at(i).sFullPath;
+                        fileRecord.sPath=listRecords.at(i).sPath;
                         fileRecord.sSHA1=XBinary::getHash(XBinary::HASH_SHA1,&file);
 
                         XZip::ZIPFILE_RECORD zipFileRecord={};
@@ -127,22 +127,22 @@ void CreateModuleProcess::process()
                 }
                 else
                 {
-                    if(pMData->listRecords.at(i).sPath.toLower()=="x32")
+                    if(listRecords.at(i).sPath.toLower()=="x32")
                     {
                         pMData->bIs32=true;
                     }
 
-                    if(pMData->listRecords.at(i).sPath.toLower()=="x64")
+                    if(listRecords.at(i).sPath.toLower()=="x64")
                     {
                         pMData->bIs64=true;
                     }
 
-                    currentStats.sFile=QString("%1: %2").arg(tr("Add directory")).arg(pMData->listRecords.at(i).sPath);
+                    currentStats.sFile=QString("%1: %2").arg(tr("Add directory")).arg(listRecords.at(i).sPath);
 
                     Utils::DIRECTORY_RECORD directoryRecord={};
 
-                    directoryRecord.sFullPath=pMData->listRecords.at(i).sFullPath;
-                    directoryRecord.sPath=pMData->listRecords.at(i).sPath;
+                    directoryRecord.sFullPath=listRecords.at(i).sFullPath;
+                    directoryRecord.sPath=listRecords.at(i).sPath;
 
                     listDirectoryRecords.append(directoryRecord);
                 }

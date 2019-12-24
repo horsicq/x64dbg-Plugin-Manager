@@ -118,6 +118,8 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
     recordObject.insert("Info",             QJsonValue::fromVariant(pMData->sInfo));
     recordObject.insert("Size",             QJsonValue::fromVariant(pMData->nSize));
     recordObject.insert("CompressedSize",   QJsonValue::fromVariant(pMData->nCompressedSize));
+    recordObject.insert("Is32",             QJsonValue::fromVariant(pMData->bIs32));
+    recordObject.insert("Is64",             QJsonValue::fromVariant(pMData->bIs64));
 
     if(sSHA1=="") // In zip
     {
@@ -234,22 +236,25 @@ Utils::MDATA Utils::getMDataFromData(QByteArray baData, QString sRootPath)
     QJsonObject rootObj=jsDoc.object();
 
     result.sName            =rootObj.value("Name").toString();
-    result.sCurrentVersion         =rootObj.value("Version").toString();
-    result.sCurrentDate            =rootObj.value("Date").toString();
+    result.sCurrentVersion  =rootObj.value("Version").toString();
+    result.sCurrentDate     =rootObj.value("Date").toString();
     result.sAuthor          =rootObj.value("Author").toString();
     result.sBugreport       =rootObj.value("Bugreport").toString();
     result.sInfo            =rootObj.value("Info").toString();
     result.nSize            =rootObj.value("Size").toInt();
     result.nCompressedSize  =rootObj.value("CompressedSize").toInt();
+    result.bIs32            =rootObj.value("Is32").toBool();
+    result.bIs64            =rootObj.value("Is64").toBool();
 
     QJsonArray installArray=rootObj.value("Install").toArray();
+    QJsonArray removeArray=rootObj.value("Remove").toArray();
 
-    int nCount=installArray.count();
+    int nInstallCount=installArray.count();
 
-    for(int i=0;i<nCount;i++)
+    for(int i=0;i<nInstallCount;i++)
     {
         QJsonObject recordObj=installArray.at(i).toObject();
-        RECORD record={};
+        INSTALL_RECORD record={};
 
         record.sPath        =recordObj.value("Path").toString();
         record.sFullPath    =sRootPath+QDir::separator()+record.sPath;
@@ -262,8 +267,39 @@ Utils::MDATA Utils::getMDataFromData(QByteArray baData, QString sRootPath)
             record.bIsFile=true;
         }
 
-        result.listRecords.append(record);
+        result.listInstallRecords.append(record);
     }
+
+    int nRemoveCount=removeArray.count();
+
+    for(int i=0;i<nRemoveCount;i++)
+    {
+        QJsonObject recordObj=removeArray.at(i).toObject();
+        REMOVE_RECORD record={};
+
+        record.sPath        =recordObj.value("Path").toString();
+        record.sFullPath    =sRootPath+QDir::separator()+record.sPath;
+
+        QString sAction=recordObj.value("Action").toString();
+
+        if(sAction=="remove_file")
+        {
+            record.bIsFile=true;
+        }
+
+        result.listRemoveRecords.append(record);
+    }
+
+    return result;
+}
+
+Utils::MDATA Utils::getMDataFromJSONFile(QString sFileName, QString sRootPath)
+{
+    Utils::MDATA result={};
+
+    QByteArray baData=XBinary::readFile(sFileName);
+
+    result=getMDataFromData(baData,sRootPath);
 
     return result;
 }
@@ -301,7 +337,7 @@ QList<Utils::MDATA> Utils::getInstalledModules(QString sDataPath, QString sRootP
     return listResult;
 }
 
-QList<Utils::MDATA> Utils::getModulesFromJSONFile(QString sJSONFilePath)
+QList<Utils::MDATA> Utils::getModulesFromJSONFile(QString sFileName)
 {
     QList<Utils::MDATA> listResult;
     // TODO

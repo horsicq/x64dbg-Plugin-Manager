@@ -246,8 +246,9 @@ void GuiMainWindow::openPlugin(QString sFileName)
 {
     if(Utils::isPluginValid(sFileName))
     {
-        QFileInfo fi(sFileName);
-        QString sDestFile=XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules"+QDir::separator()+fi.fileName();
+        Utils::MDATA mdata=Utils::getMDataFromZip(sFileName,XBinary::convertPathName(options.sRootPath));
+
+        QString sDestFile=XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1.x64dbg.zip").arg(mdata.sName);
 
         if(XBinary::isFileExists(sDestFile))
         {
@@ -271,7 +272,12 @@ void GuiMainWindow::openPlugin(QString sFileName)
 
 void GuiMainWindow::updateJsonList()
 {
-    DialogGetFileFromServer dialogGetFileFromServer(this,options.sJSONFile,XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json");
+    Utils::WEB_RECORD record={};
+
+    record.sFileName=XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json";
+    record.sLink=options.sJSONFile;
+
+    DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
 
     dialogGetFileFromServer.exec();
 }
@@ -287,9 +293,11 @@ void GuiMainWindow::installButtonSlot()
 
         // TODO download
 
-//        DialogInstallModule dialogInstallModule(this,mdata.sName);
+        QString sFileName=XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1.x64dbg.zip").arg(mdata.sName);
 
-//        dialogRemoveModule.exec();
+        DialogInstallModule dialogInstallModule(this,&options,sFileName);
+
+        dialogInstallModule.exec();
 
         getModules();
     }

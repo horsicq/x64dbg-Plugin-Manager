@@ -30,7 +30,11 @@ DialogRemoveModule::DialogRemoveModule(QWidget *parent,XPLUGINMANAGER::OPTIONS *
     this->pOptions=pOptions;
     this->sModuleName=sModuleName;
 
-    // TODO Widget
+    QString sFileName=XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"installed"+QDir::separator()+QString("%1.json").arg(sModuleName);
+
+    Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(pOptions->sRootPath));
+
+    ui->widgetInfo->setData(&mdata);
 }
 
 DialogRemoveModule::~DialogRemoveModule()

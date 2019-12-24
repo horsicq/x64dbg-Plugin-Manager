@@ -39,8 +39,6 @@ DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, XPLUGINM
     connect(pInstallModuleProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
     connect(pInstallModuleProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
-    bIsRun=false;
-
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
@@ -60,7 +58,20 @@ DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, XPLUGINM
 
 DialogInstallModuleProcess::~DialogInstallModuleProcess()
 {
+    if(bIsRun)
+    {
+        pInstallModuleProcess->stop();
+    }
+
+    pTimer->stop();
+
+    pThread->quit();
+    pThread->wait();
+
     delete ui;
+
+    delete pThread;
+    delete pInstallModuleProcess;
 }
 
 void DialogInstallModuleProcess::on_pushButtonCancel_clicked()

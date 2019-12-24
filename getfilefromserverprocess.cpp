@@ -23,21 +23,27 @@
 GetFileFromServerProcess::GetFileFromServerProcess(QObject *parent) : QObject(parent)
 {
     reply=0;
-    stats={};
+    currentStats={};
 }
 
-void GetFileFromServerProcess::setData(QString sLink, QString sFileName)
+void GetFileFromServerProcess::setData(QList<Utils::WEB_RECORD> listWebRecords)
 {
-    this->sLink=sLink;
-    this->sFileName=sFileName;
+    this->listWebRecords=listWebRecords;
 }
 
 void GetFileFromServerProcess::stop()
 {
+    bIsStop=true;
+
     if(reply)
     {
         reply->abort();
     }
+}
+
+Utils::STATS GetFileFromServerProcess::getCurrentStats()
+{
+    return currentStats;
 }
 
 void GetFileFromServerProcess::process()
@@ -45,28 +51,41 @@ void GetFileFromServerProcess::process()
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 
-    QNetworkAccessManager nam;
-    QNetworkRequest *pRequest=new QNetworkRequest(QUrl(sLink));
-    reply=nam.get(*pRequest);
-    QEventLoop loop;
-    QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
+    bIsStop=false;
 
-    if(reply->bytesAvailable())
+    currentStats.nTotalModule=listWebRecords.count();
+
+    for(qint32 i=0;(i<currentStats.nTotalModule)&&(!bIsStop);i++)
     {
-        QByteArray baData=reply->readAll();
+        currentStats.sModule=listWebRecords.at(i).sLink;
 
-        if(XBinary::isFileExists(sFileName))
+        QNetworkAccessManager nam;
+        QNetworkRequest *pRequest=new QNetworkRequest(QUrl(listWebRecords.at(i).sLink));
+        reply=nam.get(*pRequest);
+        QEventLoop loop;
+        QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+        loop.exec();
+
+        if(reply->bytesAvailable())
         {
-            XBinary::removeFile(sFileName);
-            // TODO handle errors
+            QByteArray baData=reply->readAll();
+
+            if(XBinary::isFileExists(listWebRecords.at(i).sFileName))
+            {
+                XBinary::removeFile(listWebRecords.at(i).sFileName);
+                // TODO handle errors
+            }
+
+            XBinary::writeToFile(listWebRecords.at(i).sFileName,baData); // TODO handle errors
         }
 
-        XBinary::writeToFile(sFileName,baData); // TODO handle errors
+        reply->deleteLater();
+        delete pRequest;
+
+        reply=0;
     }
 
-    reply->deleteLater();
-    delete pRequest;
+    bIsStop=false;
 
     emit completed(elapsedTimer.elapsed());
 }

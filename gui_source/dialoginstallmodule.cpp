@@ -32,14 +32,16 @@ DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTION
 
     mdata=Utils::getMDataFromZip(sModuleFileName,XBinary::convertPathName(pOptions->sRootPath));
 
-    int nCount=mdata.listRecords.count();
+    ui->widgetInfo->setData(&mdata);
+
+    int nCount=mdata.listInstallRecords.count();
 
     ui->tableWidgetRecords->setColumnCount(1);
     ui->tableWidgetRecords->setRowCount(nCount);
 
     for(int i=0;i<nCount;i++)
     {
-        QTableWidgetItem *pItem=new QTableWidgetItem(mdata.listRecords.at(i).sPath);
+        QTableWidgetItem *pItem=new QTableWidgetItem(mdata.listInstallRecords.at(i).sPath);
         ui->tableWidgetRecords->setItem(i,0,pItem);
     }
 }

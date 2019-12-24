@@ -51,12 +51,12 @@ void InstallModuleProcess::process()
 
     currentStats.nTotalModule=listModuleFileNames.count();
 
-    for(qint32 j=0;(j<currentStats.nTotalFile)&&(!bIsStop);j++)
+    for(qint32 i=0;(i<currentStats.nTotalModule)&&(!bIsStop);i++)
     {
-        currentStats.sModule=listModuleFileNames.at(j);
+        currentStats.sModule=QFileInfo(listModuleFileNames.at(i)).baseName();
 
         QFile file;
-        file.setFileName(currentStats.sModule);
+        file.setFileName(listModuleFileNames.at(i));
 
         if(file.open(QIODevice::ReadOnly))
         {
@@ -66,11 +66,11 @@ void InstallModuleProcess::process()
 
             QList<XArchive::RECORD> listZipRecords=zip.getRecords();
 
-            currentStats.nTotalFile=mdata.listRecords.count();
+            currentStats.nTotalFile=mdata.listInstallRecords.count();
 
-            for(qint32 i=0;(i<currentStats.nTotalFile)&&(!bIsStop);i++)
+            for(qint32 j=0;(j<currentStats.nTotalFile)&&(!bIsStop);j++)
             {
-                Utils::RECORD record=mdata.listRecords.at(i);
+                Utils::INSTALL_RECORD record=mdata.listInstallRecords.at(j);
 
                 currentStats.sFile=record.sPath;
 
@@ -95,7 +95,7 @@ void InstallModuleProcess::process()
                     XBinary::createDirectory(record.sFullPath);
                 }
 
-                currentStats.nCurrentFile=i+1;
+                currentStats.nCurrentFile=j+1;
             }
 
             QString sInfoFileName=XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"installed"+QDir::separator()+mdata.sName+".json";
@@ -112,7 +112,7 @@ void InstallModuleProcess::process()
             file.close();
         }
 
-        currentStats.nCurrentModule=j+1;
+        currentStats.nCurrentModule=i+1;
     }
 
     emit completed(elapsedTimer.elapsed());

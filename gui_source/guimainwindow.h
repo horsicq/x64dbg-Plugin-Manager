@@ -27,7 +27,7 @@
 #include "dialoginstallmodule.h"
 #include "dialogremovemodule.h"
 #include "dialogoptions.h"
-#include "dialoggetfilefromserver.h"
+#include "dialoggetfilefromserverprocess.h"
 #include "dialogabout.h"
 #include <QMessageBox>
 #include <QCheckBox>

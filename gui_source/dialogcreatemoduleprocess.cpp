@@ -38,8 +38,6 @@ DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *parent, Utils::MDA
     connect(pCreateModuleProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
     connect(pCreateModuleProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
-    bIsRun=false;
-
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
@@ -56,7 +54,20 @@ DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *parent, Utils::MDA
 
 DialogCreateModuleProcess::~DialogCreateModuleProcess()
 {
+    if(bIsRun)
+    {
+        pCreateModuleProcess->stop();
+    }
+
+    pTimer->stop();
+
+    pThread->quit();
+    pThread->wait();
+
     delete ui;
+
+    delete pThread;
+    delete pCreateModuleProcess;
 }
 
 void DialogCreateModuleProcess::on_pushButtonCancel_clicked()

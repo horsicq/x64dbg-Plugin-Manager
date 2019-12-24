@@ -50,7 +50,21 @@ public:
         QString sFullPath;
         QString sPath;
         bool bIsFile;
+    };
+
+    struct INSTALL_RECORD
+    {
+        QString sFullPath;
+        QString sPath;
+        bool bIsFile;
         QString sSHA1;
+    };
+
+    struct REMOVE_RECORD
+    {
+        QString sFullPath;
+        QString sPath;
+        bool bIsFile;
     };
 
     struct MDATA
@@ -68,7 +82,8 @@ public:
         QString sRoot;
         QString sBundleName;
         QString sBundlePath;
-        QList<Utils::RECORD> listRecords;
+        QList<Utils::INSTALL_RECORD> listInstallRecords;
+        QList<Utils::REMOVE_RECORD> listRemoveRecords;
         qint64 nSize;
         qint64 nCompressedSize;
     };
@@ -88,6 +103,12 @@ public:
         QString sPath;
     };
 
+    struct WEB_RECORD
+    {
+        QString sFileName;
+        QString sLink;
+    };
+
     explicit Utils(QObject *parent=nullptr);
 
     static QList<RECORD> getRecords(QString sRootPath);
@@ -100,9 +121,10 @@ public:
     static MDATA getMDataFromZip(QString sFileName,QString sRootPath);
     static MDATA getMDataFromZip(QIODevice *pDevice,QString sRootPath);
     static MDATA getMDataFromData(QByteArray baData, QString sRootPath);
+    static MDATA getMDataFromJSONFile(QString sFileName, QString sRootPath);
 
     static QList<MDATA> getInstalledModules(QString sDataPath,QString sRootPath);
-    static QList<MDATA> getModulesFromJSONFile(QString sJSONFilePath);
+    static QList<MDATA> getModulesFromJSONFile(QString sFileName);
 
     static QList<MDATA> mergeMData(QList<MDATA> *pList1,QList<MDATA> *pList2);
 

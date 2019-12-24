@@ -41,6 +41,9 @@ private slots:
     void on_pushButtonCancel_clicked();
     void on_pushButtonOK_clicked();
 
+signals:
+    void errorMessage(QString sMessage);
+
 private:
     Ui::DialogRemoveModule *ui;
     XPLUGINMANAGER::OPTIONS *pOptions;

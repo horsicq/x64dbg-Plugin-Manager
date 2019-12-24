@@ -134,16 +134,16 @@ void DialogCreateModule::on_lineEditRoot_textChanged(const QString &sDirectoryNa
         {
             mdata.sRoot=sDirectoryName;
 
-            mdata.listRecords=Utils::getRecords(sDirectoryName);
+            QList<Utils::RECORD> listRecords=Utils::getRecords(sDirectoryName);
 
-            int nCount=mdata.listRecords.count();
+            int nCount=listRecords.count();
 
             ui->tableWidgetRecords->setColumnCount(1);
             ui->tableWidgetRecords->setRowCount(nCount);
 
             for(int i=0;i<nCount;i++)
             {
-                QTableWidgetItem *pItem=new QTableWidgetItem(mdata.listRecords.at(i).sPath);
+                QTableWidgetItem *pItem=new QTableWidgetItem(listRecords.at(i).sPath);
                 ui->tableWidgetRecords->setItem(i,0,pItem);
             }
         }

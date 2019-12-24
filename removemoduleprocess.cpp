@@ -49,14 +49,43 @@ void RemoveModuleProcess::process()
 
     bIsStop=false;
 
-//    currentStats.nTotal=pMData->listRecords.count();
+    currentStats.nTotalModule=listModuleNames.count();
 
-//    for(qint32 i=0;(i<currentStats.nTotal)&&(!bIsStop);i++)
-//    {
-//        // TODO
+    for(qint32 i=0;(i<currentStats.nTotalModule)&&(!bIsStop);i++)
+    {
+        currentStats.sModule=listModuleNames.at(i);
 
-//        currentStats.nCurrent=i+1;
-//    }
+        QString sFileName=XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"installed"+QDir::separator()+QString("%1.json").arg(currentStats.sModule);
+
+        if(XBinary::isFileExists(sFileName))
+        {
+            Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(pOptions->sRootPath));
+
+            currentStats.nTotalFile=mdata.listRemoveRecords.count();
+
+            for(qint32 j=0;(j<currentStats.nTotalFile)&&(!bIsStop);j++)
+            {
+                Utils::REMOVE_RECORD record=mdata.listRemoveRecords.at(j);
+
+                currentStats.sFile=record.sPath;
+
+                if(record.bIsFile)
+                {
+                    XBinary::removeFile(record.sFullPath);
+                }
+                else
+                {
+                    XBinary::removeDirectory(record.sFullPath);
+                }
+
+                currentStats.nCurrentFile=j+1;
+            }
+
+            XBinary::removeFile(sFileName);
+        }
+
+        currentStats.nCurrentModule=i+1;
+    }
 
     emit completed(elapsedTimer.elapsed());
 }

@@ -33,8 +33,9 @@ class GetFileFromServerProcess : public QObject
     Q_OBJECT
 public:
     explicit GetFileFromServerProcess(QObject *parent=nullptr);
-    void setData(QString sLink,QString sFileName);
+    void setData(QList<Utils::WEB_RECORD> listWebRecords);
     void stop();
+    Utils::STATS getCurrentStats();
 
 signals:
     void errorMessage(QString sMessage);
@@ -45,10 +46,9 @@ public slots:
 
 private:
     bool bIsStop;
-    QString sLink;
-    QString sFileName;
+    QList<Utils::WEB_RECORD> listWebRecords;
     QNetworkReply *reply;
-    Utils::STATS stats;
+    Utils::STATS currentStats;
 };
 
 #endif // GETFILEFROMSERVERPROCESS_H

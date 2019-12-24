@@ -18,14 +18,15 @@ SOURCES += \
     dialogabout.cpp \
     dialogcreatemodule.cpp \
     dialogcreatemoduleprocess.cpp \
-    dialoggetfilefromserver.cpp \
+    dialoggetfilefromserverprocess.cpp \
     dialoginstallmodule.cpp \
     dialoginstallmoduleprocess.cpp \
     dialogoptions.cpp \
     dialogremovemodule.cpp \
     dialogremovemoduleprocess.cpp \
     guimainwindow.cpp \
-    main_gui.cpp
+    main_gui.cpp \
+    plugininfowidget.cpp
 
 HEADERS += \
     ../getfilefromserverprocess.h \
@@ -37,26 +38,27 @@ HEADERS += \
     dialogabout.h \
     dialogcreatemodule.h \
     dialogcreatemoduleprocess.h \
-    dialoggetfilefromserver.h \
+    dialoggetfilefromserverprocess.h \
     dialoginstallmodule.h \
     dialoginstallmoduleprocess.h \
     dialogoptions.h \
     dialogremovemodule.h \
     dialogremovemoduleprocess.h \
-    guimainwindow.h
+    guimainwindow.h \
+    plugininfowidget.h
 
 FORMS += \
     dialogabout.ui \
     dialogcreatemodule.ui \
     dialogcreatemoduleprocess.ui \
-    dialoggetfilefromserver.ui \
+    dialoggetfilefromserverprocess.ui \
     dialoginstallmodule.ui \
     dialoginstallmoduleprocess.ui \
     dialogoptions.ui \
-    dialogreload.ui \
     dialogremovemodule.ui \
     dialogremovemoduleprocess.ui \
-    guimainwindow.ui
+    guimainwindow.ui \
+    plugininfowidget.ui
 
 !contains(XCONFIG, xarchive) {
     XCONFIG += xarchive
