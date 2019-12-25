@@ -21,7 +21,9 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include "consoleoutput.h"
 #include "../global.h"
+#include "../utils.h"
 
 int main(int argc, char *argv[])
 {

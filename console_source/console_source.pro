@@ -8,7 +8,22 @@ TARGET = PluginManagerConsole
 include(../build.pri)
 
 SOURCES += \
-    main_console.cpp
+    ../createmoduleprocess.cpp \
+    ../getfilefromserverprocess.cpp \
+    ../installmoduleprocess.cpp \
+    ../removemoduleprocess.cpp \
+    ../utils.cpp \
+    main_console.cpp \
+    consoleoutput.cpp
+
+HEADERS += \
+    ../createmoduleprocess.h \
+    ../getfilefromserverprocess.h \
+    ../global.h \
+    ../installmoduleprocess.h \
+    ../removemoduleprocess.h \
+    ../utils.h \
+    consoleoutput.h
 
 !contains(XCONFIG, xarchive) {
     XCONFIG += xarchive
