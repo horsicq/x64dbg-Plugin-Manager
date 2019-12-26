@@ -92,12 +92,7 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
 
         if(sFileName!="")
         {
-            // TODO
-            QFileInfo fi(sFileName);
-    //        QString sBundleName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".zip";
-    //        QString sJsonName=fi.absoluteDir().path()+QDir::separator()+fi.baseName()+".json";
-            mdata.sBundleName=fi.completeBaseName();
-            mdata.sBundlePath=fi.absoluteDir().path();
+            mdata.sBundleFileName=sFileName;
 
             DialogCreateModuleProcess dcmp(this,&mdata);
 

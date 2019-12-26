@@ -42,13 +42,18 @@ bool Utils::checkMData(Utils::MDATA *pMData, QString *psErrorString)
 {
     bool bResult=true;
 
-    if(pMData->sName=="")
+    if(bResult&&(pMData->sName==""))
     {
         *psErrorString=tr("Invalid name");
-
         bResult=false;
     }
-    // TODO
+
+    if(bResult&&(pMData->sRoot==""))
+    {
+        *psErrorString=tr("Invalid root path");
+        bResult=false;
+    }
+
     return bResult;
 }
 
@@ -326,7 +331,7 @@ QList<Utils::MDATA> Utils::getInstalledModules(QString sDataPath, QString sRootP
             QByteArray baData=file.readAll();
 
             Utils::MDATA record=getMDataFromData(baData,sRootPath);
-            record.sBundlePath=sBundleName;
+            record.sBundleFileName=sBundleName;
 
             listResult.append(record);
 

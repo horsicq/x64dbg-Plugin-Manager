@@ -80,8 +80,7 @@ public:
         QString sBugreport;
         QString sInfo;
         QString sRoot;
-        QString sBundleName;
-        QString sBundlePath;
+        QString sBundleFileName;
         QList<Utils::INSTALL_RECORD> listInstallRecords;
         QList<Utils::REMOVE_RECORD> listRemoveRecords;
         qint64 nSize;

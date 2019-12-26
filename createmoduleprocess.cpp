@@ -53,8 +53,8 @@ void CreateModuleProcess::process()
 
     QList<Utils::RECORD> listRecords=Utils::getRecords(pMData->sRoot);
 
-    QString sBundleFileName=pMData->sBundlePath+QDir::separator()+pMData->sBundleName+".x64dbg.zip";
-    QString sBundleInfoFileName=pMData->sBundlePath+QDir::separator()+pMData->sBundleName+".x64dbg.json";
+    QString sBundleFileName=pMData->sBundleFileName;
+    QString sBundleInfoFileName=pMData->sBundleFileName+".json";
 
     bool bSuccess=true;
 
