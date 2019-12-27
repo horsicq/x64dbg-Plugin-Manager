@@ -4,7 +4,7 @@ QT += network
 CONFIG += c++11 console
 CONFIG -= app_bundle
 
-TARGET = PluginManagerConsole
+TARGET = x64plgmnrc
 
 include(../build.pri)
 

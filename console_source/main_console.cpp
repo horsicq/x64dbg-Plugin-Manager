@@ -45,19 +45,29 @@ int main(int argc, char *argv[])
 
     parser.addPositionalArgument("plugin","The plugin to open.");
 
-    QCommandLineOption clSetGlobalRootPath  (QStringList()<<"g"<<"setglobalrootpath",   "Set a global root path<path>.",    "path");
-    QCommandLineOption clSetRootPath        (QStringList()<<"r"<<"setrootpath",         "Set a root path<path>.",           "path");
-    QCommandLineOption clSetName            (QStringList()<<"n"<<"setname",             "Set a name of plugin<name>.",      "name");
-    QCommandLineOption clSetVersion         (QStringList()<<"V"<<"setversion",          "Set a version of plugin<version>.","version");
+    QCommandLineOption clSetGlobalRootPath  (QStringList()<<"g"<<"setglobalrootpath",   "Set a global root path<path>.",                "path");
+    QCommandLineOption clCreatePlugin       (QStringList()<<"c"<<"createplugin",        "Create a plugin<name>.",                       "name");
+    QCommandLineOption clSetRootPath        (QStringList()<<"r"<<"setrootpath",         "Set a root path<path>.",                       "path");
+    QCommandLineOption clSetName            (QStringList()<<"n"<<"setname",             "Set a name of plugin<name>.",                  "name");
+    QCommandLineOption clSetVersion         (QStringList()<<"V"<<"setversion",          "Set a version of plugin<version>.",            "version");
+    QCommandLineOption clSetDate            (QStringList()<<"d"<<"setdate",             "Set a date of plugin<date>.",                  "date");
+    QCommandLineOption clSetAuthor          (QStringList()<<"a"<<"setauthor",           "Set an author of plugin<author>.",             "author");
+    QCommandLineOption clSetBugreport       (QStringList()<<"b"<<"setbugreport",        "Set a bugreport of plugin<bugreport>.",        "bugreport");
+    QCommandLineOption clSetInfo            (QStringList()<<"I"<<"setinfo",             "Set an info of plugin<info>.",                 "info");
 
     parser.addOption(clSetGlobalRootPath);
+    parser.addOption(clCreatePlugin);
     parser.addOption(clSetRootPath);
     parser.addOption(clSetName);
     parser.addOption(clSetVersion);
+    parser.addOption(clSetDate);
+    parser.addOption(clSetAuthor);
+    parser.addOption(clSetBugreport);
+    parser.addOption(clSetInfo);
 
     parser.process(app);
 
-    QList<QString> listArgs=parser.positionalArguments();
+//    QList<QString> listArgs=parser.positionalArguments();
 
     parser.showHelp();
     Q_UNREACHABLE();
