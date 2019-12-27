@@ -82,28 +82,27 @@ void DialogCreateModule::on_pushButtonSave_clicked()
 
 void DialogCreateModule::on_pushButtonCreate_clicked()
 {
-    QString sErrorString;
+    QString sFileName=Utils::createBundleName(&mdata)+".x64dbg.zip";
+    sFileName=QFileDialog::getSaveFileName(this,tr("Save plugin bundle"),sFileName,"*.x64dbg.zip");
 
-    if(Utils::checkMData(&mdata,&sErrorString))
+    if(sFileName!="")
     {
-        //QString sFileName=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+QDir::separator()+Utils::createBundleName(&mdata)+".zip";
-        QString sFileName=Utils::createBundleName(&mdata)+".x64dbg.zip";
-        sFileName=QFileDialog::getSaveFileName(this,tr("Save plugin bundle"),sFileName,"*.x64dbg.zip");
+        mdata.sBundleFileName=sFileName;
 
-        if(sFileName!="")
+        QString sErrorString;
+
+        if(Utils::checkMData(&mdata,&sErrorString))
         {
-            mdata.sBundleFileName=sFileName;
-
             DialogCreateModuleProcess dcmp(this,&mdata);
 
             connect(&dcmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
             dcmp.exec();
         }
-    }
-    else
-    {
-        emit errorMessage(sErrorString);
+        else
+        {
+            emit errorMessage(sErrorString);
+        }
     }
 }
 

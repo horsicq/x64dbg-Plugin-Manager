@@ -48,6 +48,12 @@ bool Utils::checkMData(Utils::MDATA *pMData, QString *psErrorString)
         bResult=false;
     }
 
+    if(bResult&&(pMData->sBundleFileName==""))
+    {
+        *psErrorString=tr("Invalid bundle file name");
+        bResult=false;
+    }
+
     if(bResult&&(pMData->sRoot==""))
     {
         *psErrorString=tr("Invalid root path");

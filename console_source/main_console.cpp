@@ -45,17 +45,22 @@ int main(int argc, char *argv[])
 
     parser.addPositionalArgument("plugin","The plugin to open.");
 
-    QCommandLineOption clGlobalRoot     (QStringList()<<"g"<<"globalroot",      "A path of global root path.");
-    QCommandLineOption clRoot           (QStringList()<<"r"<<"root",            "A path of root path.");
+    QCommandLineOption clSetGlobalRootPath  (QStringList()<<"g"<<"setglobalrootpath",   "Set a global root path<path>.",    "path");
+    QCommandLineOption clSetRootPath        (QStringList()<<"r"<<"setrootpath",         "Set a root path<path>.",           "path");
+    QCommandLineOption clSetName            (QStringList()<<"n"<<"setname",             "Set a name of plugin<name>.",      "name");
+    QCommandLineOption clSetVersion         (QStringList()<<"V"<<"setversion",          "Set a version of plugin<version>.","version");
 
-    parser.addOption(clGlobalRoot);
-    parser.addOption(clRoot);
+    parser.addOption(clSetGlobalRootPath);
+    parser.addOption(clSetRootPath);
+    parser.addOption(clSetName);
+    parser.addOption(clSetVersion);
 
     parser.process(app);
 
     QList<QString> listArgs=parser.positionalArguments();
 
-    // TODO
+    parser.showHelp();
+    Q_UNREACHABLE();
 
     return 0;
 }
