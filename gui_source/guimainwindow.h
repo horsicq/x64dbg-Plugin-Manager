@@ -32,6 +32,8 @@
 #include <QMessageBox>
 #include <QCheckBox>
 #include <QToolButton>
+#include <QDragEnterEvent>
+#include <QMimeData>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GuiMainWindow; }
@@ -72,6 +74,11 @@ private slots:
     void updateJsonList();
     void installButtonSlot();
     void removeButtonSlot();
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 
 private:
     Ui::GuiMainWindow *ui;

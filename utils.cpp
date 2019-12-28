@@ -74,11 +74,6 @@ QString Utils::createBundleName(Utils::MDATA *pMData)
         sResult+=QString("_%1").arg(pMData->sCurrentVersion);
     }
 
-    if(pMData->sCurrentDate!="")
-    {
-        sResult+=QString("_%1").arg(pMData->sCurrentDate);
-    }
-
     return sResult;
 }
 

@@ -56,6 +56,11 @@ void CreateModuleProcess::process()
     QString sBundleFileName=pMData->sBundleFileName;
     QString sBundleInfoFileName=pMData->sBundleFileName+".json";
 
+    if(pMData->sCurrentDate=="")
+    {
+        pMData->sCurrentDate=QDate::currentDate().toString("yyyy-MM-dd");
+    }
+
     bool bSuccess=true;
 
     if(XBinary::isFileExists(sBundleFileName))
@@ -80,6 +85,7 @@ void CreateModuleProcess::process()
 
     pMData->nSize=0;
     pMData->nCompressedSize=0;
+    currentStats.nTotalFile=listRecords.count();
 
     if(bSuccess)
     {

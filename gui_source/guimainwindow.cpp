@@ -29,6 +29,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
 
+    setAcceptDrops(true);
+
     DialogOptions::loadOptions(&options);
 
     if(!XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath)))
@@ -317,5 +319,49 @@ void GuiMainWindow::removeButtonSlot()
         dialogRemoveModule.exec();
 
         getModules();
+    }
+}
+
+void GuiMainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    const QMimeData* mimeData=event->mimeData();
+
+    if(mimeData->hasUrls())
+    {
+        QList<QUrl> urlList=mimeData->urls();
+
+        if(urlList.count())
+        {
+            QString sFileName=urlList.at(0).toLocalFile();
+
+            if(Utils::isPluginValid(sFileName))
+            {
+                event->acceptProposedAction();
+            }
+        }
+    }
+}
+
+void GuiMainWindow::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void GuiMainWindow::dropEvent(QDropEvent *event)
+{
+    const QMimeData* mimeData=event->mimeData();
+
+    if(mimeData->hasUrls())
+    {
+        QList<QUrl> urlList=mimeData->urls();
+
+        if(urlList.count())
+        {
+            QString sFileName=urlList.at(0).toLocalFile();
+
+            sFileName=XBinary::convertFileName(sFileName);
+
+            openPlugin(sFileName);
+        }
     }
 }
