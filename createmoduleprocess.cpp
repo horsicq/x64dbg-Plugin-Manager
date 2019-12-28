@@ -97,6 +97,8 @@ void CreateModuleProcess::process()
                 {
                     currentStats.sFile=QString("%1: %2").arg(tr("Add file")).arg(listRecords.at(i).sPath);
 
+                    emit infoMessage(currentStats.sFile);
+
                     QFile file;
 
                     file.setFileName(listRecords.at(i).sFullPath);

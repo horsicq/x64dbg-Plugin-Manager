@@ -24,6 +24,10 @@
 #include "consoleoutput.h"
 #include "../global.h"
 #include "../utils.h"
+#include "../createmoduleprocess.h"
+#include "../getfilefromserverprocess.h"
+#include "../installmoduleprocess.h"
+#include "../removemoduleprocess.h"
 
 int main(int argc, char *argv[])
 {
@@ -67,7 +71,40 @@ int main(int argc, char *argv[])
 
     parser.process(app);
 
-//    QList<QString> listArgs=parser.positionalArguments();
+    if(parser.isSet(clCreatePlugin))
+    {
+        Utils::MDATA mdata={};
+
+        mdata.sBundleFileName=parser.value(clCreatePlugin);
+
+        if(mdata.sBundleFileName!="")
+        {
+            mdata.sBundleFileName+=".x64dbg.zip";
+        }
+
+        mdata.sRoot=parser.value(clSetRootPath);
+        mdata.sName=parser.value(clSetName);
+        mdata.sCurrentVersion=parser.value(clSetVersion);
+        mdata.sCurrentDate=parser.value(clSetDate);
+        mdata.sAuthor=parser.value(clSetAuthor);
+        mdata.sBugreport=parser.value(clSetBugreport);
+        mdata.sInfo=parser.value(clSetInfo);
+
+        QString sErrorString;
+
+        if(Utils::checkMData(&mdata,&sErrorString))
+        {
+            CreateModuleProcess createModuleProcess;
+            QObject::connect(&createModuleProcess,SIGNAL(infoMessage(QString)),&consoleOutput,SLOT(infoMessage(QString)));
+            QObject::connect(&createModuleProcess,SIGNAL(errorMessage(QString)),&consoleOutput,SLOT(errorMessage(QString)));
+            createModuleProcess.setData(&mdata);
+            createModuleProcess.process();
+        }
+        else
+        {
+            consoleOutput.errorMessage(sErrorString);
+        }
+    }
 
     parser.showHelp();
     Q_UNREACHABLE();

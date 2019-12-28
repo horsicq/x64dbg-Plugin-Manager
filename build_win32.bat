@@ -56,9 +56,9 @@ mkdir %SOURCE_PATH%\release\%BUILD_NAME%
 mkdir %SOURCE_PATH%\release\%BUILD_NAME%\base
 mkdir %SOURCE_PATH%\release\%BUILD_NAME%\base\platforms
 
-copy %SOURCE_PATH%\die_source\build\release\winloader.exe %SOURCE_PATH%\release\%BUILD_NAME%\x64plgmnr.exe
-copy %SOURCE_PATH%\die_source\build\release\x64plgmnr.exe %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %SOURCE_PATH%\die_source\build\release\x64plgmnrc.exe %SOURCE_PATH%\release\%BUILD_NAME%\base\
+copy %SOURCE_PATH%\build\release\winloader.exe %SOURCE_PATH%\release\%BUILD_NAME%\x64plgmnr.exe
+copy %SOURCE_PATH%\build\release\x64plgmnr.exe %SOURCE_PATH%\release\%BUILD_NAME%\base\
+copy %SOURCE_PATH%\build\release\x64plgmnrc.exe %SOURCE_PATH%\release\%BUILD_NAME%\base\
 
 copy %SOURCE_PATH%\QOpenSSL\libs\win32-msvc\libcrypto-1_1.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
 copy %SOURCE_PATH%\QOpenSSL\libs\win32-msvc\libssl-1_1.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\

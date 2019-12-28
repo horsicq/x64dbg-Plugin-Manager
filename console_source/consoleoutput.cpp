@@ -25,8 +25,14 @@ ConsoleOutput::ConsoleOutput(QObject *parent) : QObject(parent)
 
 }
 
-void ConsoleOutput::messageString(QString sText)
+void ConsoleOutput::infoMessage(QString sText)
 {
     QString _sText=sText;
     printf("%s\n",_sText.toLatin1().data());
+}
+
+void ConsoleOutput::errorMessage(QString sText)
+{
+    QString _sText=sText;
+    printf("Error: %s\n",_sText.toLatin1().data());
 }
