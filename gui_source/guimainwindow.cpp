@@ -100,14 +100,14 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     ui->tableWidgetPlugins->setColumnWidth(CN_INSTALL,                  60);
     ui->tableWidgetPlugins->setColumnWidth(CN_REMOVE,                   60);
 
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_NAME,           QHeaderView::Interactive);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_NAME,           QHeaderView::ResizeToContents);
     ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_INFO,           QHeaderView::Stretch);
     ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_32,             QHeaderView::ResizeToContents);
     ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_64,             QHeaderView::ResizeToContents);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_CURRENTVERSION, QHeaderView::Interactive);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_LASTVERSION,    QHeaderView::Interactive);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_INSTALL,        QHeaderView::Interactive);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_REMOVE,         QHeaderView::Interactive);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_CURRENTVERSION, QHeaderView::ResizeToContents);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_LASTVERSION,    QHeaderView::ResizeToContents);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_INSTALL,        QHeaderView::ResizeToContents);
+    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_REMOVE,         QHeaderView::ResizeToContents);
 
     getModules();
 }
