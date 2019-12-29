@@ -347,7 +347,29 @@ QList<Utils::MDATA> Utils::getInstalledModules(QString sDataPath, QString sRootP
 QList<Utils::MDATA> Utils::getModulesFromJSONFile(QString sFileName)
 {
     QList<Utils::MDATA> listResult;
-    // TODO
+
+    QByteArray baData=XBinary::readFile(sFileName);
+
+    QJsonDocument jsDoc=QJsonDocument::fromJson(baData);
+
+    QJsonObject rootObj=jsDoc.object();
+
+//    QString sDate=rootObj.value("Date").toString();
+
+    QJsonArray arrayModules=rootObj.value("Modules").toArray();
+
+    int nCount=arrayModules.count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        QJsonObject recordObject=arrayModules.at(i).toObject();
+
+        MDATA mdata={};
+
+        objectToMData(&recordObject,&mdata);
+
+        listResult.append(mdata);
+    }
 
     return listResult;
 }
@@ -357,6 +379,7 @@ QList<Utils::MDATA> Utils::mergeMData(QList<Utils::MDATA> *pList1, QList<Utils::
     QList<Utils::MDATA> listResult;
 
     listResult.append(*pList1);
+    listResult.append(*pList2);
 
     // TODO
 
