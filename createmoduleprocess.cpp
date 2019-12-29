@@ -51,7 +51,7 @@ void CreateModuleProcess::process()
     QList<Utils::FILE_RECORD> listFileRecords;
     QList<Utils::DIRECTORY_RECORD> listDirectoryRecords;
 
-    QList<Utils::RECORD> listRecords=Utils::getRecords(pMData->sRoot);
+    QList<Utils::RECORD> listRecords=Utils::getRecords(XBinary::convertPathName(pMData->sRoot));
 
     QString sBundleFileName=pMData->sBundleFileName;
     QString sBundleInfoFileName=pMData->sBundleFileName+".json";
@@ -82,6 +82,10 @@ void CreateModuleProcess::process()
             emit errorMessage(tr("Cannot remove: %1").arg(sBundleFileName));
         }
     }
+
+    QFileInfo fi(sBundleFileName);
+
+    pMData->sSrc=fi.fileName();
 
     pMData->nSize=0;
     pMData->nCompressedSize=0;
@@ -158,7 +162,7 @@ void CreateModuleProcess::process()
                 currentStats.nCurrentFile=i+1;
             }
 
-            QByteArray baInfoFile=Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords,"");
+            QByteArray baInfoFile=Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords);
 
             QBuffer bufferInfoFile(&baInfoFile);
 
@@ -179,9 +183,8 @@ void CreateModuleProcess::process()
                 bufferInfoFile.close();
             }
 
-            QString sSHA1=XBinary::getHash(XBinary::HASH_SHA1,sBundleFileName);
-
-            XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords,sSHA1)); // TODO errors
+            pMData->sSHA1=XBinary::getHash(XBinary::HASH_SHA1,sBundleFileName);
+            XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords)); // TODO errors
 
             if(!bIsStop)
             {

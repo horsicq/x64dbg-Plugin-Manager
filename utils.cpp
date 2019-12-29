@@ -25,6 +25,26 @@ Utils::Utils(QObject *parent) : QObject(parent)
 
 }
 
+void Utils::loadOptions(XPLUGINMANAGER::OPTIONS *pOptions)
+{
+    QSettings settings(QCoreApplication::applicationDirPath()+QDir::separator()+"x64plgmnr.ini",QSettings::IniFormat);
+
+    pOptions->bStayOnTop=settings.value("StayOnTop",false).toBool();
+    pOptions->sRootPath=settings.value("RootPath","").toString(); // TODO
+    pOptions->sDataPath=settings.value("DataPath","$app/data").toString();
+    pOptions->sJSONLink=settings.value("JSONFile",X_JSON_DEFAULT).toString();
+}
+
+void Utils::saveOptions(XPLUGINMANAGER::OPTIONS *pOptions)
+{
+    QSettings settings(QCoreApplication::applicationDirPath()+QDir::separator()+"x64plgmnr.ini",QSettings::IniFormat);
+
+    settings.setValue("StayOnTop",pOptions->bStayOnTop);
+    settings.setValue("RootPath",pOptions->sRootPath);
+    settings.setValue("DataPath",pOptions->sDataPath);
+    settings.setValue("JSONFile",pOptions->sJSONLink);
+}
+
 QList<Utils::RECORD> Utils::getRecords(QString sRootPath)
 {
     QList<Utils::RECORD> listResult;
@@ -56,8 +76,11 @@ bool Utils::checkMData(Utils::MDATA *pMData, QString *psErrorString)
 
     if(bResult&&(pMData->sRoot==""))
     {
-        *psErrorString=tr("Invalid root path");
-        bResult=false;
+        if(!XBinary::isDirectoryExists(XBinary::convertPathName(pMData->sRoot)))
+        {
+            *psErrorString=tr("Invalid root path");
+            bResult=false;
+        }
     }
 
     return bResult;
@@ -111,23 +134,15 @@ bool Utils::isPluginValid(QIODevice *pDevice)
     return bResult;
 }
 
-QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords, QString sSHA1)
+QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords)
 {
     QByteArray baResult;
 
     QJsonObject recordObject;
-    recordObject.insert("Name",             QJsonValue::fromVariant(pMData->sName));
-    recordObject.insert("Version",          QJsonValue::fromVariant(pMData->sCurrentVersion));
-    recordObject.insert("Date",             QJsonValue::fromVariant(pMData->sCurrentDate));
-    recordObject.insert("Author",           QJsonValue::fromVariant(pMData->sAuthor));
-    recordObject.insert("Bugreport",        QJsonValue::fromVariant(pMData->sBugreport));
-    recordObject.insert("Info",             QJsonValue::fromVariant(pMData->sInfo));
-    recordObject.insert("Size",             QJsonValue::fromVariant(pMData->nSize));
-    recordObject.insert("CompressedSize",   QJsonValue::fromVariant(pMData->nCompressedSize));
-    recordObject.insert("Is32",             QJsonValue::fromVariant(pMData->bIs32));
-    recordObject.insert("Is64",             QJsonValue::fromVariant(pMData->bIs64));
 
-    if(sSHA1=="") // In zip
+    mDataToObject(pMData,&recordObject);
+
+    if(pMData->sSHA1=="") // In zip
     {
         int nFilesCount=pListFileRecords->count();
         int nDirectoriesCount=pListDirectoryRecords->count();
@@ -180,11 +195,6 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
         }
 
         recordObject.insert("Remove",   removeArray);
-    }
-    else
-    {
-        recordObject.insert("Src",          "");
-        recordObject.insert("SHA1",         QJsonValue::fromVariant(sSHA1));
     }
 
     QJsonDocument doc(recordObject);
@@ -241,16 +251,7 @@ Utils::MDATA Utils::getMDataFromData(QByteArray baData, QString sRootPath)
 
     QJsonObject rootObj=jsDoc.object();
 
-    result.sName            =rootObj.value("Name").toString();
-    result.sCurrentVersion  =rootObj.value("Version").toString();
-    result.sCurrentDate     =rootObj.value("Date").toString();
-    result.sAuthor          =rootObj.value("Author").toString();
-    result.sBugreport       =rootObj.value("Bugreport").toString();
-    result.sInfo            =rootObj.value("Info").toString();
-    result.nSize            =rootObj.value("Size").toInt();
-    result.nCompressedSize  =rootObj.value("CompressedSize").toInt();
-    result.bIs32            =rootObj.value("Is32").toBool();
-    result.bIs64            =rootObj.value("Is64").toBool();
+    objectToMData(&rootObj,&result);
 
     QJsonArray installArray=rootObj.value("Install").toArray();
     QJsonArray removeArray=rootObj.value("Remove").toArray();
@@ -360,6 +361,76 @@ QList<Utils::MDATA> Utils::mergeMData(QList<Utils::MDATA> *pList1, QList<Utils::
     // TODO
 
     return listResult;
+}
+
+bool Utils::createServerList(QString sListFileName, QList<QString> *pList, QString sWebPrefix, QString sDate)
+{
+    bool bResult=false;
+
+    QJsonArray arrayModules;
+
+    int nCount=pList->count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        MDATA mdata=getMDataFromJSONFile(pList->at(i),"");
+        mdata.sSrc=sWebPrefix+"/"+mdata.sSrc;
+
+        QJsonObject record;
+
+        mDataToObject(&mdata,&record);
+
+        arrayModules.append(record);
+    }
+
+    QJsonObject recordObject;
+    recordObject.insert("Date",      sDate);
+    recordObject.insert("Modules",   arrayModules);
+
+    QByteArray baResult;
+
+    QJsonDocument doc(recordObject);
+    baResult.append(doc.toJson());
+
+    bResult=XBinary::writeToFile(sListFileName,baResult);
+
+    return bResult;
+}
+
+void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject)
+{
+    pObject->insert("Name",             QJsonValue::fromVariant(pMData->sName));
+    pObject->insert("Version",          QJsonValue::fromVariant(pMData->sCurrentVersion));
+    pObject->insert("Date",             QJsonValue::fromVariant(pMData->sCurrentDate));
+    pObject->insert("Author",           QJsonValue::fromVariant(pMData->sAuthor));
+    pObject->insert("Bugreport",        QJsonValue::fromVariant(pMData->sBugreport));
+    pObject->insert("Info",             QJsonValue::fromVariant(pMData->sInfo));
+    pObject->insert("Size",             QJsonValue::fromVariant(pMData->nSize));
+    pObject->insert("CompressedSize",   QJsonValue::fromVariant(pMData->nCompressedSize));
+    pObject->insert("Is32",             QJsonValue::fromVariant(pMData->bIs32));
+    pObject->insert("Is64",             QJsonValue::fromVariant(pMData->bIs64));
+    pObject->insert("Src",              QJsonValue::fromVariant(pMData->sSrc));
+
+    if(pMData->sSHA1!="")
+    {
+        pObject->insert("SHA1",             QJsonValue::fromVariant(pMData->sSHA1));
+    }
+}
+
+void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
+{
+    pMData->sName           =pObject->value("Name").toString();
+    pMData->sCurrentVersion =pObject->value("Version").toString();
+    pMData->sCurrentDate    =pObject->value("Date").toString();
+    pMData->sAuthor         =pObject->value("Author").toString();
+    pMData->sBugreport      =pObject->value("Bugreport").toString();
+    pMData->sInfo           =pObject->value("Info").toString();
+    pMData->nSize           =pObject->value("Size").toInt();
+    pMData->nCompressedSize =pObject->value("CompressedSize").toInt();
+    pMData->bIs32           =pObject->value("Is32").toBool();
+    pMData->bIs64           =pObject->value("Is64").toBool();
+    pMData->sSrc            =pObject->value("Src").toString();
+    pMData->sSHA1           =pObject->value("SHA1").toString();
 }
 
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)

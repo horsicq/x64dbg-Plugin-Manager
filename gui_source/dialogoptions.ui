@@ -90,9 +90,9 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBoxJSONFile">
+    <widget class="QGroupBox" name="groupBoxJSONLink">
      <property name="title">
-      <string>JSON file</string>
+      <string>JSON link</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <property name="leftMargin">
@@ -108,7 +108,7 @@
        <number>1</number>
       </property>
       <item>
-       <widget class="QLineEdit" name="lineEditJSONFile"/>
+       <widget class="QLineEdit" name="lineEditJSONLink"/>
       </item>
      </layout>
     </widget>

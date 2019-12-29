@@ -28,7 +28,7 @@
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 
-#define X_JSON_DEFAULT "https://raw.githubusercontent.com/x64dbg/PluginManager/master/plugins/root.json"
+#define X_JSON_DEFAULT "https://raw.githubusercontent.com/x64dbg/PluginManager/master/list.json"
 
 namespace XPLUGINMANAGER
 {
@@ -37,7 +37,7 @@ namespace XPLUGINMANAGER
         bool bStayOnTop;
         QString sRootPath;
         QString sDataPath;
-        QString sJSONFile;
+        QString sJSONLink;
     };
 }
 

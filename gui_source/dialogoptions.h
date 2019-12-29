@@ -22,7 +22,6 @@
 #define DIALOGOPTIONS_H
 
 #include <QDialog>
-#include <QSettings>
 #include <QDir>
 #include <QFileDialog>
 #include "../global.h"
@@ -39,9 +38,6 @@ class DialogOptions : public QDialog
 public:
     explicit DialogOptions(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions);
     ~DialogOptions();
-
-    static void loadOptions(XPLUGINMANAGER::OPTIONS *pOptions);
-    static void saveOptions(XPLUGINMANAGER::OPTIONS *pOptions);
 
 private slots:
     void on_pushButtonOK_clicked();

@@ -38,6 +38,10 @@ int main(int argc, char *argv[])
 
     QCoreApplication app(argc, argv);
 
+    XPLUGINMANAGER::OPTIONS options={};
+
+    Utils::loadOptions(&options);
+
     ConsoleOutput consoleOutput;
     QCommandLineParser parser;
     QString sDescription;
@@ -49,8 +53,11 @@ int main(int argc, char *argv[])
 
     parser.addPositionalArgument("plugin","The plugin to open.");
 
-    QCommandLineOption clSetGlobalRootPath  (QStringList()<<"g"<<"setglobalrootpath",   "Set a global root path<path>.",                "path");
+    QCommandLineOption clSetGlobalRootPath  (QStringList()<<"G"<<"setglobalrootpath",   "Set a global root path<path>.",                "path");
+    QCommandLineOption clSetGlobalDataPath  (QStringList()<<"D"<<"setglobaldatapath",   "Set a global data path<path>.",                "path");
+    QCommandLineOption clSetGlobalJSONLink  (QStringList()<<"J"<<"setglobaljsonlink",   "Set a global JSON link<link>.",                "link");
     QCommandLineOption clCreatePlugin       (QStringList()<<"c"<<"createplugin",        "Create a plugin<name>.",                       "name");
+    QCommandLineOption clCreateList         (QStringList()<<"l"<<"createserverlist",    "Create a serverlist<name>.",                   "name");
     QCommandLineOption clSetRootPath        (QStringList()<<"r"<<"setrootpath",         "Set a root path<path>.",                       "path");
     QCommandLineOption clSetName            (QStringList()<<"n"<<"setname",             "Set a name of plugin<name>.",                  "name");
     QCommandLineOption clSetVersion         (QStringList()<<"V"<<"setversion",          "Set a version of plugin<version>.",            "version");
@@ -58,9 +65,13 @@ int main(int argc, char *argv[])
     QCommandLineOption clSetAuthor          (QStringList()<<"a"<<"setauthor",           "Set an author of plugin<author>.",             "author");
     QCommandLineOption clSetBugreport       (QStringList()<<"b"<<"setbugreport",        "Set a bugreport of plugin<bugreport>.",        "bugreport");
     QCommandLineOption clSetInfo            (QStringList()<<"I"<<"setinfo",             "Set an info of plugin<info>.",                 "info");
+    QCommandLineOption clSetWebPrefix       (QStringList()<<"p"<<"setwebprefix",        "Set a webprefix<prefix>.",                     "prefix");
 
     parser.addOption(clSetGlobalRootPath);
+    parser.addOption(clSetGlobalDataPath);
+    parser.addOption(clSetGlobalJSONLink);
     parser.addOption(clCreatePlugin);
+    parser.addOption(clCreateList);
     parser.addOption(clSetRootPath);
     parser.addOption(clSetName);
     parser.addOption(clSetVersion);
@@ -68,8 +79,31 @@ int main(int argc, char *argv[])
     parser.addOption(clSetAuthor);
     parser.addOption(clSetBugreport);
     parser.addOption(clSetInfo);
+    parser.addOption(clSetWebPrefix);
 
     parser.process(app);
+
+    bool bIsSetGlobalRootPath=parser.isSet(clSetGlobalRootPath);
+    bool bIsSetGlobalDataPath=parser.isSet(clSetGlobalDataPath);
+    bool bIsSetGlobalJSONLink=parser.isSet(clSetGlobalJSONLink);
+
+    if(bIsSetGlobalRootPath||bIsSetGlobalDataPath||bIsSetGlobalJSONLink)
+    {
+        if(bIsSetGlobalRootPath)
+        {
+            options.sRootPath=parser.value(clSetGlobalRootPath);
+        }
+        if(bIsSetGlobalDataPath)
+        {
+            options.sDataPath=parser.value(clSetGlobalDataPath);
+        }
+        if(bIsSetGlobalJSONLink)
+        {
+            options.sJSONLink=parser.value(clSetGlobalJSONLink);
+        }
+
+        Utils::saveOptions(&options);
+    }
 
     if(parser.isSet(clCreatePlugin))
     {
@@ -103,6 +137,38 @@ int main(int argc, char *argv[])
         else
         {
             consoleOutput.errorMessage(sErrorString);
+        }
+    }
+    else if(parser.isSet(clCreateList))
+    {
+        QString sListName=parser.value(clCreateList);
+        QString sWebPrefix=parser.value(clSetWebPrefix);
+        QString sDate=parser.value(clSetDate);
+
+        if(sDate=="")
+        {
+            sDate=QDate::currentDate().toString("yyyy-MM-dd");
+        }
+
+        if(sListName!="")
+        {
+            QList<QString> listFiles=parser.positionalArguments();
+
+            if(listFiles.count())
+            {
+                if(!Utils::createServerList(sListName,&listFiles,sWebPrefix,sDate))
+                {
+                    consoleOutput.errorMessage(QObject::tr("Cannot create serverlist."));
+                }
+            }
+            else
+            {
+                consoleOutput.errorMessage(QObject::tr("No input files."));
+            }
+        }
+        else
+        {
+            consoleOutput.errorMessage(QObject::tr("List name is empty."));
         }
     }
 

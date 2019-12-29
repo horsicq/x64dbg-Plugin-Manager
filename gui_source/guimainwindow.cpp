@@ -31,7 +31,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     setAcceptDrops(true);
 
-    DialogOptions::loadOptions(&options);
+    Utils::loadOptions(&options);
 
     if(!XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath)))
     {
@@ -114,7 +114,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
 GuiMainWindow::~GuiMainWindow()
 {
-    DialogOptions::saveOptions(&options);
+    Utils::saveOptions(&options);
 
     delete ui;
 }
@@ -277,7 +277,7 @@ void GuiMainWindow::updateJsonList()
     Utils::WEB_RECORD record={};
 
     record.sFileName=XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json";
-    record.sLink=options.sJSONFile;
+    record.sLink=options.sJSONLink;
 
     DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
 

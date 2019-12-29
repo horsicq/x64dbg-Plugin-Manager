@@ -120,15 +120,19 @@ void DialogCreateModule::on_lineEditRoot_textChanged(const QString &sDirectoryNa
 {
     mdata.sRoot="";
 
+    QString _sDirectoryName=sDirectoryName;
+
     if(sDirectoryName!="")
     {
-        QDir dir(sDirectoryName);
+        _sDirectoryName=XBinary::convertPathName(_sDirectoryName);
+
+        QDir dir(_sDirectoryName);
 
         if(dir.exists())
         {
-            mdata.sRoot=sDirectoryName;
+            mdata.sRoot=_sDirectoryName;
 
-            QList<Utils::RECORD> listRecords=Utils::getRecords(sDirectoryName);
+            QList<Utils::RECORD> listRecords=Utils::getRecords(_sDirectoryName);
 
             int nCount=listRecords.count();
 

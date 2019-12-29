@@ -27,6 +27,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QSettings>
 #include "global.h"
 #include "xzip.h"
 
@@ -85,6 +86,8 @@ public:
         QList<Utils::REMOVE_RECORD> listRemoveRecords;
         qint64 nSize;
         qint64 nCompressedSize;
+        QString sSrc;
+        QString sSHA1;
     };
 
     struct FILE_RECORD
@@ -110,13 +113,16 @@ public:
 
     explicit Utils(QObject *parent=nullptr);
 
+    static void loadOptions(XPLUGINMANAGER::OPTIONS *pOptions);
+    static void saveOptions(XPLUGINMANAGER::OPTIONS *pOptions);
+
     static QList<RECORD> getRecords(QString sRootPath);
     static bool checkMData(MDATA *pMData,QString *psErrorString);
     static QString createBundleName(MDATA *pMData);
     static bool isPluginValid(QString sFileName);
     static bool isPluginValid(QIODevice *pDevice);
 
-    static QByteArray createPluginInfo(Utils::MDATA *pMData,QList<Utils::FILE_RECORD> *pListFileRecords,QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords,QString sSHA1);
+    static QByteArray createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords);
     static MDATA getMDataFromZip(QString sFileName,QString sRootPath);
     static MDATA getMDataFromZip(QIODevice *pDevice,QString sRootPath);
     static MDATA getMDataFromData(QByteArray baData, QString sRootPath);
@@ -126,6 +132,11 @@ public:
     static QList<MDATA> getModulesFromJSONFile(QString sFileName);
 
     static QList<MDATA> mergeMData(QList<MDATA> *pList1,QList<MDATA> *pList2);
+
+    static bool createServerList(QString sListFileName,QList<QString> *pList,QString sWebPrefix,QString sDate);
+
+    static void mDataToObject(Utils::MDATA *pMData,QJsonObject *pObject);
+    static void objectToMData(QJsonObject *pObject,Utils::MDATA *pMData);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
