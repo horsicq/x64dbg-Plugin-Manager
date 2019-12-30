@@ -30,7 +30,7 @@ DialogRemoveModule::DialogRemoveModule(QWidget *parent,XPLUGINMANAGER::OPTIONS *
     this->pOptions=pOptions;
     this->sModuleName=sModuleName;
 
-    QString sFileName=XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"installed"+QDir::separator()+QString("%1.json").arg(sModuleName);
+    QString sFileName=Utils::getInstalledJsonFileName(pOptions,sModuleName);
 
     Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(pOptions->sRootPath));
 

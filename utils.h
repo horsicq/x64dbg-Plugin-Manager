@@ -155,6 +155,9 @@ public:
     static QMap<QString,STATUS> getModulesStatusMap(QList<MDATA> *pServerList,QList<MDATA> *pInstalled);
 
     static MODULES_DATA getModulesData(XPLUGINMANAGER::OPTIONS *pOptions);
+    static QString getInstalledJsonFileName(XPLUGINMANAGER::OPTIONS *pOptions,QString sName);
+    static QString getServerListFileName(XPLUGINMANAGER::OPTIONS *pOptions);
+    static QString getModuleFileName(XPLUGINMANAGER::OPTIONS *pOptions,QString sName);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);

@@ -98,7 +98,7 @@ void InstallModuleProcess::process()
                 currentStats.nCurrentFile=j+1;
             }
 
-            QString sInfoFileName=XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"installed"+QDir::separator()+mdata.sName+".json";
+            QString sInfoFileName=Utils::getInstalledJsonFileName(pOptions,mdata.sName);
 
             if(XBinary::isFileExists(sInfoFileName))
             {

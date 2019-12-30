@@ -500,11 +500,26 @@ Utils::MODULES_DATA Utils::getModulesData(XPLUGINMANAGER::OPTIONS *pOptions)
 {
     MODULES_DATA result={};
 
-    result.listServerList=Utils::getModulesFromJSONFile(XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"list.json");
+    result.listServerList=Utils::getModulesFromJSONFile(Utils::getServerListFileName(pOptions));
     result.listInstalled=Utils::getInstalledModules(XBinary::convertPathName(pOptions->sDataPath),XBinary::convertPathName(pOptions->sRootPath));
     result.mapStatus=getModulesStatusMap(&result.listServerList,&result.listInstalled);
 
     return result;
+}
+
+QString Utils::getInstalledJsonFileName(XPLUGINMANAGER::OPTIONS *pOptions, QString sName)
+{
+    return XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"installed"+QDir::separator()+QString("%1.json").arg(sName);
+}
+
+QString Utils::getServerListFileName(XPLUGINMANAGER::OPTIONS *pOptions)
+{
+    return XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"list.json";
+}
+
+QString Utils::getModuleFileName(XPLUGINMANAGER::OPTIONS *pOptions, QString sName)
+{
+    return XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1.x64dbg.zip").arg(sName);
 }
 
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)

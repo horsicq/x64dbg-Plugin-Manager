@@ -55,7 +55,7 @@ void RemoveModuleProcess::process()
     {
         currentStats.sModule=listModuleNames.at(i);
 
-        QString sFileName=XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"installed"+QDir::separator()+QString("%1.json").arg(currentStats.sModule);
+        QString sFileName=Utils::getInstalledJsonFileName(pOptions,currentStats.sModule);
 
         if(XBinary::isFileExists(sFileName))
         {
