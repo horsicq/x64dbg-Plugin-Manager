@@ -276,8 +276,11 @@
         <attribute name="verticalHeaderVisible">
          <bool>false</bool>
         </attribute>
+        <attribute name="verticalHeaderMinimumSectionSize">
+         <number>20</number>
+        </attribute>
         <attribute name="verticalHeaderDefaultSectionSize">
-         <number>23</number>
+         <number>20</number>
         </attribute>
        </widget>
       </item>

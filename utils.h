@@ -159,6 +159,8 @@ public:
     static QString getServerListFileName(XPLUGINMANAGER::OPTIONS *pOptions);
     static QString getModuleFileName(XPLUGINMANAGER::OPTIONS *pOptions,QString sName);
 
+    static Utils::MDATA getMDataByName(QList<MDATA> *pServerList,QString sName);
+
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
 };

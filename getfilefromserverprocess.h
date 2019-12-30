@@ -48,6 +48,7 @@ private:
     bool bIsStop;
     QList<Utils::WEB_RECORD> listWebRecords;
     QNetworkReply *reply;
+    QNetworkReply *replyRed;
     Utils::STATS currentStats;
 };
 

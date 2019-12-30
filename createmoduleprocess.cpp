@@ -79,7 +79,7 @@ void CreateModuleProcess::process()
 
         if(!bSuccess)
         {
-            emit errorMessage(tr("Cannot remove: %1").arg(sBundleFileName));
+            emit errorMessage(tr("Cannot remove: %1").arg(sBundleInfoFileName));
         }
     }
 
@@ -183,9 +183,6 @@ void CreateModuleProcess::process()
                 bufferInfoFile.close();
             }
 
-            pMData->sSHA1=XBinary::getHash(XBinary::HASH_SHA1,sBundleFileName);
-            XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords)); // TODO errors
-
             if(!bIsStop)
             {
                 currentStats.sFile=tr("Add central directory");
@@ -194,6 +191,9 @@ void CreateModuleProcess::process()
             }
 
             fileResult.close();
+
+            pMData->sSHA1=XBinary::getHash(XBinary::HASH_SHA1,sBundleFileName);
+            XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords)); // TODO errors
         }
     }
 

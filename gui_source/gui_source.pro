@@ -19,6 +19,7 @@ SOURCES += \
     dialogcreatemodule.cpp \
     dialogcreatemoduleprocess.cpp \
     dialoggetfilefromserverprocess.cpp \
+    dialoginfomodule.cpp \
     dialoginstallmodule.cpp \
     dialoginstallmoduleprocess.cpp \
     dialogoptions.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     dialogcreatemodule.h \
     dialogcreatemoduleprocess.h \
     dialoggetfilefromserverprocess.h \
+    dialoginfomodule.h \
     dialoginstallmodule.h \
     dialoginstallmoduleprocess.h \
     dialogoptions.h \
@@ -52,6 +54,7 @@ FORMS += \
     dialogcreatemodule.ui \
     dialogcreatemoduleprocess.ui \
     dialoggetfilefromserverprocess.ui \
+    dialoginfomodule.ui \
     dialoginstallmodule.ui \
     dialoginstallmoduleprocess.ui \
     dialogoptions.ui \
@@ -68,3 +71,6 @@ FORMS += \
 win32 {
     RC_ICONS = ../icons/main.ico
 }
+
+RESOURCES += \
+    resources.qrc

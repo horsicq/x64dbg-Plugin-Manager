@@ -85,7 +85,7 @@ void InstallModuleProcess::process()
                     XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("files/"+record.sPath,&listZipRecords);
                     zip.decompressToFile(&archiveRecord,record.sFullPath);
 
-                    if(XBinary::getHash(XBinary::HASH_SHA1,record.sFullPath)!=record.sSHA1)
+                    if(XBinary::isFileHashValid(XBinary::HASH_SHA1,record.sFullPath,record.sSHA1))
                     {
                         qDebug("INVALID HASH"); // TODO
                     }

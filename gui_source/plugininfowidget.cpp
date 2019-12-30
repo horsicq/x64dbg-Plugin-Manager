@@ -43,6 +43,10 @@ void PluginInfoWidget::setData(Utils::MDATA *pMData)
     sText+=QString("<b>%1:</b> %2<br />").arg(tr("Author")).arg(pMData->sAuthor);
     sText+=QString("<b>%1:</b> %2<br />").arg(tr("Bugreport")).arg(pMData->sBugreport);
     sText+=QString("<b>%1:</b> %2<br />").arg(tr("Info")).arg(pMData->sInfo);
+    sText+=QString("<b>%1:</b> %2<br />").arg(tr("Size")).arg(pMData->nSize);
+    sText+=QString("<b>%1:</b> %2<br />").arg(tr("Compressed size")).arg(pMData->nCompressedSize);
+    sText+=QString("<b>%1:</b> %2<br />").arg(tr("Is32")).arg((pMData->bIs32)?("true"):("false"));
+    sText+=QString("<b>%1:</b> %2<br />").arg(tr("Is64")).arg((pMData->bIs64)?("true"):("false"));
 
     ui->textEditInfo->setHtml(sText);
 }

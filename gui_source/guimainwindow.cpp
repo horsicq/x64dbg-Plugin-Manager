@@ -118,14 +118,15 @@ void GuiMainWindow::adjustTable(QTableWidget *pTableWidget)
     pTableWidget->horizontalHeader()->setSectionResizeMode(CN_32,           QHeaderView::ResizeToContents);
     pTableWidget->horizontalHeader()->setSectionResizeMode(CN_64,           QHeaderView::ResizeToContents);
     pTableWidget->horizontalHeader()->setSectionResizeMode(CN_VERSION,      QHeaderView::ResizeToContents);
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_INSTALL,      QHeaderView::ResizeToContents);
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_REMOVE,       QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_INSTALL,      QHeaderView::Interactive);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_REMOVE,       QHeaderView::Interactive);
 }
 
 void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *pMData, QMap<QString, Utils::STATUS> *pMapStatus)
 {
     int nCount=pMData->count();
 
+    pTableWidget->setRowCount(0);
     pTableWidget->setRowCount(nCount);
 
     for(int i=0;i<nCount;i++)
@@ -311,15 +312,37 @@ void GuiMainWindow::installButtonSlot()
 
     if(sName!="") // TODO Check
     {
-        // TODO
+        Utils::MDATA mdata=Utils::getMDataByName(&(modulesData.listServerList),sName);
 
-        QString sFileName=Utils::getModuleFileName(&options,sName);
+        if(mdata.sName!="")
+        {
+            QString sFileName=Utils::getModuleFileName(&options,mdata.sName);
 
-        DialogInstallModule dialogInstallModule(this,&options,sFileName);
+            if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,mdata.sSHA1))
+            {
+                Utils::WEB_RECORD record={};
 
-        dialogInstallModule.exec();
+                record.sFileName=sFileName;
+                record.sLink=mdata.sSrc;
 
-        getModules();
+                DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
+
+                dialogGetFileFromServer.exec();
+            }
+
+            if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,mdata.sSHA1))
+            {
+                DialogInstallModule dialogInstallModule(this,&options,sFileName);
+
+                dialogInstallModule.exec();
+
+                getModules();
+            }
+            else
+            {
+                // TODO errors invalid SHA1
+            }
+        }
     }
 }
 

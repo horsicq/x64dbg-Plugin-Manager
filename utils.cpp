@@ -453,11 +453,12 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QList<Utils::MDATA> *pSe
     for(int i=0;i<nCount;i++)
     {
         STATUS status={};
+        status.sName=pServerList->at(i).sName;
         status.bInstall=true;
         status.sServerListDate=pServerList->at(i).sDate;
         status.sServerListVersion=pServerList->at(i).sVersion;
 
-        mapResult.insert(pServerList->at(i).sName,status);
+        mapResult.insert(status.sName,status);
     }
 
     nCount=pInstalled->count();
@@ -473,7 +474,8 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QList<Utils::MDATA> *pSe
         {
             status=mapResult.value(sName);
         }
-
+        status.sName=pInstalled->at(i).sName;
+        status.bInstall=false;
         status.bRemove=true;
         status.sInstalledDate=pInstalled->at(i).sDate;
         status.sInstalledVersion=pInstalled->at(i).sVersion;
@@ -484,13 +486,9 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QList<Utils::MDATA> *pSe
             {
                 status.bUpdate=true;
             }
-            else
-            {
-                status.bInstall=true;
-            }
         }
 
-        mapResult.insert(pInstalled->at(i).sName,status);
+        mapResult.insert(status.sName,status);
     }
 
     return mapResult;
@@ -520,6 +518,25 @@ QString Utils::getServerListFileName(XPLUGINMANAGER::OPTIONS *pOptions)
 QString Utils::getModuleFileName(XPLUGINMANAGER::OPTIONS *pOptions, QString sName)
 {
     return XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1.x64dbg.zip").arg(sName);
+}
+
+Utils::MDATA Utils::getMDataByName(QList<MDATA> *pServerList,QString sName)
+{
+    Utils::MDATA result={};
+
+    int nCount=pServerList->count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        if(pServerList->at(i).sName==sName)
+        {
+            result=pServerList->at(i);
+
+            break;
+        }
+    }
+
+    return result;
 }
 
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)

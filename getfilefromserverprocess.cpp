@@ -23,6 +23,7 @@
 GetFileFromServerProcess::GetFileFromServerProcess(QObject *parent) : QObject(parent)
 {
     reply=0;
+    replyRed=0;
     currentStats={};
 }
 
@@ -38,6 +39,11 @@ void GetFileFromServerProcess::stop()
     if(reply)
     {
         reply->abort();
+    }
+
+    if(replyRed)
+    {
+        replyRed->abort();
     }
 }
 
@@ -68,15 +74,42 @@ void GetFileFromServerProcess::process()
 
         if(reply->bytesAvailable())
         {
-            QByteArray baData=reply->readAll();
+            bool bSuccess=false;
+            QByteArray baData;
 
-            if(XBinary::isFileExists(listWebRecords.at(i).sFileName))
+            QString sRedirectUrl=reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
+
+            if(sRedirectUrl!="") // Github redirect
             {
-                XBinary::removeFile(listWebRecords.at(i).sFileName);
-                // TODO handle errors
+                QNetworkAccessManager namRed;
+                QNetworkRequest *pRequestRed=new QNetworkRequest(QUrl(sRedirectUrl));
+                replyRed=namRed.get(*pRequestRed);
+                QEventLoop loopRed;
+                QObject::connect(replyRed, SIGNAL(finished()), &loopRed, SLOT(quit()));
+                loopRed.exec();
+
+                if(replyRed->bytesAvailable())
+                {
+                    baData=replyRed->readAll();
+                    bSuccess=true;
+                }
+            }
+            else
+            {
+                baData=reply->readAll();
+                bSuccess=true;
             }
 
-            XBinary::writeToFile(listWebRecords.at(i).sFileName,baData); // TODO handle errors
+            if(bSuccess)
+            {
+                if(XBinary::isFileExists(listWebRecords.at(i).sFileName))
+                {
+                    XBinary::removeFile(listWebRecords.at(i).sFileName);
+                    // TODO handle errors
+                }
+
+                XBinary::writeToFile(listWebRecords.at(i).sFileName,baData); // TODO handle errors
+            }
         }
 
         reply->deleteLater();
