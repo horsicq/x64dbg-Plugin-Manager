@@ -33,8 +33,11 @@ class DialogInfoModule : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInfoModule(QWidget *parent = nullptr);
+    explicit DialogInfoModule(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleName);
     ~DialogInfoModule();
+
+private slots:
+    void on_pushButtonOK_clicked();
 
 private:
     Ui::DialogInfoModule *ui;

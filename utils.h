@@ -38,6 +38,7 @@ class Utils : public QObject
 public:
     struct STATUS
     {
+        QString sName;
         bool bInstall;
         bool bUpdate;
         bool bRemove;
