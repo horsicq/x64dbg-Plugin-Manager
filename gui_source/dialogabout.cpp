@@ -27,9 +27,15 @@ DialogAbout::DialogAbout(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->labelVersion->setText(QString("<span style=\" font-weight:600;\">%1 %2</span>")
-                                  .arg(QApplication::applicationName())
-                                  .arg(QApplication::applicationVersion()));
+    ui->labelInfo->setText(QString("<html><head/><body><p align=\"center\">"
+                                   "<span style=\" font-weight:600;\">Copyright(C) 2019 hors</span></p>"
+                                   "<p align=\"center\"><span style=\" font-weight:600;\">"
+                                   "Version: </span>%1 (%2)</p><p align=\"center\">"
+                                   "<span style=\" font-weight:600;\">Website: </span><a href=\"http://ntinfo.biz\">"
+                                   "<span style=\" text-decoration: underline; color:#0000ff;\">http://ntinfo.biz</span>"
+                                   "</a></p><p align=\"center\"><span style=\" font-weight:600;\">Bugerports: </span>"
+                                   "<a href=\"mailto:horsicq@gmail.com\"><span style=\" text-decoration: underline; color:#0000ff;\">"
+                                   "horsicq@gmail.com</span></a></p></body></html>").arg(X_APPLICATIONVERSION).arg(__DATE__));
 }
 
 DialogAbout::~DialogAbout()

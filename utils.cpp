@@ -92,9 +92,9 @@ QString Utils::createBundleName(Utils::MDATA *pMData)
 
     sResult+=pMData->sName;
 
-    if(pMData->sCurrentVersion!="")
+    if(pMData->sVersion!="")
     {
-        sResult+=QString("_%1").arg(pMData->sCurrentVersion);
+        sResult+=QString("_%1").arg(pMData->sVersion);
     }
 
     return sResult;
@@ -374,18 +374,6 @@ QList<Utils::MDATA> Utils::getModulesFromJSONFile(QString sFileName)
     return listResult;
 }
 
-QList<Utils::MDATA> Utils::mergeMData(QList<Utils::MDATA> *pList1, QList<Utils::MDATA> *pList2)
-{
-    QList<Utils::MDATA> listResult;
-
-    listResult.append(*pList1);
-    listResult.append(*pList2);
-
-    // TODO
-
-    return listResult;
-}
-
 bool Utils::createServerList(QString sListFileName, QList<QString> *pList, QString sWebPrefix, QString sDate)
 {
     bool bResult=false;
@@ -423,8 +411,8 @@ bool Utils::createServerList(QString sListFileName, QList<QString> *pList, QStri
 void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject)
 {
     pObject->insert("Name",             QJsonValue::fromVariant(pMData->sName));
-    pObject->insert("Version",          QJsonValue::fromVariant(pMData->sCurrentVersion));
-    pObject->insert("Date",             QJsonValue::fromVariant(pMData->sCurrentDate));
+    pObject->insert("Version",          QJsonValue::fromVariant(pMData->sVersion));
+    pObject->insert("Date",             QJsonValue::fromVariant(pMData->sDate));
     pObject->insert("Author",           QJsonValue::fromVariant(pMData->sAuthor));
     pObject->insert("Bugreport",        QJsonValue::fromVariant(pMData->sBugreport));
     pObject->insert("Info",             QJsonValue::fromVariant(pMData->sInfo));
@@ -443,8 +431,8 @@ void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject)
 void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
 {
     pMData->sName           =pObject->value("Name").toString();
-    pMData->sCurrentVersion =pObject->value("Version").toString();
-    pMData->sCurrentDate    =pObject->value("Date").toString();
+    pMData->sVersion        =pObject->value("Version").toString();
+    pMData->sDate           =pObject->value("Date").toString();
     pMData->sAuthor         =pObject->value("Author").toString();
     pMData->sBugreport      =pObject->value("Bugreport").toString();
     pMData->sInfo           =pObject->value("Info").toString();
@@ -454,6 +442,69 @@ void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
     pMData->bIs64           =pObject->value("Is64").toBool();
     pMData->sSrc            =pObject->value("Src").toString();
     pMData->sSHA1           =pObject->value("SHA1").toString();
+}
+
+QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QList<Utils::MDATA> *pServerList, QList<Utils::MDATA> *pInstalled)
+{
+    QMap<QString, Utils::STATUS> mapResult;
+
+    int nCount=pServerList->count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        STATUS status={};
+        status.bInstall=true;
+        status.sServerListDate=pServerList->at(i).sDate;
+        status.sServerListVersion=pServerList->at(i).sVersion;
+
+        mapResult.insert(pServerList->at(i).sName,status);
+    }
+
+    nCount=pInstalled->count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        QString sName=pInstalled->at(i).sName;
+        bool bIsServerList=mapResult.contains(sName);
+
+        STATUS status={};
+
+        if(bIsServerList)
+        {
+            status=mapResult.value(sName);
+        }
+
+        status.bRemove=true;
+        status.sInstalledDate=pInstalled->at(i).sDate;
+        status.sInstalledVersion=pInstalled->at(i).sVersion;
+
+        if(bIsServerList)
+        {
+            if((status.sServerListDate>status.sInstalledDate)&&(status.sServerListVersion!=status.sInstalledVersion))
+            {
+                status.bUpdate=true;
+            }
+            else
+            {
+                status.bInstall=true;
+            }
+        }
+
+        mapResult.insert(pInstalled->at(i).sName,status);
+    }
+
+    return mapResult;
+}
+
+Utils::MODULES_DATA Utils::getModulesData(XPLUGINMANAGER::OPTIONS *pOptions)
+{
+    MODULES_DATA result={};
+
+    result.listServerList=Utils::getModulesFromJSONFile(XBinary::convertPathName(pOptions->sDataPath)+QDir::separator()+"list.json");
+    result.listInstalled=Utils::getInstalledModules(XBinary::convertPathName(pOptions->sDataPath),XBinary::convertPathName(pOptions->sRootPath));
+    result.mapStatus=getModulesStatusMap(&result.listServerList,&result.listInstalled);
+
+    return result;
 }
 
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)

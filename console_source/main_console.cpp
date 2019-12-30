@@ -118,8 +118,8 @@ int main(int argc, char *argv[])
 
         mdata.sRoot=parser.value(clSetRootPath);
         mdata.sName=parser.value(clSetName);
-        mdata.sCurrentVersion=parser.value(clSetVersion);
-        mdata.sCurrentDate=parser.value(clSetDate);
+        mdata.sVersion=parser.value(clSetVersion);
+        mdata.sDate=parser.value(clSetDate);
         mdata.sAuthor=parser.value(clSetAuthor);
         mdata.sBugreport=parser.value(clSetBugreport);
         mdata.sInfo=parser.value(clSetInfo);

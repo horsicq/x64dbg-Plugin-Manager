@@ -36,6 +36,17 @@ class Utils : public QObject
     Q_OBJECT
 
 public:
+    struct STATUS
+    {
+        bool bInstall;
+        bool bUpdate;
+        bool bRemove;
+        QString sServerListVersion;
+        QString sServerListDate;
+        QString sInstalledVersion;
+        QString sInstalledDate;
+    };
+
     struct STATS
     {
         QString sModule;
@@ -71,12 +82,10 @@ public:
     struct MDATA
     {
         QString sName;
-        QString sCurrentVersion;
-        QString sLastVersion;
+        QString sVersion;
         bool bIs32;
         bool bIs64;
-        QString sCurrentDate;
-        QString sLastDate;
+        QString sDate;
         QString sAuthor;
         QString sBugreport;
         QString sInfo;
@@ -111,6 +120,13 @@ public:
         QString sLink;
     };
 
+    struct MODULES_DATA
+    {
+        QList<Utils::MDATA> listServerList;
+        QList<Utils::MDATA> listInstalled;
+        QMap<QString,STATUS> mapStatus;
+    };
+
     explicit Utils(QObject *parent=nullptr);
 
     static void loadOptions(XPLUGINMANAGER::OPTIONS *pOptions);
@@ -131,12 +147,14 @@ public:
     static QList<MDATA> getInstalledModules(QString sDataPath,QString sRootPath);
     static QList<MDATA> getModulesFromJSONFile(QString sFileName);
 
-    static QList<MDATA> mergeMData(QList<MDATA> *pList1,QList<MDATA> *pList2);
-
     static bool createServerList(QString sListFileName,QList<QString> *pList,QString sWebPrefix,QString sDate);
 
     static void mDataToObject(Utils::MDATA *pMData,QJsonObject *pObject);
     static void objectToMData(QJsonObject *pObject,Utils::MDATA *pMData);
+
+    static QMap<QString,STATUS> getModulesStatusMap(QList<MDATA> *pServerList,QList<MDATA> *pInstalled);
+
+    static MODULES_DATA getModulesData(XPLUGINMANAGER::OPTIONS *pOptions);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);

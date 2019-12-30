@@ -172,7 +172,7 @@ void DialogCreateModule::on_lineEditName_textChanged(const QString &sName)
 void DialogCreateModule::on_lineEditVersion_textChanged(const QString &sVersion)
 {
     // TODO Checks
-    mdata.sCurrentVersion=sVersion;
+    mdata.sVersion=sVersion;
 }
 
 void DialogCreateModule::on_pushButtonCurrentDate_clicked()
@@ -187,7 +187,7 @@ void DialogCreateModule::_currentDate()
 
 void DialogCreateModule::on_dateEdit_dateChanged(const QDate &date)
 {
-    mdata.sCurrentDate=date.toString("yyyy-MM-dd");
+    mdata.sDate=date.toString("yyyy-MM-dd");
 }
 
 void DialogCreateModule::on_lineEditInfo_textChanged(const QString &sInfo)

@@ -22,6 +22,8 @@
 #define DIALOGABOUT_H
 
 #include <QDialog>
+#include <QDate>
+#include "../global.h"
 
 namespace Ui {
 class DialogAbout;

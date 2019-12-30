@@ -38,8 +38,8 @@ void PluginInfoWidget::setData(Utils::MDATA *pMData)
     QString sText;
 
     sText+=QString("<b>%1:</b> %2<br />").arg(tr("Name")).arg(pMData->sName);
-    sText+=QString("<b>%1:</b> %2<br />").arg(tr("Version")).arg(pMData->sCurrentVersion);
-    sText+=QString("<b>%1:</b> %2<br />").arg(tr("Date")).arg(pMData->sCurrentDate);
+    sText+=QString("<b>%1:</b> %2<br />").arg(tr("Version")).arg(pMData->sVersion);
+    sText+=QString("<b>%1:</b> %2<br />").arg(tr("Date")).arg(pMData->sDate);
     sText+=QString("<b>%1:</b> %2<br />").arg(tr("Author")).arg(pMData->sAuthor);
     sText+=QString("<b>%1:</b> %2<br />").arg(tr("Bugreport")).arg(pMData->sBugreport);
     sText+=QString("<b>%1:</b> %2<br />").arg(tr("Info")).arg(pMData->sInfo);

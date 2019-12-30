@@ -56,9 +56,9 @@ void CreateModuleProcess::process()
     QString sBundleFileName=pMData->sBundleFileName;
     QString sBundleInfoFileName=pMData->sBundleFileName+".json";
 
-    if(pMData->sCurrentDate=="")
+    if(pMData->sDate=="")
     {
-        pMData->sCurrentDate=QDate::currentDate().toString("yyyy-MM-dd");
+        pMData->sDate=QDate::currentDate().toString("yyyy-MM-dd");
     }
 
     bool bSuccess=true;

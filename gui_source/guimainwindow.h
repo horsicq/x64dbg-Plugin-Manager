@@ -34,6 +34,7 @@
 #include <QToolButton>
 #include <QDragEnterEvent>
 #include <QMimeData>
+#include <QTableWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GuiMainWindow; }
@@ -49,8 +50,7 @@ class GuiMainWindow : public QMainWindow
         CN_INFO,
         CN_32,
         CN_64,
-        CN_CURRENTVERSION,
-        CN_LASTVERSION,
+        CN_VERSION,
         CN_INSTALL,
         CN_REMOVE,
         CN_size
@@ -59,6 +59,10 @@ class GuiMainWindow : public QMainWindow
 public:
     GuiMainWindow(QWidget *parent=nullptr);
     ~GuiMainWindow();
+
+private:
+    void adjustTable(QTableWidget *pTableWidget);
+    void fillTable(QTableWidget *pTableWidget,QList<Utils::MDATA> *pMData,QMap<QString,Utils::STATUS> *pMapStatus);
 
 private slots:
     void on_actionCreate_triggered();
@@ -83,6 +87,6 @@ protected:
 private:
     Ui::GuiMainWindow *ui;
     XPLUGINMANAGER::OPTIONS options;
-    QList<Utils::MDATA> _listModules;
+    Utils::MODULES_DATA modulesData;
 };
 #endif // GUIMAINWINDOW_H

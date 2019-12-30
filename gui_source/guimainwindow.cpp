@@ -79,35 +79,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
         }
     }
 
-    ui->tableWidgetPlugins->setColumnCount(CN_size);
-    ui->tableWidgetPlugins->setRowCount(0);
-
-    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_NAME,            new QTableWidgetItem(tr("Name")));
-    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_INFO,            new QTableWidgetItem(tr("Information")));
-    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_32,              new QTableWidgetItem(tr("32")));
-    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_64,              new QTableWidgetItem(tr("64")));
-    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_CURRENTVERSION,  new QTableWidgetItem(tr("Current")));
-    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_LASTVERSION,     new QTableWidgetItem(tr("Last")));
-    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_INSTALL,         new QTableWidgetItem(""));
-    ui->tableWidgetPlugins->setHorizontalHeaderItem(CN_REMOVE,          new QTableWidgetItem(""));
-
-    ui->tableWidgetPlugins->setColumnWidth(CN_NAME,                     100);
-    ui->tableWidgetPlugins->setColumnWidth(CN_INFO,                     300);
-    ui->tableWidgetPlugins->setColumnWidth(CN_32,                       10);
-    ui->tableWidgetPlugins->setColumnWidth(CN_64,                       10);
-    ui->tableWidgetPlugins->setColumnWidth(CN_CURRENTVERSION,           80);
-    ui->tableWidgetPlugins->setColumnWidth(CN_LASTVERSION,              80);
-    ui->tableWidgetPlugins->setColumnWidth(CN_INSTALL,                  60);
-    ui->tableWidgetPlugins->setColumnWidth(CN_REMOVE,                   60);
-
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_NAME,           QHeaderView::ResizeToContents);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_INFO,           QHeaderView::Stretch);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_32,             QHeaderView::ResizeToContents);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_64,             QHeaderView::ResizeToContents);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_CURRENTVERSION, QHeaderView::ResizeToContents);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_LASTVERSION,    QHeaderView::ResizeToContents);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_INSTALL,        QHeaderView::ResizeToContents);
-    ui->tableWidgetPlugins->horizontalHeader()->setSectionResizeMode(CN_REMOVE,         QHeaderView::ResizeToContents);
+    adjustTable(ui->tableWidgetServerList);
+    adjustTable(ui->tableWidgetInstalled);
 
     getModules();
 }
@@ -117,6 +90,98 @@ GuiMainWindow::~GuiMainWindow()
     Utils::saveOptions(&options);
 
     delete ui;
+}
+
+void GuiMainWindow::adjustTable(QTableWidget *pTableWidget)
+{
+    pTableWidget->setColumnCount(CN_size);
+    pTableWidget->setRowCount(0);
+
+    pTableWidget->setHorizontalHeaderItem(CN_NAME,          new QTableWidgetItem(tr("Name")));
+    pTableWidget->setHorizontalHeaderItem(CN_INFO,          new QTableWidgetItem(tr("Information")));
+    pTableWidget->setHorizontalHeaderItem(CN_32,            new QTableWidgetItem(tr("32")));
+    pTableWidget->setHorizontalHeaderItem(CN_64,            new QTableWidgetItem(tr("64")));
+    pTableWidget->setHorizontalHeaderItem(CN_VERSION,       new QTableWidgetItem(tr("Version")));
+    pTableWidget->setHorizontalHeaderItem(CN_INSTALL,       new QTableWidgetItem(""));
+    pTableWidget->setHorizontalHeaderItem(CN_REMOVE,        new QTableWidgetItem(""));
+
+    pTableWidget->setColumnWidth(CN_NAME,                   100);
+    pTableWidget->setColumnWidth(CN_INFO,                   300);
+    pTableWidget->setColumnWidth(CN_32,                     10);
+    pTableWidget->setColumnWidth(CN_64,                     10);
+    pTableWidget->setColumnWidth(CN_VERSION,                80);
+    pTableWidget->setColumnWidth(CN_INSTALL,                60);
+    pTableWidget->setColumnWidth(CN_REMOVE,                 60);
+
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_NAME,         QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_INFO,         QHeaderView::Stretch);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_32,           QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_64,           QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_VERSION,      QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_INSTALL,      QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_REMOVE,       QHeaderView::ResizeToContents);
+}
+
+void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *pMData, QMap<QString, Utils::STATUS> *pMapStatus)
+{
+    int nCount=pMData->count();
+
+    pTableWidget->setRowCount(nCount);
+
+    for(int i=0;i<nCount;i++)
+    {
+        QTableWidgetItem *pItemName=new QTableWidgetItem;
+        pItemName->setText(pMData->at(i).sName);
+        pItemName->setData(Qt::UserRole,i);
+        pTableWidget->setItem(i,CN_NAME,pItemName);
+
+        QTableWidgetItem *pItemInfo=new QTableWidgetItem;
+        pItemInfo->setText(pMData->at(i).sInfo);
+        pTableWidget->setItem(i,CN_INFO,pItemInfo);
+
+        QCheckBox *pCheckBoxIs32=new QCheckBox(this);
+        pCheckBoxIs32->setEnabled(false);
+        pCheckBoxIs32->setChecked(pMData->at(i).bIs32);
+        pTableWidget->setCellWidget(i,CN_32,pCheckBoxIs32);
+
+        QCheckBox *pCheckBoxIs64=new QCheckBox(this);
+        pCheckBoxIs64->setEnabled(false);
+        pCheckBoxIs64->setChecked(pMData->at(i).bIs64);
+        pTableWidget->setCellWidget(i,CN_64,pCheckBoxIs64);
+
+        QTableWidgetItem *pItemVersion=new QTableWidgetItem;
+        pItemVersion->setText(pMData->at(i).sVersion);
+        pTableWidget->setItem(i,CN_VERSION,pItemVersion);
+
+        Utils::STATUS status=pMapStatus->value(pMData->at(i).sName);
+
+        if(status.bInstall||status.bUpdate)
+        {
+            QToolButton *pPushButtonInstall=new QToolButton(this);
+            pPushButtonInstall->setProperty("Name",pMData->at(i).sName);
+            connect(pPushButtonInstall,SIGNAL(clicked()),this,SLOT(installButtonSlot()));
+
+            if(status.bInstall)
+            {
+                pPushButtonInstall->setText(tr("Install"));
+            }
+            else if(status.bUpdate)
+            {
+                pPushButtonInstall->setText(tr("Update"));
+            }
+
+            pTableWidget->setCellWidget(i,CN_INSTALL,pPushButtonInstall);
+        }
+
+        if(status.bRemove)
+        {
+            QToolButton *pPushButtonRemove=new QToolButton(this);
+            pPushButtonRemove->setProperty("Name",pMData->at(i).sName);
+            connect(pPushButtonRemove,SIGNAL(clicked()),this,SLOT(removeButtonSlot()));
+            pPushButtonRemove->setText(tr("Remove"));
+            pTableWidget->setCellWidget(i,CN_REMOVE,pPushButtonRemove);
+        }
+    }
 }
 
 void GuiMainWindow::on_actionCreate_triggered()
@@ -193,55 +258,10 @@ void GuiMainWindow::errorMessage(QString sMessage)
 
 void GuiMainWindow::getModules()
 {
-    QList<Utils::MDATA> listInstalledModules=Utils::getInstalledModules(XBinary::convertPathName(options.sDataPath),XBinary::convertPathName(options.sRootPath));
-    QList<Utils::MDATA> listModulesFromJSON=Utils::getModulesFromJSONFile(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"list.json");
-    _listModules=Utils::mergeMData(&listInstalledModules,&listModulesFromJSON);
+    modulesData=Utils::getModulesData(&options);
 
-    int nCount=_listModules.count();
-
-    ui->tableWidgetPlugins->setRowCount(nCount);
-
-    for(int i=0;i<nCount;i++)
-    {
-        QTableWidgetItem *pItemName=new QTableWidgetItem;
-        pItemName->setText(_listModules.at(i).sName);
-        pItemName->setData(Qt::UserRole,i);
-        ui->tableWidgetPlugins->setItem(i,CN_NAME,pItemName);
-
-        QTableWidgetItem *pItemInfo=new QTableWidgetItem;
-        pItemInfo->setText(_listModules.at(i).sInfo);
-        ui->tableWidgetPlugins->setItem(i,CN_INFO,pItemInfo);
-
-        QCheckBox *pCheckBoxIs32=new QCheckBox(this);
-        pCheckBoxIs32->setEnabled(false);
-        pCheckBoxIs32->setChecked(_listModules.at(i).bIs32);
-        ui->tableWidgetPlugins->setCellWidget(i,CN_32,pCheckBoxIs32);
-
-        QCheckBox *pCheckBoxIs64=new QCheckBox(this);
-        pCheckBoxIs64->setEnabled(false);
-        pCheckBoxIs64->setChecked(_listModules.at(i).bIs64);
-        ui->tableWidgetPlugins->setCellWidget(i,CN_64,pCheckBoxIs64);
-
-        QTableWidgetItem *pItemCurrentVersion=new QTableWidgetItem;
-        pItemCurrentVersion->setText(_listModules.at(i).sCurrentVersion);
-        ui->tableWidgetPlugins->setItem(i,CN_CURRENTVERSION,pItemCurrentVersion);
-
-        QTableWidgetItem *pItemLastVersion=new QTableWidgetItem;
-        pItemLastVersion->setText(_listModules.at(i).sLastVersion);
-        ui->tableWidgetPlugins->setItem(i,CN_LASTVERSION,pItemLastVersion);
-
-        QToolButton *pPushButtonInstall=new QToolButton(this);
-        pPushButtonInstall->setProperty("ID",i);
-        connect(pPushButtonInstall,SIGNAL(clicked()),this,SLOT(installButtonSlot()));
-        pPushButtonInstall->setText(tr("Install"));
-        ui->tableWidgetPlugins->setCellWidget(i,CN_INSTALL,pPushButtonInstall);
-
-        QToolButton *pPushButtonRemove=new QToolButton(this);
-        pPushButtonRemove->setProperty("ID",i);
-        connect(pPushButtonRemove,SIGNAL(clicked()),this,SLOT(removeButtonSlot()));
-        pPushButtonRemove->setText(tr("Remove"));
-        ui->tableWidgetPlugins->setCellWidget(i,CN_REMOVE,pPushButtonRemove);
-    }
+    fillTable(ui->tableWidgetServerList,&(modulesData.listServerList),&(modulesData.mapStatus));
+    fillTable(ui->tableWidgetInstalled,&(modulesData.listInstalled),&(modulesData.mapStatus));
 }
 
 void GuiMainWindow::openPlugin(QString sFileName)
@@ -287,15 +307,11 @@ void GuiMainWindow::updateJsonList()
 void GuiMainWindow::installButtonSlot()
 {
     QToolButton *pPushButton=qobject_cast<QToolButton *>(sender());
-    qint32 nID=pPushButton->property("ID").toInt();
+    QString sName=pPushButton->property("Name").toString();
 
-    if(nID<_listModules.count())
+    if(sName!="") // TODO Check
     {
-        Utils::MDATA mdata=_listModules.at(nID);
-
-        // TODO download
-
-        QString sFileName=XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1.x64dbg.zip").arg(mdata.sName);
+        QString sFileName=XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1.x64dbg.zip").arg(sName);
 
         DialogInstallModule dialogInstallModule(this,&options,sFileName);
 
@@ -308,13 +324,11 @@ void GuiMainWindow::installButtonSlot()
 void GuiMainWindow::removeButtonSlot()
 {
     QToolButton *pPushButton=qobject_cast<QToolButton *>(sender());
-    qint32 nID=pPushButton->property("ID").toInt();
+    QString sName=pPushButton->property("Name").toString();
 
-    if(nID<_listModules.count())
+    if(sName!="") // TODO Check
     {
-        Utils::MDATA mdata=_listModules.at(nID);
-
-        DialogRemoveModule dialogRemoveModule(this,&options,mdata.sName);
+        DialogRemoveModule dialogRemoveModule(this,&options,sName);
 
         dialogRemoveModule.exec();
 
