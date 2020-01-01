@@ -166,6 +166,7 @@ public:
 
     static Utils::MDATA getMDataByName(QList<MDATA> *pServerList,QString sName);
     static QList<QString> getNamesFromWebRecords(QList<WEB_RECORD> *pListWebRecords);
+    static Utils::WEB_RECORD getWebRecordByName(QList<WEB_RECORD> *pListWebRecords,QString sName);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);

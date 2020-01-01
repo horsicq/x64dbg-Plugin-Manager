@@ -577,6 +577,25 @@ QList<QString> Utils::getNamesFromWebRecords(QList<Utils::WEB_RECORD> *pListWebR
     return listResult;
 }
 
+Utils::WEB_RECORD Utils::getWebRecordByName(QList<Utils::WEB_RECORD> *pListWebRecords, QString sName)
+{
+    Utils::WEB_RECORD result={};
+
+    int nCount=pListWebRecords->count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        if(pListWebRecords->at(i).sName==sName)
+        {
+            result=pListWebRecords->at(i);
+
+            break;
+        }
+    }
+
+    return result;
+}
+
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)
 {
     QFileInfo fi(sCurrentPath);

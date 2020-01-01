@@ -64,6 +64,7 @@ void GetFileFromServerProcess::process()
     for(qint32 i=0;(i<currentStats.nTotalModule)&&(!bIsStop);i++)
     {
         currentStats.sModule=listWebRecords.at(i).sLink;
+        emit infoMessage(currentStats.sModule);
 
         QNetworkAccessManager nam;
         QNetworkRequest *pRequest=new QNetworkRequest(QUrl(listWebRecords.at(i).sLink));
@@ -115,7 +116,11 @@ void GetFileFromServerProcess::process()
                         }
                     }
 
-                    if(!XBinary::writeToFile(listWebRecords.at(i).sFileName,baData))
+                    if(XBinary::writeToFile(listWebRecords.at(i).sFileName,baData))
+                    {
+                        emit infoMessage(QString("%1: %2").arg(tr("Write data to file")).arg(listWebRecords.at(i).sFileName));
+                    }
+                    else
                     {
                         emit errorMessage(QString("%1: %2").arg(tr("Cannot write data to file")).arg(listWebRecords.at(i).sFileName));
                     }
