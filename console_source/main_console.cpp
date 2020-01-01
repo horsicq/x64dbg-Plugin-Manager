@@ -196,12 +196,28 @@ int main(int argc, char *argv[])
         if(bIsSetGlobalRootPath)
         {
             options.sRootPath=parser.value(clSetGlobalRootPath);
-            consoleOutput.infoMessage(QString("Set a global root path: %1").arg(options.sRootPath));
+            if(XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath)))
+            {
+                consoleOutput.infoMessage(QString("Set a global root path: %1").arg(options.sRootPath));
+            }
+            else
+            {
+                options.sRootPath="";
+                consoleOutput.errorMessage(QString("Invalid root path: %1").arg(options.sRootPath));
+            }
         }
         if(bIsSetGlobalDataPath)
         {
             options.sDataPath=parser.value(clSetGlobalDataPath);
-            consoleOutput.infoMessage(QString("Set a global data path: %1").arg(options.sDataPath));
+            if(XBinary::isDirectoryExists(XBinary::convertPathName(options.sDataPath)))
+            {
+                consoleOutput.infoMessage(QString("Set a global data path: %1").arg(options.sDataPath));
+            }
+            else
+            {
+                options.sDataPath="";
+                consoleOutput.errorMessage(QString("Invalid data path: %1").arg(options.sDataPath));
+            }
         }
         if(bIsSetGlobalJSONLink)
         {
@@ -317,106 +333,122 @@ int main(int argc, char *argv[])
     {
         bProcess=true;
 
-        Utils::MODULES_DATA modulesData=Utils::getModulesData(&options);
+        bool bRootPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath));
+        bool bDataPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sDataPath));
 
-        if(parser.isSet(clShowServerList))
+        if(!bRootPathPresent)
         {
-            if(modulesData.listServerList.count())
-            {
-                consoleOutput.infoMessage(QString("Show server list."));
-
-                showModules(&consoleOutput,&modulesData.listServerList);
-            }
-            else
-            {
-                consoleOutput.infoMessage(QString("Server list is empty. Please update server list('-U' or '--updateserverlist')"));
-            }
+            consoleOutput.errorMessage(QString("Invalid root path: %1").arg(options.sRootPath));
         }
-        else if(parser.isSet(clShowInstalled))
-        {
-            if(modulesData.listInstalled.count())
-            {
-                consoleOutput.infoMessage(QString("Show installed."));
 
-                showModules(&consoleOutput,&modulesData.listInstalled);
-            }
-            else
-            {
-                consoleOutput.infoMessage(QString("No plugins installed"));
-            }
+        if(!bDataPathPresent)
+        {
+            consoleOutput.errorMessage(QString("Invalid data path: %1").arg(options.sDataPath));
         }
-        else if(parser.isSet(clShowUpdates))
+
+        if(bRootPathPresent&&bDataPathPresent)
         {
-            if(modulesData.listUpdates.count())
+            Utils::MODULES_DATA modulesData=Utils::getModulesData(&options);
+
+            if(parser.isSet(clShowServerList))
             {
-                consoleOutput.infoMessage(QString("Show updates."));
-
-                int nCount=modulesData.listUpdates.count();
-
-                for(int i=0;i<nCount;i++)
+                if(modulesData.listServerList.count())
                 {
-                    consoleOutput.infoMessage(modulesData.listUpdates.at(i).sName);
-                }
-            }
-            else
-            {
-                consoleOutput.infoMessage(QString("No updates available."));
-            }
-        }
-        else if(parser.isSet(clInstallPlugin))
-        {
-            consoleOutput.infoMessage(QString("Install plugin(s)."));
+                    consoleOutput.infoMessage(QString("Show server list."));
 
-            QList<QString> listModules=parser.positionalArguments();
-
-            installModules(&options,&modulesData,&consoleOutput,&listModules);
-        }
-        else if(parser.isSet(clUpdatePlugin))
-        {
-            consoleOutput.infoMessage(QString("Update plugin(s)."));
-
-            QList<QString> listModules=parser.positionalArguments();
-            QList<QString> _listModules;
-
-            int nCount=listModules.count();
-
-            for(int i=0;i<nCount;i++)
-            {
-                Utils::WEB_RECORD webRecord=Utils::getWebRecordByName(&(modulesData.listUpdates),listModules.at(i));
-
-                if(webRecord.sName!="")
-                {
-                    _listModules.append(webRecord.sName);
+                    showModules(&consoleOutput,&modulesData.listServerList);
                 }
                 else
                 {
-                     consoleOutput.errorMessage(QString("No update available for module: %1").arg(listModules.at(i)));
+                    consoleOutput.infoMessage(QString("Server list is empty. Please update server list('-U' or '--updateserverlist')"));
                 }
             }
-
-            installModules(&options,&modulesData,&consoleOutput,&_listModules);
-        }
-        else if(parser.isSet(clRemovePlugin))
-        {
-            consoleOutput.infoMessage(QString("Remove plugin(s)."));
-
-            QList<QString> listModules=parser.positionalArguments();
-
-            removeModules(&options,&modulesData,&consoleOutput,&listModules);
-        }
-        else if(parser.isSet(clUpdateAllInstalledPlugins))
-        {
-            if(modulesData.listUpdates.count())
+            else if(parser.isSet(clShowInstalled))
             {
-                consoleOutput.infoMessage(QString("Update all installed plugins"));
+                if(modulesData.listInstalled.count())
+                {
+                    consoleOutput.infoMessage(QString("Show installed."));
 
-                QList<QString> listModules=Utils::getNamesFromWebRecords(&(modulesData.listUpdates));
+                    showModules(&consoleOutput,&modulesData.listInstalled);
+                }
+                else
+                {
+                    consoleOutput.infoMessage(QString("No plugins installed"));
+                }
+            }
+            else if(parser.isSet(clShowUpdates))
+            {
+                if(modulesData.listUpdates.count())
+                {
+                    consoleOutput.infoMessage(QString("Show updates."));
+
+                    int nCount=modulesData.listUpdates.count();
+
+                    for(int i=0;i<nCount;i++)
+                    {
+                        consoleOutput.infoMessage(modulesData.listUpdates.at(i).sName);
+                    }
+                }
+                else
+                {
+                    consoleOutput.infoMessage(QString("No updates available."));
+                }
+            }
+            else if(parser.isSet(clInstallPlugin))
+            {
+                consoleOutput.infoMessage(QString("Install plugin(s)."));
+
+                QList<QString> listModules=parser.positionalArguments();
 
                 installModules(&options,&modulesData,&consoleOutput,&listModules);
             }
-            else
+            else if(parser.isSet(clUpdatePlugin))
             {
-                consoleOutput.infoMessage(QString("No updates available."));
+                consoleOutput.infoMessage(QString("Update plugin(s)."));
+
+                QList<QString> listModules=parser.positionalArguments();
+                QList<QString> _listModules;
+
+                int nCount=listModules.count();
+
+                for(int i=0;i<nCount;i++)
+                {
+                    Utils::WEB_RECORD webRecord=Utils::getWebRecordByName(&(modulesData.listUpdates),listModules.at(i));
+
+                    if(webRecord.sName!="")
+                    {
+                        _listModules.append(webRecord.sName);
+                    }
+                    else
+                    {
+                         consoleOutput.errorMessage(QString("No update available for module: %1").arg(listModules.at(i)));
+                    }
+                }
+
+                installModules(&options,&modulesData,&consoleOutput,&_listModules);
+            }
+            else if(parser.isSet(clRemovePlugin))
+            {
+                consoleOutput.infoMessage(QString("Remove plugin(s)."));
+
+                QList<QString> listModules=parser.positionalArguments();
+
+                removeModules(&options,&modulesData,&consoleOutput,&listModules);
+            }
+            else if(parser.isSet(clUpdateAllInstalledPlugins))
+            {
+                if(modulesData.listUpdates.count())
+                {
+                    consoleOutput.infoMessage(QString("Update all installed plugins"));
+
+                    QList<QString> listModules=Utils::getNamesFromWebRecords(&(modulesData.listUpdates));
+
+                    installModules(&options,&modulesData,&consoleOutput,&listModules);
+                }
+                else
+                {
+                    consoleOutput.infoMessage(QString("No updates available."));
+                }
             }
         }
     }
