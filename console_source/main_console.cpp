@@ -57,7 +57,11 @@ int main(int argc, char *argv[])
     QCommandLineOption clSetGlobalDataPath  (QStringList()<<"D"<<"setglobaldatapath",   "Set a global data path<path>.",                "path");
     QCommandLineOption clSetGlobalJSONLink  (QStringList()<<"J"<<"setglobaljsonlink",   "Set a global JSON link<link>.",                "link");
     QCommandLineOption clCreatePlugin       (QStringList()<<"c"<<"createplugin",        "Create a plugin<name>.",                       "name");
-    QCommandLineOption clCreateList         (QStringList()<<"l"<<"createserverlist",    "Create a serverlist<name>.",                   "name");
+    QCommandLineOption clCreateServerList   (QStringList()<<"l"<<"createserverlist",    "Create a serverlist<name>.",                   "name");
+    QCommandLineOption clInstallPlugin      (QStringList()<<"i"<<"installplugin",       "Install a plugin<name>.",                      "name");
+    QCommandLineOption clUpdatePlugin       (QStringList()<<"u"<<"updateplugin",        "Update a plugin<name>.",                       "name");
+    QCommandLineOption clRemovePlugin       (QStringList()<<"m"<<"removeplugin",        "Remove a plugin<name>.",                       "name");
+    QCommandLineOption clUpdateServerList   (QStringList()<<"U"<<"updateserverlist",    "Update server list."                           );
     QCommandLineOption clSetRootPath        (QStringList()<<"r"<<"setrootpath",         "Set a root path<path>.",                       "path");
     QCommandLineOption clSetName            (QStringList()<<"n"<<"setname",             "Set a name of plugin<name>.",                  "name");
     QCommandLineOption clSetVersion         (QStringList()<<"V"<<"setversion",          "Set a version of plugin<version>.",            "version");
@@ -71,7 +75,11 @@ int main(int argc, char *argv[])
     parser.addOption(clSetGlobalDataPath);
     parser.addOption(clSetGlobalJSONLink);
     parser.addOption(clCreatePlugin);
-    parser.addOption(clCreateList);
+    parser.addOption(clCreateServerList);
+    parser.addOption(clInstallPlugin);
+    parser.addOption(clUpdatePlugin);
+    parser.addOption(clRemovePlugin);
+    parser.addOption(clUpdateServerList);
     parser.addOption(clSetRootPath);
     parser.addOption(clSetName);
     parser.addOption(clSetVersion);
@@ -83,30 +91,45 @@ int main(int argc, char *argv[])
 
     parser.process(app);
 
+    bool bSuccess=false;
+
     bool bIsSetGlobalRootPath=parser.isSet(clSetGlobalRootPath);
     bool bIsSetGlobalDataPath=parser.isSet(clSetGlobalDataPath);
     bool bIsSetGlobalJSONLink=parser.isSet(clSetGlobalJSONLink);
 
     if(bIsSetGlobalRootPath||bIsSetGlobalDataPath||bIsSetGlobalJSONLink)
     {
+        bSuccess=true;
+
         if(bIsSetGlobalRootPath)
         {
+            consoleOutput.infoMessage("Set a global root path.");
             options.sRootPath=parser.value(clSetGlobalRootPath);
         }
         if(bIsSetGlobalDataPath)
         {
+            consoleOutput.infoMessage("Set a global data path.");
             options.sDataPath=parser.value(clSetGlobalDataPath);
         }
         if(bIsSetGlobalJSONLink)
         {
+            consoleOutput.infoMessage("Set a global JSON link.");
             options.sJSONLink=parser.value(clSetGlobalJSONLink);
         }
 
         Utils::saveOptions(&options);
     }
 
+    if(parser.isSet(clSetRootPath))
+    {
+        options.sRootPath=parser.value(clSetRootPath);
+    }
+
     if(parser.isSet(clCreatePlugin))
     {
+        bSuccess=true;
+        consoleOutput.infoMessage("Create a plugin.");
+
         Utils::MDATA mdata={};
 
         mdata.sBundleFileName=parser.value(clCreatePlugin);
@@ -139,9 +162,12 @@ int main(int argc, char *argv[])
             consoleOutput.errorMessage(sErrorString);
         }
     }
-    else if(parser.isSet(clCreateList))
+    else if(parser.isSet(clCreateServerList))
     {
-        QString sListName=parser.value(clCreateList);
+        bSuccess=true;
+        consoleOutput.infoMessage("Create a serverlist.");
+
+        QString sListName=parser.value(clCreateServerList);
         QString sWebPrefix=parser.value(clSetWebPrefix);
         QString sDate=parser.value(clSetDate);
 
@@ -172,8 +198,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    parser.showHelp();
-    Q_UNREACHABLE();
+    if(!bSuccess)
+    {
+        parser.showHelp();
+        Q_UNREACHABLE();
+    }
 
     return 0;
 }

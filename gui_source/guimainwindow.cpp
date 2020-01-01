@@ -126,6 +126,8 @@ void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *p
 {
     int nCount=pMData->count();
 
+    pTableWidget->setSortingEnabled(false);
+
     pTableWidget->setRowCount(0);
     pTableWidget->setRowCount(nCount);
 
@@ -183,6 +185,8 @@ void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *p
             pTableWidget->setCellWidget(i,CN_REMOVE,pPushButtonRemove);
         }
     }
+
+    pTableWidget->setSortingEnabled(true);
 }
 
 void GuiMainWindow::on_actionCreate_triggered()
@@ -403,4 +407,24 @@ void GuiMainWindow::dropEvent(QDropEvent *event)
             openPlugin(sFileName);
         }
     }
+}
+
+void GuiMainWindow::on_tableWidgetServerList_customContextMenuRequested(const QPoint &pos)
+{
+    qDebug("on_tableWidgetServerList_customContextMenuRequested");
+}
+
+void GuiMainWindow::on_tableWidgetInstalled_customContextMenuRequested(const QPoint &pos)
+{
+    qDebug("on_tableWidgetInstalled_customContextMenuRequested");
+}
+
+void GuiMainWindow::_infoPluginServerList()
+{
+
+}
+
+void GuiMainWindow::_infoPluginInstalled()
+{
+
 }

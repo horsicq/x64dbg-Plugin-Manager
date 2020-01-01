@@ -78,6 +78,10 @@ private slots:
     void updateJsonList();
     void installButtonSlot();
     void removeButtonSlot();
+    void on_tableWidgetServerList_customContextMenuRequested(const QPoint &pos);
+    void on_tableWidgetInstalled_customContextMenuRequested(const QPoint &pos);
+    void _infoPluginServerList();
+    void _infoPluginInstalled();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
