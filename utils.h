@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,9 +36,15 @@ class Utils : public QObject
     Q_OBJECT
 
 public:
-    struct STATUS
+    struct WEB_RECORD
     {
         QString sName;
+        QString sFileName;
+        QString sLink;
+    };
+
+    struct STATUS
+    {
         bool bInstall;
         bool bUpdate;
         bool bRemove;
@@ -46,16 +52,17 @@ public:
         QString sServerListDate;
         QString sInstalledVersion;
         QString sInstalledDate;
+        WEB_RECORD webRecord;
     };
 
     struct STATS
     {
         QString sModule;
-        qint32 nTotalModule;
-        qint32 nCurrentModule;
+        qint64 nTotalModule;
+        qint64 nCurrentModule;
         QString sFile;
-        qint32 nTotalFile;
-        qint32 nCurrentFile;
+        qint64 nTotalFile;
+        qint64 nCurrentFile;
     };
 
     struct RECORD
@@ -115,17 +122,12 @@ public:
         QString sPath;
     };
 
-    struct WEB_RECORD
-    {
-        QString sFileName;
-        QString sLink;
-    };
-
     struct MODULES_DATA
     {
         QList<Utils::MDATA> listServerList;
         QList<Utils::MDATA> listInstalled;
         QMap<QString,STATUS> mapStatus;
+        QList<WEB_RECORD> listUpdates;
     };
 
     explicit Utils(QObject *parent=nullptr);
@@ -153,14 +155,17 @@ public:
     static void mDataToObject(Utils::MDATA *pMData,QJsonObject *pObject);
     static void objectToMData(QJsonObject *pObject,Utils::MDATA *pMData);
 
-    static QMap<QString,STATUS> getModulesStatusMap(QList<MDATA> *pServerList,QList<MDATA> *pInstalled);
+    static QMap<QString,STATUS> getModulesStatusMap(XPLUGINMANAGER::OPTIONS *pOptions,QList<MDATA> *pServerList,QList<MDATA> *pInstalled);
 
     static MODULES_DATA getModulesData(XPLUGINMANAGER::OPTIONS *pOptions);
+    static QList<Utils::WEB_RECORD> getUpdates(QMap<QString, STATUS> *pMapStatus);
+
     static QString getInstalledJsonFileName(XPLUGINMANAGER::OPTIONS *pOptions,QString sName);
     static QString getServerListFileName(XPLUGINMANAGER::OPTIONS *pOptions);
     static QString getModuleFileName(XPLUGINMANAGER::OPTIONS *pOptions,QString sName);
 
     static Utils::MDATA getMDataByName(QList<MDATA> *pServerList,QString sName);
+    static QList<QString> getNamesFromWebRecords(QList<WEB_RECORD> *pListWebRecords);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);

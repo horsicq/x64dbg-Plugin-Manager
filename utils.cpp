@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -444,7 +444,7 @@ void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
     pMData->sSHA1           =pObject->value("SHA1").toString();
 }
 
-QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QList<Utils::MDATA> *pServerList, QList<Utils::MDATA> *pInstalled)
+QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(XPLUGINMANAGER::OPTIONS *pOptions,QList<Utils::MDATA> *pServerList, QList<Utils::MDATA> *pInstalled)
 {
     QMap<QString, Utils::STATUS> mapResult;
 
@@ -453,12 +453,14 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QList<Utils::MDATA> *pSe
     for(int i=0;i<nCount;i++)
     {
         STATUS status={};
-        status.sName=pServerList->at(i).sName;
         status.bInstall=true;
         status.sServerListDate=pServerList->at(i).sDate;
         status.sServerListVersion=pServerList->at(i).sVersion;
+        status.webRecord.sName=pServerList->at(i).sName;
+        status.webRecord.sFileName=getModuleFileName(pOptions,pServerList->at(i).sName);
+        status.webRecord.sLink=pServerList->at(i).sSrc;
 
-        mapResult.insert(status.sName,status);
+        mapResult.insert(pInstalled->at(i).sName,status);
     }
 
     nCount=pInstalled->count();
@@ -474,7 +476,7 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QList<Utils::MDATA> *pSe
         {
             status=mapResult.value(sName);
         }
-        status.sName=pInstalled->at(i).sName;
+        status.webRecord.sName=pInstalled->at(i).sName;
         status.bInstall=false;
         status.bRemove=true;
         status.sInstalledDate=pInstalled->at(i).sDate;
@@ -488,7 +490,7 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QList<Utils::MDATA> *pSe
             }
         }
 
-        mapResult.insert(status.sName,status);
+        mapResult.insert(pInstalled->at(i).sName,status);
     }
 
     return mapResult;
@@ -500,9 +502,31 @@ Utils::MODULES_DATA Utils::getModulesData(XPLUGINMANAGER::OPTIONS *pOptions)
 
     result.listServerList=Utils::getModulesFromJSONFile(Utils::getServerListFileName(pOptions));
     result.listInstalled=Utils::getInstalledModules(XBinary::convertPathName(pOptions->sDataPath),XBinary::convertPathName(pOptions->sRootPath));
-    result.mapStatus=getModulesStatusMap(&result.listServerList,&result.listInstalled);
+    result.mapStatus=getModulesStatusMap(pOptions,&result.listServerList,&result.listInstalled);
+    result.listUpdates=getUpdates(&result.mapStatus);
 
     return result;
+}
+
+QList<Utils::WEB_RECORD> Utils::getUpdates(QMap<QString,STATUS> *pMapStatus)
+{
+    QList<Utils::WEB_RECORD> listResult;
+
+    QList<STATUS> listStatuses=pMapStatus->values();
+
+    int nCount=listStatuses.count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        if(listStatuses.at(i).bUpdate)
+        {
+            WEB_RECORD record=listStatuses.at(i).webRecord;
+
+            listResult.append(record);
+        }
+    }
+
+    return listResult;
 }
 
 QString Utils::getInstalledJsonFileName(XPLUGINMANAGER::OPTIONS *pOptions, QString sName)
@@ -537,6 +561,20 @@ Utils::MDATA Utils::getMDataByName(QList<MDATA> *pServerList,QString sName)
     }
 
     return result;
+}
+
+QList<QString> Utils::getNamesFromWebRecords(QList<Utils::WEB_RECORD> *pListWebRecords)
+{
+    QList<QString> listResult;
+
+    int nCount=pListWebRecords->count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        listResult.append(pListWebRecords->at(i).sName);
+    }
+
+    return listResult;
 }
 
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)

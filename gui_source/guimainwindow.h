@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@
 #include "dialogcreatemodule.h"
 #include "dialoginstallmodule.h"
 #include "dialogremovemodule.h"
+#include "dialoginfomodule.h"
 #include "dialogoptions.h"
 #include "dialoggetfilefromserverprocess.h"
 #include "dialogabout.h"
@@ -35,6 +36,7 @@
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QTableWidget>
+#include <QDesktopServices>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GuiMainWindow; }
@@ -65,23 +67,42 @@ private:
     void fillTable(QTableWidget *pTableWidget,QList<Utils::MDATA> *pMData,QMap<QString,Utils::STATUS> *pMapStatus);
 
 private slots:
-    void on_actionCreate_triggered();
-    void on_pushButtonUpdateAll_clicked();
-    void on_actionAbout_triggered();
-    void on_actionOpen_triggered();
-    void on_actionOptions_triggered();
-    void on_pushButtonReload_clicked();
-    void on_actionExit_triggered();
+    void createPlugin();
+    void aboutDialog();
+    void openPlugin();
+    void optionsDialog();
+    void exitProgram();
     void errorMessage(QString sMessage);
     void getModules();
     void openPlugin(QString sFileName);
     void updateJsonList();
     void installButtonSlot();
     void removeButtonSlot();
+    void installPlugin(QString sName);
+    void installPlugins(QList<QString> *pListNames);
+    void removePlugin(QString sName);
+    void infoPlugin(Utils::MDATA *pMData);
     void on_tableWidgetServerList_customContextMenuRequested(const QPoint &pos);
     void on_tableWidgetInstalled_customContextMenuRequested(const QPoint &pos);
     void _infoPluginServerList();
+    void _installPluginServerList();
+    void _removePluginServerList();
     void _infoPluginInstalled();
+    void _installPluginInstalled();
+    void _removePluginInstalled();
+    void updateServerList();
+    void updateAllInstalledPlugins();
+    void checkForUpdates();
+    void on_pushButtonUpdateServerList_clicked();
+    void on_pushButtonUpdateAllInstalledPlugins_clicked();
+    void on_actionExit_triggered();
+    void on_actionAbout_triggered();
+    void on_actionOpen_triggered();
+    void on_actionCreate_triggered();
+    void on_actionOptions_triggered();
+    void on_actionUpdate_server_list_triggered();
+    void on_actionUpdate_all_installed_plugins_triggered();
+    void on_actionCheck_for_updates_triggered();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;

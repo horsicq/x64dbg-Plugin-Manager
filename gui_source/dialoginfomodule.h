@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,8 @@ class DialogInfoModule : public QDialog
 {
     Q_OBJECT
 
-public:
-    explicit DialogInfoModule(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleName);
+public:    
+    explicit DialogInfoModule(QWidget *parent, Utils::MDATA *pMData);
     ~DialogInfoModule();
 
 private slots:

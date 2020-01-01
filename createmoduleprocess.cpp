@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -193,7 +193,10 @@ void CreateModuleProcess::process()
             fileResult.close();
 
             pMData->sSHA1=XBinary::getHash(XBinary::HASH_SHA1,sBundleFileName);
-            XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords)); // TODO errors
+            if(!XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords)))
+            {
+                emit errorMessage(QString("%1: %2").arg(tr("Cannot write data to file")).arg(sBundleInfoFileName));
+            }
         }
     }
 

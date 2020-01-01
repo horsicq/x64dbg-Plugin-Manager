@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ DialogAbout::DialogAbout(QWidget *parent) :
     ui->setupUi(this);
 
     ui->labelInfo->setText(QString("<html><head/><body><p align=\"center\">"
-                                   "<span style=\" font-weight:600;\">Copyright(C) 2019 hors</span></p>"
+                                   "<span style=\" font-weight:600;\">Copyright(C) 2019-2020 hors</span></p>"
                                    "<p align=\"center\"><span style=\" font-weight:600;\">"
                                    "Version: </span>%1 (%2)</p><p align=\"center\">"
                                    "<span style=\" font-weight:600;\">Website: </span><a href=\"http://ntinfo.biz\">"

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -78,16 +78,20 @@ void InstallModuleProcess::process()
                 {
                     if(XBinary::isFileExists(record.sFullPath))
                     {
-                        XBinary::removeFile(record.sFullPath);
-                        // TODO handle errors
+                        if(!XBinary::removeFile(record.sFullPath))
+                        {
+                            emit errorMessage(QString("%1: %2").arg(tr("Cannot remove file")).arg(record.sFullPath));
+                            bIsStop=true;
+                        }
                     }
 
                     XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("files/"+record.sPath,&listZipRecords);
                     zip.decompressToFile(&archiveRecord,record.sFullPath);
 
-                    if(XBinary::isFileHashValid(XBinary::HASH_SHA1,record.sFullPath,record.sSHA1))
+                    if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,record.sFullPath,record.sSHA1))
                     {
-                        qDebug("INVALID HASH"); // TODO
+                        emit errorMessage(QString("%1: %2").arg(tr("Invalid file HASH")).arg(record.sFullPath));
+                        bIsStop=true;
                     }
                 }
                 else
@@ -102,8 +106,11 @@ void InstallModuleProcess::process()
 
             if(XBinary::isFileExists(sInfoFileName))
             {
-                XBinary::removeFile(sInfoFileName);
-                // TODO handle errors
+                if(!XBinary::removeFile(sInfoFileName))
+                {
+                    emit errorMessage(QString("%1: %2").arg(tr("Cannot remove file")).arg(sInfoFileName));
+                    bIsStop=true;
+                }
             }
 
             XArchive::RECORD archiveRecord=XArchive::getArchiveRecord("plugin_info.json",&listZipRecords);

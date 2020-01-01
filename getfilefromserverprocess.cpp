@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 
 GetFileFromServerProcess::GetFileFromServerProcess(QObject *parent) : QObject(parent)
 {
-    reply=0;
+    pReply=0;
     replyRed=0;
     currentStats={};
 }
@@ -36,9 +36,9 @@ void GetFileFromServerProcess::stop()
 {
     bIsStop=true;
 
-    if(reply)
+    if(pReply)
     {
-        reply->abort();
+        pReply->abort();
     }
 
     if(replyRed)
@@ -67,58 +67,82 @@ void GetFileFromServerProcess::process()
 
         QNetworkAccessManager nam;
         QNetworkRequest *pRequest=new QNetworkRequest(QUrl(listWebRecords.at(i).sLink));
-        reply=nam.get(*pRequest);
+        pReply=nam.get(*pRequest);
         QEventLoop loop;
-        QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+        QObject::connect(pReply,SIGNAL(finished()),&loop,SLOT(quit()));
+        QObject::connect(pReply,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(_downloadProgress(qint64,qint64)));
         loop.exec();
 
-        if(reply->bytesAvailable())
+        if(pReply->error()==QNetworkReply::NoError)
         {
-            bool bSuccess=false;
-            QByteArray baData;
-
-            QString sRedirectUrl=reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
-
-            if(sRedirectUrl!="") // Github redirect
+            if(pReply->bytesAvailable())
             {
-                QNetworkAccessManager namRed;
-                QNetworkRequest *pRequestRed=new QNetworkRequest(QUrl(sRedirectUrl));
-                replyRed=namRed.get(*pRequestRed);
-                QEventLoop loopRed;
-                QObject::connect(replyRed, SIGNAL(finished()), &loopRed, SLOT(quit()));
-                loopRed.exec();
+                bool bSuccess=false;
+                QByteArray baData;
 
-                if(replyRed->bytesAvailable())
+                QString sRedirectUrl=pReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
+
+                if(sRedirectUrl!="") // Github redirect
                 {
-                    baData=replyRed->readAll();
+                    QNetworkAccessManager namRed;
+                    QNetworkRequest *pRequestRed=new QNetworkRequest(QUrl(sRedirectUrl));
+                    replyRed=namRed.get(*pRequestRed);
+                    QEventLoop loopRed;
+                    QObject::connect(replyRed,SIGNAL(finished()),&loopRed,SLOT(quit()));
+                    QObject::connect(replyRed,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(_downloadProgress(qint64,qint64)));
+                    loopRed.exec();
+
+                    if(replyRed->bytesAvailable())
+                    {
+                        baData=replyRed->readAll();
+                        bSuccess=true;
+                    }
+                }
+                else
+                {
+                    baData=pReply->readAll();
                     bSuccess=true;
                 }
-            }
-            else
-            {
-                baData=reply->readAll();
-                bSuccess=true;
-            }
 
-            if(bSuccess)
-            {
-                if(XBinary::isFileExists(listWebRecords.at(i).sFileName))
+                if(bSuccess)
                 {
-                    XBinary::removeFile(listWebRecords.at(i).sFileName);
-                    // TODO handle errors
-                }
+                    if(XBinary::isFileExists(listWebRecords.at(i).sFileName))
+                    {
+                        if(!XBinary::removeFile(listWebRecords.at(i).sFileName))
+                        {
+                            emit errorMessage(QString("%1: %2").arg(tr("Cannot remove file")).arg(listWebRecords.at(i).sFileName));
+                            bIsStop=true;
+                        }
+                    }
 
-                XBinary::writeToFile(listWebRecords.at(i).sFileName,baData); // TODO handle errors
+                    if(!XBinary::writeToFile(listWebRecords.at(i).sFileName,baData))
+                    {
+                        emit errorMessage(QString("%1: %2").arg(tr("Cannot write data to file")).arg(listWebRecords.at(i).sFileName));
+                    }
+                }
             }
         }
+        else
+        {
+            emit errorMessage(pReply->errorString());
+            bIsStop=true;
+        }
 
-        reply->deleteLater();
+        pReply->deleteLater();
         delete pRequest;
 
-        reply=0;
+        pReply=0;
+
+        currentStats.nCurrentModule=i;
     }
 
     bIsStop=false;
 
     emit completed(elapsedTimer.elapsed());
+}
+
+void GetFileFromServerProcess::_downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
+    currentStats.nTotalFile=bytesTotal;
+    currentStats.nCurrentFile=bytesReceived;
 }

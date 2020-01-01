@@ -18,9 +18,9 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QPushButton" name="pushButtonReload">
+       <widget class="QPushButton" name="pushButtonUpdateServerList">
         <property name="text">
-         <string>Get list from server</string>
+         <string>Update server list</string>
         </property>
        </widget>
       </item>
@@ -38,9 +38,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonUpdateAll">
+       <widget class="QPushButton" name="pushButtonUpdateAllInstalledPlugins">
         <property name="text">
-         <string>Update all</string>
+         <string>Update all installed plugins</string>
         </property>
        </widget>
       </item>
@@ -123,6 +123,9 @@
         </property>
         <item>
          <widget class="QTableWidget" name="tableWidgetInstalled">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
@@ -181,6 +184,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionCheck_for_updates"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -188,7 +192,15 @@
     </property>
     <addaction name="actionOptions"/>
    </widget>
+   <widget class="QMenu" name="menuAction">
+    <property name="title">
+     <string>Action</string>
+    </property>
+    <addaction name="actionUpdate_server_list"/>
+    <addaction name="actionUpdate_all_installed_plugins"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuAction"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -215,6 +227,21 @@
   <action name="actionOptions">
    <property name="text">
     <string>Options</string>
+   </property>
+  </action>
+  <action name="actionUpdate_server_list">
+   <property name="text">
+    <string>Update server list</string>
+   </property>
+  </action>
+  <action name="actionUpdate_all_installed_plugins">
+   <property name="text">
+    <string>Update all installed plugins</string>
+   </property>
+  </action>
+  <action name="actionCheck_for_updates">
+   <property name="text">
+    <string>Check for updates</string>
    </property>
   </action>
  </widget>

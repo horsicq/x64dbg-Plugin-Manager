@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,13 @@
 #include "dialoginfomodule.h"
 #include "ui_dialoginfomodule.h"
 
-DialogInfoModule::DialogInfoModule(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleName) :
+DialogInfoModule::DialogInfoModule(QWidget *parent,Utils::MDATA *pMData) :
     QDialog(parent),
     ui(new Ui::DialogInfoModule)
 {
     ui->setupUi(this);
 
-    QString sFileName=Utils::getInstalledJsonFileName(pOptions,sModuleName);
-
-    Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(pOptions->sRootPath));
-
-    ui->widgetInfo->setData(&mdata);
+    ui->widgetInfo->setData(pMData);
 }
 
 DialogInfoModule::~DialogInfoModule()

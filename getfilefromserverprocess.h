@@ -1,4 +1,4 @@
-// Copyright (c) 2019 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,11 +43,12 @@ signals:
 
 public slots:
     void process();
+    void _downloadProgress(qint64 bytesReceived,qint64 bytesTotal);
 
 private:
     bool bIsStop;
     QList<Utils::WEB_RECORD> listWebRecords;
-    QNetworkReply *reply;
+    QNetworkReply *pReply;
     QNetworkReply *replyRed;
     Utils::STATS currentStats;
 };
