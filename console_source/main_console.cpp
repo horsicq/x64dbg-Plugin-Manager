@@ -196,6 +196,12 @@ int main(int argc, char *argv[])
         if(bIsSetGlobalRootPath)
         {
             options.sRootPath=parser.value(clSetGlobalRootPath);
+
+            if(options.sRootPath!="")
+            {
+                XBinary::createDirectory(XBinary::convertPathName(options.sRootPath));
+            }
+
             if(XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath)))
             {
                 consoleOutput.infoMessage(QString("Set a global root path: %1").arg(options.sRootPath));
@@ -209,6 +215,12 @@ int main(int argc, char *argv[])
         if(bIsSetGlobalDataPath)
         {
             options.sDataPath=parser.value(clSetGlobalDataPath);
+
+            if(options.sDataPath!="")
+            {
+                XBinary::createDirectory(XBinary::convertPathName(options.sDataPath));
+            }
+
             if(XBinary::isDirectoryExists(XBinary::convertPathName(options.sDataPath)))
             {
                 consoleOutput.infoMessage(QString("Set a global data path: %1").arg(options.sDataPath));
@@ -332,6 +344,9 @@ int main(int argc, char *argv[])
             parser.isSet(clShowUpdates))
     {
         bProcess=true;
+
+        XBinary::createDirectory(XBinary::convertPathName(options.sRootPath));
+        XBinary::createDirectory(XBinary::convertPathName(options.sDataPath));
 
         bool bRootPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath));
         bool bDataPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sDataPath));
