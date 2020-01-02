@@ -33,5 +33,5 @@ HEADERS += \
 
 !contains(XCONFIG, libssl) {
     XCONFIG += libssl
-    include(../../_mylibs/QOpenSSL/libssl.pri)
+    include(../QOpenSSL/libssl.pri)
 }

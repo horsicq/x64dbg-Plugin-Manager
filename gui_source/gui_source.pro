@@ -65,12 +65,12 @@ FORMS += \
 
 !contains(XCONFIG, xarchive) {
     XCONFIG += xarchive
-    include(../)
+    include(../XArchive/xarchive.pri)
 }
 
 !contains(XCONFIG, libssl) {
     XCONFIG += libssl
-    include(../../_mylibs/QOpenSSL/libssl.pri)
+    include(../QOpenSSL/libssl.pri)
 }
 
 win32 {
