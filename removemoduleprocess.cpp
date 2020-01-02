@@ -57,7 +57,7 @@ void RemoveModuleProcess::process()
 
         emit infoMessage(currentStats.sModule);
 
-        QString sFileName=Utils::getInstalledJsonFileName(pOptions,currentStats.sModule);
+        QString sFileName=Utils::getInstalledJsonFileName(pOptions,listModuleNames.at(i));
 
         if(XBinary::isFileExists(sFileName))
         {
