@@ -257,7 +257,9 @@ int main(int argc, char *argv[])
     if(options.sDataPath!="")
     {
         XBinary::createDirectory(XBinary::convertPathName(options.sDataPath));
-        bRootPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sDataPath));
+        XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"installed");
+        XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules");
+        bDataPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sDataPath));
     }
 
     if(!bRootPathPresent)
