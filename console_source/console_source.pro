@@ -30,3 +30,8 @@ HEADERS += \
     XCONFIG += xarchive
     include(../XArchive/xarchive.pri)
 }
+
+!contains(XCONFIG, libssl) {
+    XCONFIG += libssl
+    include(../../_mylibs/QOpenSSL/libssl.pri)
+}

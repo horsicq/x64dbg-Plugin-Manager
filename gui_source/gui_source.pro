@@ -68,6 +68,11 @@ FORMS += \
     include(../XArchive/xarchive.pri)
 }
 
+!contains(XCONFIG, libssl) {
+    XCONFIG += libssl
+    include(../../_mylibs/QOpenSSL/libssl.pri)
+}
+
 win32 {
     RC_ICONS = ../icons/main.ico
 }
