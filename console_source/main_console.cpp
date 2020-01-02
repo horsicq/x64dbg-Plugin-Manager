@@ -245,6 +245,31 @@ int main(int argc, char *argv[])
         options.sRootPath=parser.value(clSetRootPath);
     }
 
+    bool bRootPathPresent=false;
+    bool bDataPathPresent=false;
+
+    if(options.sRootPath!="")
+    {
+        XBinary::createDirectory(XBinary::convertPathName(options.sRootPath));
+        bRootPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath));
+    }
+
+    if(options.sDataPath!="")
+    {
+        XBinary::createDirectory(XBinary::convertPathName(options.sDataPath));
+        bRootPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sDataPath));
+    }
+
+    if(!bRootPathPresent)
+    {
+        consoleOutput.errorMessage(QString("Invalid root path: %1").arg(options.sRootPath));
+    }
+
+    if(!bDataPathPresent)
+    {
+        consoleOutput.errorMessage(QString("Invalid data path: %1").arg(options.sDataPath));
+    }
+
     if(parser.isSet(clCreatePlugin))
     {
         bProcess=true;
@@ -344,22 +369,6 @@ int main(int argc, char *argv[])
             parser.isSet(clShowUpdates))
     {
         bProcess=true;
-
-        XBinary::createDirectory(XBinary::convertPathName(options.sRootPath));
-        XBinary::createDirectory(XBinary::convertPathName(options.sDataPath));
-
-        bool bRootPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath));
-        bool bDataPathPresent=XBinary::isDirectoryExists(XBinary::convertPathName(options.sDataPath));
-
-        if(!bRootPathPresent)
-        {
-            consoleOutput.errorMessage(QString("Invalid root path: %1").arg(options.sRootPath));
-        }
-
-        if(!bDataPathPresent)
-        {
-            consoleOutput.errorMessage(QString("Invalid data path: %1").arg(options.sDataPath));
-        }
 
         if(bRootPathPresent&&bDataPathPresent)
         {
