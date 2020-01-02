@@ -28,7 +28,7 @@ HEADERS += \
 
 !contains(XCONFIG, xarchive) {
     XCONFIG += xarchive
-    include(../XArchive/xarchive.pri)
+    include(../)
 }
 
 !contains(XCONFIG, libssl) {
