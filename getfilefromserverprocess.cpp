@@ -118,7 +118,8 @@ void GetFileFromServerProcess::process()
 
                     if(XBinary::writeToFile(listWebRecords.at(i).sFileName,baData))
                     {
-                        emit infoMessage(QString("%1: %2").arg(tr("Write data to file")).arg(listWebRecords.at(i).sFileName));
+                        currentStats.sFile=QString("%1: %2").arg(tr("Write data to file")).arg(listWebRecords.at(i).sFileName);
+                        emit infoMessage(currentStats.sFile);
                     }
                     else
                     {

@@ -53,7 +53,8 @@ void InstallModuleProcess::process()
 
     for(qint32 i=0;(i<currentStats.nTotalModule)&&(!bIsStop);i++)
     {
-        currentStats.sModule=QFileInfo(listModuleFileNames.at(i)).baseName();
+        currentStats.sModule=QString("%1: %2").arg(tr("Install module")).arg(QFileInfo(listModuleFileNames.at(i)).baseName());
+        emit infoMessage(currentStats.sModule);
 
         QFile file;
         file.setFileName(listModuleFileNames.at(i));
@@ -72,7 +73,8 @@ void InstallModuleProcess::process()
             {
                 Utils::INSTALL_RECORD record=mdata.listInstallRecords.at(j);
 
-                currentStats.sFile=record.sPath;
+                currentStats.sFile=QString("%1: %2").arg(tr("Install file")).arg(record.sFullPath);
+                emit infoMessage(currentStats.sFile);
 
                 if(record.bIsFile)
                 {

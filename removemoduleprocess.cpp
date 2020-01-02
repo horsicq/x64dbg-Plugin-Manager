@@ -53,7 +53,9 @@ void RemoveModuleProcess::process()
 
     for(qint32 i=0;(i<currentStats.nTotalModule)&&(!bIsStop);i++)
     {
-        currentStats.sModule=listModuleNames.at(i);
+        currentStats.sModule=QString("%1: %2").arg(tr("Remove module")).arg(listModuleNames.at(i));
+
+        emit infoMessage(currentStats.sModule);
 
         QString sFileName=Utils::getInstalledJsonFileName(pOptions,currentStats.sModule);
 
@@ -67,7 +69,9 @@ void RemoveModuleProcess::process()
             {
                 Utils::REMOVE_RECORD record=mdata.listRemoveRecords.at(j);
 
-                currentStats.sFile=record.sPath;
+                currentStats.sFile=QString("%1: %2").arg(tr("Remove file")).arg(record.sPath);
+
+                emit infoMessage(currentStats.sFile);
 
                 if(record.bIsFile)
                 {

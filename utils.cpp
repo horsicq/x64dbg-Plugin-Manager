@@ -460,7 +460,7 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(XPLUGINMANAGER::OPTIONS 
         status.webRecord.sFileName=getModuleFileName(pOptions,pServerList->at(i).sName);
         status.webRecord.sLink=pServerList->at(i).sSrc;
 
-        mapResult.insert(pInstalled->at(i).sName,status);
+        mapResult.insert(pServerList->at(i).sName,status);
     }
 
     nCount=pInstalled->count();
