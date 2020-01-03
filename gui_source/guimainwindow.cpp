@@ -639,7 +639,7 @@ void GuiMainWindow::updateAllInstalledPlugins()
 void GuiMainWindow::checkForUpdates()
 {
     QNetworkAccessManager manager(this);
-    QNetworkRequest request(QUrl(X_SEVERVERSION));
+    QNetworkRequest request(QUrl(X_SERVERVERSION));
     QNetworkReply *pReply=manager.get(request);
     QEventLoop loop;
     QObject::connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));

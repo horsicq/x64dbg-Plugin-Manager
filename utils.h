@@ -80,11 +80,18 @@ public:
         QString sSHA1;
     };
 
+    enum RRA
+    {
+        RRA_UNKNOWN=0,
+        RRA_REMOVEFILE,
+        RRA_REMOVEDIRECTORYIFEMPTY
+    };
+
     struct REMOVE_RECORD
     {
         QString sFullPath;
         QString sPath;
-        bool bIsFile;
+        RRA action;
     };
 
     struct MDATA

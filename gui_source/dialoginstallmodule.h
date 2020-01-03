@@ -34,7 +34,7 @@ class DialogInstallModule : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName);
+    explicit DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions,QString sModuleFileName);
     ~DialogInstallModule();
 
 private slots:

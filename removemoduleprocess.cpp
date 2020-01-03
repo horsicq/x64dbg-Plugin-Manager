@@ -73,19 +73,41 @@ void RemoveModuleProcess::process()
 
                 emit infoMessage(currentStats.sFile);
 
-                if(record.bIsFile)
+                if(record.action==Utils::RRA_REMOVEFILE)
                 {
                     XBinary::removeFile(record.sFullPath);
+
+                    if(XBinary::isFileExists(record.sFullPath))
+                    {
+                        emit errorMessage(tr("%1: %2").arg(tr("Cannot remove file")).arg(record.sFullPath));
+                        bIsStop=true;
+                    }
                 }
-                else
+                else if(record.action==Utils::RRA_REMOVEDIRECTORYIFEMPTY)
                 {
-                    XBinary::removeDirectory(record.sFullPath);
+                    if(XBinary::isDirectoryEmpty(record.sFullPath))
+                    {
+                        XBinary::removeDirectory(record.sFullPath);
+
+                        if(XBinary::isDirectoryExists(record.sFullPath))
+                        {
+                            emit errorMessage(tr("%1: %2").arg(tr("Cannot remove directory")).arg(record.sFullPath));
+                            bIsStop=true;
+                        }
+                    }
                 }
 
                 currentStats.nCurrentFile=j+1;
             }
 
-            XBinary::removeFile(sFileName);
+            if(!bIsStop)
+            {
+                XBinary::removeFile(sFileName);
+            }
+            else
+            {
+                emit errorMessage(tr("Please, close all applications and try again."));
+            }
         }
 
         currentStats.nCurrentModule=i+1;

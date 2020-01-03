@@ -184,7 +184,7 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
             removeArray.append(record);
         }
 
-        for(int i=0;i<nDirectoriesCount;i++)
+        for(int i=nDirectoriesCount-1;i>=0;i--)
         {
             QJsonObject record;
 
@@ -291,7 +291,11 @@ Utils::MDATA Utils::getMDataFromData(QByteArray baData, QString sRootPath)
 
         if(sAction=="remove_file")
         {
-            record.bIsFile=true;
+            record.action=RRA_REMOVEFILE;
+        }
+        else if(sAction=="remove_directory_if_empty")
+        {
+            record.action=RRA_REMOVEDIRECTORYIFEMPTY;
         }
 
         result.listRemoveRecords.append(record);
