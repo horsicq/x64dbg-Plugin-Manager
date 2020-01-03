@@ -29,6 +29,29 @@
 #include "../installmoduleprocess.h"
 #include "../removemoduleprocess.h"
 
+void installFiles(XPLUGINMANAGER::OPTIONS *pOptions,ConsoleOutput *pConsoleOutput,QList<QString> *pListFileNames)
+{
+    int nCount=pListFileNames->count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        QString sFileName=pListFileNames->at(i);
+        if(Utils::isPluginValid(sFileName))
+        {
+            InstallModuleProcess installModuleProcess;
+            QObject::connect(&installModuleProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
+            QObject::connect(&installModuleProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
+            installModuleProcess.setData(pOptions,QList<QString>()<<sFileName);
+
+            installModuleProcess.process();
+        }
+        else
+        {
+            pConsoleOutput->errorMessage(QString("Invalid plugin file: %1").arg(sFileName));
+        }
+    }
+}
+
 void installModules(XPLUGINMANAGER::OPTIONS *pOptions,Utils::MODULES_DATA *pModulesData,ConsoleOutput *pConsoleOutput,QList<QString> *pListModuleNames)
 {
     int nCount=pListModuleNames->count();
@@ -130,12 +153,12 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     QString sDescription;
     sDescription.append(QString("%1 v%2\n").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
-    sDescription.append(QString("%1\n").arg("Copyright(C) 2019 hors<horsicq@gmail.com> Web: http://ntinfo.biz"));
+    sDescription.append(QString("%1\n").arg("Copyright(C) 2019-2020 hors<horsicq@gmail.com> Web: http://ntinfo.biz"));
     parser.setApplicationDescription(sDescription);
     parser.addHelpOption();
     parser.addVersionOption();
 
-    parser.addPositionalArgument("plugin","The plugin to open.");
+    parser.addPositionalArgument("plugin or file","The plugin or file to open.");
 
     QCommandLineOption clSetGlobalRootPath          (QStringList()<<"G"<<"setglobalrootpath",   "Set a global root path<path>.",                "path");
     QCommandLineOption clSetGlobalDataPath          (QStringList()<<"D"<<"setglobaldatapath",   "Set a global data path<path>.",                "path");
@@ -143,6 +166,7 @@ int main(int argc, char *argv[])
     QCommandLineOption clCreatePlugin               (QStringList()<<"c"<<"createplugin",        "Create a plugin<name>.",                       "name");
     QCommandLineOption clCreateServerList           (QStringList()<<"l"<<"createserverlist",    "Create a serverlist<name>.",                   "name");
     QCommandLineOption clInstallPlugin              (QStringList()<<"i"<<"installplugin",       "Install plugin(s)."                            );
+    QCommandLineOption clInstallFile                (QStringList()<<"f"<<"installfile",         "Install file(s)."                              );
     QCommandLineOption clUpdatePlugin               (QStringList()<<"u"<<"updateplugin",        "Update plugin(s)."                             );
     QCommandLineOption clRemovePlugin               (QStringList()<<"m"<<"removeplugin",        "Remove plugin(s)."                             );
     QCommandLineOption clUpdateServerList           (QStringList()<<"U"<<"updateserverlist",    "Update server list."                           );
@@ -165,6 +189,7 @@ int main(int argc, char *argv[])
     parser.addOption(clCreatePlugin);
     parser.addOption(clCreateServerList);
     parser.addOption(clInstallPlugin);
+    parser.addOption(clInstallFile);
     parser.addOption(clUpdatePlugin);
     parser.addOption(clRemovePlugin);
     parser.addOption(clUpdateServerList);
@@ -363,6 +388,7 @@ int main(int argc, char *argv[])
         getFileFromServerProcess.process();
     }
     else if(parser.isSet(clInstallPlugin)||
+            parser.isSet(clInstallFile)||
             parser.isSet(clUpdatePlugin)||
             parser.isSet(clRemovePlugin)||
             parser.isSet(clUpdateAllInstalledPlugins)||
@@ -427,6 +453,14 @@ int main(int argc, char *argv[])
                 QList<QString> listModules=parser.positionalArguments();
 
                 installModules(&options,&modulesData,&consoleOutput,&listModules);
+            }
+            else if(parser.isSet(clInstallFile))
+            {
+                consoleOutput.infoMessage(QString("Install file(s)."));
+
+                QList<QString> listFiles=parser.positionalArguments();
+
+                installFiles(&options,&consoleOutput,&listFiles);
             }
             else if(parser.isSet(clUpdatePlugin))
             {

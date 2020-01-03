@@ -23,6 +23,7 @@
 
 #include <QDialog>
 #include "dialoginstallmoduleprocess.h"
+#include "dialoggetfilefromserverprocess.h"
 #include "../utils.h"
 
 namespace Ui {
@@ -34,8 +35,10 @@ class DialogInstallModule : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions,QString sModuleFileName);
+    explicit DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions);
     ~DialogInstallModule();
+    void setFileName(QString sModuleFileName);
+    void setMData(Utils::MDATA *pMData);
 
 private slots:
     void on_pushButtonCancel_clicked();
@@ -46,7 +49,7 @@ signals:
 
 private:
     Ui::DialogInstallModule *ui;
-    Utils::MDATA mdata;
+    Utils::MDATA _mdata;
     XPLUGINMANAGER::OPTIONS *pOptions;
     QString sModuleFileName;
 };

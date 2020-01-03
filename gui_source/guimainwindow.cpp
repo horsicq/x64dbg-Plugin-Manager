@@ -265,29 +265,17 @@ void GuiMainWindow::openPlugin(QString sFileName)
 {
     if(Utils::isPluginValid(sFileName))
     {
-        Utils::MDATA mdata=Utils::getMDataFromZip(sFileName,XBinary::convertPathName(options.sRootPath));
+        DialogInstallModule dialogInstallModule(this,&options);
+        connect(&dialogInstallModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 
-        QString sDestFile=Utils::getModuleFileName(&options,mdata.sName);
+        dialogInstallModule.setFileName(sFileName);
+        dialogInstallModule.exec();
 
-        if(XBinary::isFileExists(sDestFile))
-        {
-            XBinary::removeFile(sDestFile); // TODO handle errors
-        }
-
-        if(XBinary::copyFile(sFileName,sDestFile))
-        {
-            DialogInstallModule dialogInstallModule(this,&options,sDestFile);
-
-            connect(&dialogInstallModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
-
-            dialogInstallModule.exec();
-
-            getModules();
-        }
+        getModules();
     }
     else
     {
-        errorMessage(tr("Invalid plugin file"));
+        errorMessage(QString("%1: %2").arg(tr("Invalid plugin file")).arg(sFileName));
     }
 }
 
@@ -329,36 +317,13 @@ void GuiMainWindow::installPlugin(QString sName)
 
         if(mdata.sName!="")
         {
-            QString sFileName=Utils::getModuleFileName(&options,mdata.sName);
+            DialogInstallModule dialogInstallModule(this,&options);
+            connect(&dialogInstallModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 
-            if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,mdata.sSHA1))
-            {
-                Utils::WEB_RECORD record={};
+            dialogInstallModule.setMData(&mdata);
+            dialogInstallModule.exec();
 
-                record.sFileName=sFileName;
-                record.sLink=mdata.sSrc;
-
-                DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
-
-                connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
-
-                dialogGetFileFromServer.exec();
-            }
-
-            if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,mdata.sSHA1))
-            {
-                DialogInstallModule dialogInstallModule(this,&options,sFileName);
-
-                connect(&dialogInstallModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
-
-                dialogInstallModule.exec();
-
-                getModules();
-            }
-            else
-            {
-                errorMessage(QString("%1: %2").arg(tr("Invalid SHA1")).arg(sFileName));
-            }
+            getModules();
         }
     }
 }

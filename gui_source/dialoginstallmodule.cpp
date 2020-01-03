@@ -21,34 +21,66 @@
 #include "dialoginstallmodule.h"
 #include "ui_dialoginstallmodule.h"
 
-DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleFileName) :
+DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions) :
     QDialog(parent),
     ui(new Ui::DialogInstallModule)
 {
     ui->setupUi(this);
 
     this->pOptions=pOptions;
+}
+
+DialogInstallModule::~DialogInstallModule()
+{
+    delete ui;
+}
+
+void DialogInstallModule::setFileName(QString sModuleFileName)
+{
     this->sModuleFileName=sModuleFileName;
 
-    mdata=Utils::getMDataFromZip(sModuleFileName,XBinary::convertPathName(pOptions->sRootPath));
+    _mdata=Utils::getMDataFromZip(sModuleFileName,XBinary::convertPathName(pOptions->sRootPath));
 
-    ui->widgetInfo->setData(&mdata);
+    ui->widgetInfo->setData(&_mdata);
 
-    int nCount=mdata.listInstallRecords.count();
+    int nCount=_mdata.listInstallRecords.count();
 
     ui->tableWidgetRecords->setColumnCount(1);
     ui->tableWidgetRecords->setRowCount(nCount);
 
     for(int i=0;i<nCount;i++)
     {
-        QTableWidgetItem *pItem=new QTableWidgetItem(mdata.listInstallRecords.at(i).sPath);
+        QTableWidgetItem *pItem=new QTableWidgetItem(_mdata.listInstallRecords.at(i).sPath);
         ui->tableWidgetRecords->setItem(i,0,pItem);
     }
 }
 
-DialogInstallModule::~DialogInstallModule()
+void DialogInstallModule::setMData(Utils::MDATA *pMData)
 {
-    delete ui;
+    QString sFileName=Utils::getModuleFileName(pOptions,pMData->sName);
+
+    if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,pMData->sSHA1))
+    {
+        Utils::WEB_RECORD record={};
+
+        record.sFileName=sFileName;
+        record.sLink=pMData->sSrc;
+
+        DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
+
+        connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+        dialogGetFileFromServer.exec();
+    }
+
+    if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,pMData->sSHA1))
+    {
+        setFileName(sFileName);
+    }
+    else
+    {
+        emit errorMessage(QString("%1: %2").arg(tr("Invalid SHA1")).arg(sFileName));
+    }
 }
 
 void DialogInstallModule::on_pushButtonCancel_clicked()
