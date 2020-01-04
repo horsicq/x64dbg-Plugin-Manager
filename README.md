@@ -8,10 +8,15 @@ Console example
 =======
 
 x64plgmnrc.exe -G "C:\x64dbg_root"  // Set root path for x64dbg
+
 x64plgmnrc.exe -U                   // Update list from server
+
 x64plgmnrc.exe -S                   // Show list of plugins
+
 x64plgmnrc.exe -i x64core           // Install last version of x64dbg
+
 x64plgmnrc.exe -i AdvancedScript    // install AdvancedScript
+
 
 How to build on Windows
 =======
