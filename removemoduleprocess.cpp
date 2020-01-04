@@ -55,8 +55,6 @@ void RemoveModuleProcess::process()
     {
         currentStats.sModule=QString("%1: %2").arg(tr("Remove module")).arg(listModuleNames.at(i));
 
-        emit infoMessage(currentStats.sModule);
-
         QString sFileName=Utils::getInstalledJsonFileName(pOptions,listModuleNames.at(i));
 
         if(XBinary::isFileExists(sFileName))
@@ -77,7 +75,11 @@ void RemoveModuleProcess::process()
                 {
                     XBinary::removeFile(record.sFullPath);
 
-                    if(XBinary::isFileExists(record.sFullPath))
+                    if(!XBinary::isFileExists(record.sFullPath))
+                    {
+                        emit infoMessage(currentStats.sModule);
+                    }
+                    else
                     {
                         emit errorMessage(tr("%1: %2").arg(tr("Cannot remove file")).arg(record.sFullPath));
                         bIsStop=true;
@@ -89,7 +91,11 @@ void RemoveModuleProcess::process()
                     {
                         XBinary::removeDirectory(record.sFullPath);
 
-                        if(XBinary::isDirectoryExists(record.sFullPath))
+                        if(!XBinary::isDirectoryExists(record.sFullPath))
+                        {
+                            emit infoMessage(currentStats.sModule);
+                        }
+                        else
                         {
                             emit errorMessage(tr("%1: %2").arg(tr("Cannot remove directory")).arg(record.sFullPath));
                             bIsStop=true;
@@ -103,8 +109,19 @@ void RemoveModuleProcess::process()
             if(!bIsStop)
             {
                 XBinary::removeFile(sFileName);
+
+                if(!XBinary::isFileExists(sFileName))
+                {
+                    emit infoMessage(QString("%1: %2").arg(tr("Remove file")).arg(sFileName));
+                }
+                else
+                {
+                    emit errorMessage(tr("%1: %2").arg(tr("Cannot remove file")).arg(sFileName));
+                    bIsStop=true;
+                }
             }
-            else
+
+            if(bIsStop)
             {
                 emit errorMessage(tr("Please, close all applications and try again."));
             }
