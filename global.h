@@ -24,7 +24,7 @@
 #include <QString>
 
 #define X_APPLICATIONNAME "x64dbg Plugin Manager"
-#define X_APPLICATIONVERSION "0.01"
+#define X_APPLICATIONVERSION "0.02"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 #define X_HOMEPAGE "https://github.com/horsicq/x64dbg-Plugin-Manager"
