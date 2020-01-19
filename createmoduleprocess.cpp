@@ -69,7 +69,7 @@ void CreateModuleProcess::process()
 
         if(!bSuccess)
         {
-            emit errorMessage(tr("Cannot remove: %1").arg(sBundleFileName));
+            emit errorMessage(QString("%1: %2").arg(tr("Cannot remove")).arg(sBundleFileName));
         }
     }
 
@@ -79,7 +79,7 @@ void CreateModuleProcess::process()
 
         if(!bSuccess)
         {
-            emit errorMessage(tr("Cannot remove: %1").arg(sBundleInfoFileName));
+            emit errorMessage(QString("%1: %2").arg(tr("Cannot remove")).arg(sBundleFileName));
         }
     }
 

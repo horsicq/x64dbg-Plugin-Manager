@@ -607,7 +607,7 @@ void GuiMainWindow::checkForUpdates()
     QNetworkRequest request(QUrl(X_SERVERVERSION));
     QNetworkReply *pReply=manager.get(request);
     QEventLoop loop;
-    QObject::connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
+    QObject::connect(pReply,SIGNAL(finished()),&loop,SLOT(quit()));
     loop.exec();
 
     if(pReply->error()==QNetworkReply::NoError)
