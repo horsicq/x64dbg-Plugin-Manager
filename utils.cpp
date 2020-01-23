@@ -124,7 +124,7 @@ bool Utils::isPluginValid(QIODevice *pDevice)
 
     XZip xzip(pDevice);
 
-    if(xzip.isVaild())
+    if(xzip.isValid())
     {
         QList<XArchive::RECORD> listRecords=xzip.getRecords();
 
@@ -229,7 +229,7 @@ Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath)
 
     XZip xzip(pDevice);
 
-    if(xzip.isVaild())
+    if(xzip.isValid())
     {
         QList<XArchive::RECORD> listRecords=xzip.getRecords();
 
