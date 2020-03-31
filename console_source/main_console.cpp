@@ -29,6 +29,30 @@
 #include "../installmoduleprocess.h"
 #include "../removemoduleprocess.h"
 
+enum PLGMNGREXITCODE
+{
+    PLGMNGREXITCODE_NOARGS=0,
+    PLGMNGREXITCODE_ERROR,
+    PLGMNGREXITCODE_DATAERROR,
+    PLGMNGREXITCODE_INSTALLFILES,
+    PLGMNGREXITCODE_INSTALLPLUGINS,
+    PLGMNGREXITCODE_LISTNAMEISEMPTY,
+    PLGMNGREXITCODE_NOINPUTFILES,
+    PLGMNGREXITCODE_NOPLUGINSINSTALLED,
+    PLGMNGREXITCODE_PLUGINCREATED,
+    PLGMNGREXITCODE_CANNOTCREATESERVERLIST,
+    PLGMNGREXITCODE_SHOWSERVERLIST,
+    PLGMNGREXITCODE_SERVERLISTCREATED,
+    PLGMNGREXITCODE_SERVERLISTISEMPTY,
+    PLGMNGREXITCODE_SERVERLISTUPDATED,
+    PLGMNGREXITCODE_SHOWINSTALLED,
+    PLGMNGREXITCODE_SHOWUPDATES,
+    PLGMNGREXITCODE_UPDATEALL,
+    PLGMNGREXITCODE_UPDATEPLUGINS,
+    PLGMNGREXITCODE_REMOVEPLUGINS,
+    PLGMNGREXITCODE_NOUPDATESAVAILABLE,
+};
+
 void installFiles(XPLUGINMANAGER::OPTIONS *pOptions,ConsoleOutput *pConsoleOutput,QList<QString> *pListFileNames)
 {
     int nCount=pListFileNames->count();
@@ -138,6 +162,8 @@ void showModules(ConsoleOutput *pConsoleOutput,QList<Utils::MDATA> *pList)
 
 int main(int argc, char *argv[])
 {
+    int nReturnCode=PLGMNGREXITCODE_NOARGS;
+
     QCoreApplication::setOrganizationName(X_ORGANIZATIONNAME);
     QCoreApplication::setOrganizationDomain(X_ORGANIZATIONDOMAIN);
     QCoreApplication::setApplicationName(X_APPLICATIONNAME);
@@ -328,10 +354,14 @@ int main(int argc, char *argv[])
             QObject::connect(&createModuleProcess,SIGNAL(errorMessage(QString)),&consoleOutput,SLOT(errorMessage(QString)));
             createModuleProcess.setData(&mdata);
             createModuleProcess.process();
+
+            nReturnCode=PLGMNGREXITCODE_PLUGINCREATED;
         }
         else
         {
             consoleOutput.errorMessage(sErrorString);
+
+            nReturnCode=PLGMNGREXITCODE_DATAERROR;
         }
     }
     else if(parser.isSet(clCreateServerList))
@@ -354,19 +384,29 @@ int main(int argc, char *argv[])
 
             if(listFiles.count())
             {
-                if(!Utils::createServerList(sListName,&listFiles,sWebPrefix,sDate))
+                if(Utils::createServerList(sListName,&listFiles,sWebPrefix,sDate))
+                {
+                    nReturnCode=PLGMNGREXITCODE_SERVERLISTCREATED;
+                }
+                else
                 {
                     consoleOutput.errorMessage("Cannot create serverlist.");
+
+                    nReturnCode=PLGMNGREXITCODE_CANNOTCREATESERVERLIST;
                 }
             }
             else
             {
                 consoleOutput.errorMessage("No input files.");
+
+                nReturnCode=PLGMNGREXITCODE_NOINPUTFILES;
             }
         }
         else
         {
             consoleOutput.errorMessage("List name is empty.");
+
+            nReturnCode=PLGMNGREXITCODE_LISTNAMEISEMPTY;
         }
     }
     else if(parser.isSet(clUpdateServerList))
@@ -386,6 +426,8 @@ int main(int argc, char *argv[])
         getFileFromServerProcess.setData(QList<Utils::WEB_RECORD>()<<record);
 
         getFileFromServerProcess.process();
+
+        nReturnCode=PLGMNGREXITCODE_SERVERLISTUPDATED;
     }
     else if(parser.isSet(clInstallPlugin)||
             parser.isSet(clInstallFile)||
@@ -409,10 +451,14 @@ int main(int argc, char *argv[])
                     consoleOutput.infoMessage(QString("Show server list."));
 
                     showModules(&consoleOutput,&modulesData.listServerList);
+
+                    nReturnCode=PLGMNGREXITCODE_SHOWSERVERLIST;
                 }
                 else
                 {
                     consoleOutput.infoMessage(QString("Server list is empty. Please update server list('-U' or '--updateserverlist')"));
+
+                    nReturnCode=PLGMNGREXITCODE_SERVERLISTISEMPTY;
                 }
             }
             else if(parser.isSet(clShowInstalled))
@@ -422,10 +468,14 @@ int main(int argc, char *argv[])
                     consoleOutput.infoMessage(QString("Show installed."));
 
                     showModules(&consoleOutput,&modulesData.listInstalled);
+
+                    nReturnCode=PLGMNGREXITCODE_SHOWINSTALLED;
                 }
                 else
                 {
                     consoleOutput.infoMessage(QString("No plugins installed"));
+
+                    nReturnCode=PLGMNGREXITCODE_NOPLUGINSINSTALLED;
                 }
             }
             else if(parser.isSet(clShowUpdates))
@@ -440,10 +490,14 @@ int main(int argc, char *argv[])
                     {
                         consoleOutput.infoMessage(modulesData.listUpdates.at(i).sName);
                     }
+
+                    nReturnCode=PLGMNGREXITCODE_SHOWUPDATES;
                 }
                 else
                 {
                     consoleOutput.infoMessage(QString("No updates available."));
+
+                    nReturnCode=PLGMNGREXITCODE_NOUPDATESAVAILABLE;
                 }
             }
             else if(parser.isSet(clInstallPlugin))
@@ -453,6 +507,8 @@ int main(int argc, char *argv[])
                 QList<QString> listModules=parser.positionalArguments();
 
                 installModules(&options,&modulesData,&consoleOutput,&listModules);
+
+                nReturnCode=PLGMNGREXITCODE_INSTALLPLUGINS;
             }
             else if(parser.isSet(clInstallFile))
             {
@@ -461,6 +517,8 @@ int main(int argc, char *argv[])
                 QList<QString> listFiles=parser.positionalArguments();
 
                 installFiles(&options,&consoleOutput,&listFiles);
+
+                nReturnCode=PLGMNGREXITCODE_INSTALLFILES;
             }
             else if(parser.isSet(clUpdatePlugin))
             {
@@ -486,6 +544,8 @@ int main(int argc, char *argv[])
                 }
 
                 installModules(&options,&modulesData,&consoleOutput,&_listModules);
+
+                nReturnCode=PLGMNGREXITCODE_UPDATEPLUGINS;
             }
             else if(parser.isSet(clRemovePlugin))
             {
@@ -494,6 +554,8 @@ int main(int argc, char *argv[])
                 QList<QString> listModules=parser.positionalArguments();
 
                 removeModules(&options,&modulesData,&consoleOutput,&listModules);
+
+                nReturnCode=PLGMNGREXITCODE_REMOVEPLUGINS;
             }
             else if(parser.isSet(clUpdateAllInstalledPlugins))
             {
@@ -504,10 +566,14 @@ int main(int argc, char *argv[])
                     QList<QString> listModules=Utils::getNamesFromWebRecords(&(modulesData.listUpdates));
 
                     installModules(&options,&modulesData,&consoleOutput,&listModules);
+
+                    nReturnCode=PLGMNGREXITCODE_UPDATEALL;
                 }
                 else
                 {
                     consoleOutput.infoMessage(QString("No updates available."));
+
+                    nReturnCode=PLGMNGREXITCODE_NOUPDATESAVAILABLE;
                 }
             }
         }
@@ -519,5 +585,5 @@ int main(int argc, char *argv[])
         Q_UNREACHABLE();
     }
 
-    return 0;
+    return nReturnCode;
 }
