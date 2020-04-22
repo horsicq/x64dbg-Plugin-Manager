@@ -24,11 +24,11 @@ x64plgmnrc.exe -i AdvancedScript    // install AdvancedScript
 How to build on Windows
 =======
 
-Install Visual Studio 2013: https://docs.microsoft.com/en-us/visualstudio/releasenotes/vs2013-community-vs
+Install Visual Studio 2013: https://github.com/horsicq/build_tools
 
-Install Qt 5.6.3 for VS2013: https://download.qt.io/archive/qt/5.6/5.6.3/qt-opensource-windows-x86-msvc2013-5.6.3.exe
+Install Qt 5.6.3 for VS2013(x86): https://github.com/horsicq/build_tools
 
-Install 7-Zip: https://www.7-zip.org/
+Install 7-Zip: https://github.com/horsicq/build_tools
 
 Clone project: git clone --recursive https://github.com/horsicq/x64dbg-Plugin-Manager.git
 
