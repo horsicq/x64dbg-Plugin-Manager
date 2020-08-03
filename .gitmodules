@@ -4,3 +4,6 @@
 [submodule "Formats"]
 	path = Formats
 	url = https://github.com/horsicq/Formats.git
+[submodule "XGithub"]
+	path = XGithub
+	url = https://github.com/horsicq/XGithub.git
