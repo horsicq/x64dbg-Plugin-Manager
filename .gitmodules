@@ -7,3 +7,6 @@
 [submodule "XGithub"]
 	path = XGithub
 	url = https://github.com/horsicq/XGithub.git
+[submodule "XOptions"]
+	path = XOptions
+	url = https://github.com/horsicq/XOptions.git
