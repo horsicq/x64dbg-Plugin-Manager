@@ -137,7 +137,7 @@ public:
         QList<WEB_RECORD> listUpdates;
     };
 
-    explicit Utils(QObject *parent=nullptr);
+    explicit Utils(QObject *pParent=nullptr);
 
     static void loadOptions(XPLUGINMANAGER::OPTIONS *pOptions);
     static void saveOptions(XPLUGINMANAGER::OPTIONS *pOptions);

@@ -20,7 +20,7 @@
 //
 #include "utils.h"
 
-Utils::Utils(QObject *parent) : QObject(parent)
+Utils::Utils(QObject *pParent) : QObject(pParent)
 {
 
 }
