@@ -105,9 +105,9 @@ private slots:
     void on_actionCheck_for_updates_triggered();
 
 protected:
-    void dragEnterEvent(QDragEnterEvent *event) override;
-    void dragMoveEvent(QDragMoveEvent *event) override;
-    void dropEvent(QDropEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
 
 private:
     Ui::GuiMainWindow *ui;

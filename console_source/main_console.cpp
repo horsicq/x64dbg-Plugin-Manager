@@ -173,6 +173,7 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
 
     XOptions xOptions;
+    xOptions.setName(X_OPTIONSFILE);
 
     QList<XOptions::ID> listIDs;
 

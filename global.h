@@ -27,6 +27,7 @@
 #define X_APPLICATIONVERSION "0.04"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
+#define X_OPTIONSFILE "x64plgmnr.ini"
 #define X_HOMEPAGE "https://github.com/horsicq/x64dbg-Plugin-Manager"
 #define X_SERVERVERSION "https://raw.githubusercontent.com/horsicq/x64dbg-Plugin-Manager/master/release_version.txt"
 
