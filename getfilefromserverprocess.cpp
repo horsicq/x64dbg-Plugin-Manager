@@ -149,6 +149,6 @@ void GetFileFromServerProcess::process()
 
 void GetFileFromServerProcess::_downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
-    currentStats.nTotalFile=bytesTotal;
-    currentStats.nCurrentFile=bytesReceived;
+    currentStats.nTotalBytes=bytesTotal;
+    currentStats.nCurrentBytes=bytesReceived;
 }

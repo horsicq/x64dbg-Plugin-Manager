@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>444</width>
-    <height>114</height>
+    <width>452</width>
+    <height>135</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,6 +26,19 @@
    </item>
    <item>
     <widget class="QProgressBar" name="progressBarModule">
+     <property name="maximum">
+      <number>0</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="progressBarBytes">
      <property name="maximum">
       <number>0</number>
      </property>

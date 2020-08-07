@@ -63,6 +63,8 @@ public:
         QString sFile;
         qint64 nTotalFile;
         qint64 nCurrentFile;
+        qint64 nTotalBytes;
+        qint64 nCurrentBytes;
     };
 
     struct RECORD

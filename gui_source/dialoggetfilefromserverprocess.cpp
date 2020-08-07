@@ -50,7 +50,10 @@ DialogGetFileFromServerProcess::DialogGetFileFromServerProcess(QWidget *parent, 
     ui->progressBarModule->setMaximum(100);
     ui->progressBarModule->setValue(0);
 
-    pTimer->start(1000); // 1 sec
+    ui->progressBarBytes->setMaximum(100);
+    ui->progressBarBytes->setValue(0);
+
+    pTimer->start(100); // 0.1 sec
 }
 
 DialogGetFileFromServerProcess::~DialogGetFileFromServerProcess()
@@ -98,5 +101,10 @@ void DialogGetFileFromServerProcess::timerSlot()
     if(stats.nTotalModule)
     {
         ui->progressBarModule->setValue((int)((stats.nCurrentModule*100)/stats.nTotalModule));
+    }
+
+    if(stats.nTotalBytes)
+    {
+        ui->progressBarBytes->setValue((int)((stats.nCurrentBytes*100)/stats.nTotalBytes));
     }
 }
