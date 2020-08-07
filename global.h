@@ -24,23 +24,12 @@
 #include <QString>
 
 #define X_APPLICATIONNAME "x64dbg Plugin Manager"
-#define X_APPLICATIONVERSION "0.04"
+#define X_APPLICATIONVERSION "0.03"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 #define X_HOMEPAGE "https://github.com/horsicq/x64dbg-Plugin-Manager"
 #define X_SERVERVERSION "https://raw.githubusercontent.com/horsicq/x64dbg-Plugin-Manager/master/release_version.txt"
 
 #define X_JSON_DEFAULT "https://raw.githubusercontent.com/x64dbg/PluginManager/master/list.json"
-
-namespace XPLUGINMANAGER
-{
-    struct OPTIONS
-    {
-        bool bStayOnTop;
-        QString sRootPath;
-        QString sDataPath;
-        QString sJSONLink;
-    };
-}
 
 #endif // _GLOBAL_H

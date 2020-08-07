@@ -26,9 +26,10 @@ InstallModuleProcess::InstallModuleProcess(QObject *parent) : QObject(parent)
     currentStats={};
 }
 
-void InstallModuleProcess::setData(XPLUGINMANAGER::OPTIONS *pOptions, QList<QString> listModuleFileNames)
+void InstallModuleProcess::setData(QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames)
 {
-    this->pOptions=pOptions;
+    this->sDataPath=sDataPath;
+    this->sRootPath=sRootPath;
     this->listModuleFileNames=listModuleFileNames;
 }
 
@@ -61,7 +62,7 @@ void InstallModuleProcess::process()
 
         if(file.open(QIODevice::ReadOnly))
         {
-            Utils::MDATA mdata=Utils::getMDataFromZip(&file,XBinary::convertPathName(pOptions->sRootPath));
+            Utils::MDATA mdata=Utils::getMDataFromZip(&file,XBinary::convertPathName(sRootPath));
 
             XZip zip(&file);
 
@@ -104,7 +105,7 @@ void InstallModuleProcess::process()
                 currentStats.nCurrentFile=j+1;
             }
 
-            QString sInfoFileName=Utils::getInstalledJsonFileName(pOptions,mdata.sName);
+            QString sInfoFileName=Utils::getInstalledJsonFileName(sDataPath,mdata.sName);
 
             if(XBinary::isFileExists(sInfoFileName))
             {

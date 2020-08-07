@@ -111,7 +111,7 @@ protected:
 
 private:
     Ui::GuiMainWindow *ui;
-    XPLUGINMANAGER::OPTIONS options;
+    XOptions xOptions;
     Utils::MODULES_DATA modulesData;
 };
 #endif // GUIMAINWINDOW_H

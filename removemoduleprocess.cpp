@@ -26,9 +26,10 @@ RemoveModuleProcess::RemoveModuleProcess(QObject *parent) : QObject(parent)
     currentStats={};
 }
 
-void RemoveModuleProcess::setData(XPLUGINMANAGER::OPTIONS *pOptions, QList<QString> listModuleNames)
+void RemoveModuleProcess::setData(QString sDataPath, QString sRootPath, QList<QString> listModuleNames)
 {
-    this->pOptions=pOptions;
+    this->sDataPath=sDataPath;
+    this->sRootPath=sRootPath;
     this->listModuleNames=listModuleNames;
 }
 
@@ -56,11 +57,11 @@ void RemoveModuleProcess::process()
         currentStats.sModule=QString("%1: %2").arg(tr("Remove module")).arg(listModuleNames.at(i));
         emit infoMessage(currentStats.sModule);
 
-        QString sFileName=Utils::getInstalledJsonFileName(pOptions,listModuleNames.at(i));
+        QString sFileName=Utils::getInstalledJsonFileName(sDataPath,listModuleNames.at(i));
 
         if(XBinary::isFileExists(sFileName))
         {
-            Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(pOptions->sRootPath));
+            Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(sRootPath));
 
             currentStats.nTotalFile=mdata.listRemoveRecords.count();
 

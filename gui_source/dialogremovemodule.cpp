@@ -21,18 +21,19 @@
 #include "dialogremovemodule.h"
 #include "ui_dialogremovemodule.h"
 
-DialogRemoveModule::DialogRemoveModule(QWidget *parent,XPLUGINMANAGER::OPTIONS *pOptions, QString sModuleName) :
+DialogRemoveModule::DialogRemoveModule(QWidget *parent, QString sDataPath, QString sRootPath, QString sModuleName) :
     QDialog(parent),
     ui(new Ui::DialogRemoveModule)
 {
     ui->setupUi(this);
 
-    this->pOptions=pOptions;
+    this->sDataPath=sDataPath;
+    this->sRootPath=sRootPath;
     this->sModuleName=sModuleName;
 
-    QString sFileName=Utils::getInstalledJsonFileName(pOptions,sModuleName);
+    QString sFileName=Utils::getInstalledJsonFileName(sDataPath,sModuleName);
 
-    Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(pOptions->sRootPath));
+    Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(sRootPath));
 
     ui->widgetInfo->setData(&mdata);
 }
@@ -49,7 +50,7 @@ void DialogRemoveModule::on_pushButtonCancel_clicked()
 
 void DialogRemoveModule::on_pushButtonOK_clicked()
 {
-    DialogRemoveModuleProcess drmp(this,pOptions,QList<QString>()<<sModuleName);
+    DialogRemoveModuleProcess drmp(this,sDataPath,sRootPath,QList<QString>()<<sModuleName);
 
     connect(&drmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 

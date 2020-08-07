@@ -21,13 +21,14 @@
 #include "dialoginstallmodule.h"
 #include "ui_dialoginstallmodule.h"
 
-DialogInstallModule::DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions) :
+DialogInstallModule::DialogInstallModule(QWidget *parent, QString sDataPath, QString sRootPath) :
     QDialog(parent),
     ui(new Ui::DialogInstallModule)
 {
     ui->setupUi(this);
 
-    this->pOptions=pOptions;
+    this->sDataPath=sDataPath;
+    this->sRootPath=sRootPath;
 }
 
 DialogInstallModule::~DialogInstallModule()
@@ -39,7 +40,7 @@ void DialogInstallModule::setFileName(QString sModuleFileName)
 {
     this->sModuleFileName=sModuleFileName;
 
-    _mdata=Utils::getMDataFromZip(sModuleFileName,XBinary::convertPathName(pOptions->sRootPath));
+    _mdata=Utils::getMDataFromZip(sModuleFileName,XBinary::convertPathName(sRootPath));
 
     ui->widgetInfo->setData(&_mdata);
 
@@ -57,7 +58,7 @@ void DialogInstallModule::setFileName(QString sModuleFileName)
 
 void DialogInstallModule::setMData(Utils::MDATA *pMData)
 {
-    QString sFileName=Utils::getModuleFileName(pOptions,pMData->sName);
+    QString sFileName=Utils::getModuleFileName(sDataPath,pMData->sName);
 
     if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,pMData->sSHA1))
     {
@@ -90,7 +91,7 @@ void DialogInstallModule::on_pushButtonCancel_clicked()
 
 void DialogInstallModule::on_pushButtonOK_clicked()
 {
-    DialogInstallModuleProcess dimp(this,pOptions,QList<QString>()<<sModuleFileName);
+    DialogInstallModuleProcess dimp(this,sDataPath,sRootPath,QList<QString>()<<sModuleFileName);
 
     connect(&dimp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 

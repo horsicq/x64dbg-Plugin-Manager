@@ -139,9 +139,6 @@ public:
 
     explicit Utils(QObject *pParent=nullptr);
 
-    static void loadOptions(XPLUGINMANAGER::OPTIONS *pOptions);
-    static void saveOptions(XPLUGINMANAGER::OPTIONS *pOptions);
-
     static QList<RECORD> getRecords(QString sRootPath);
     static bool checkMData(MDATA *pMData,QString *psErrorString);
     static QString createBundleName(MDATA *pMData);
@@ -162,14 +159,14 @@ public:
     static void mDataToObject(Utils::MDATA *pMData,QJsonObject *pObject);
     static void objectToMData(QJsonObject *pObject,Utils::MDATA *pMData);
 
-    static QMap<QString,STATUS> getModulesStatusMap(XPLUGINMANAGER::OPTIONS *pOptions,QList<MDATA> *pServerList,QList<MDATA> *pInstalled);
+    static QMap<QString,STATUS> getModulesStatusMap(QString sDataPath, QList<MDATA> *pServerList, QList<MDATA> *pInstalled);
 
-    static MODULES_DATA getModulesData(XPLUGINMANAGER::OPTIONS *pOptions);
+    static MODULES_DATA getModulesData(QString sDataPath);
     static QList<Utils::WEB_RECORD> getUpdates(QMap<QString, STATUS> *pMapStatus);
 
-    static QString getInstalledJsonFileName(XPLUGINMANAGER::OPTIONS *pOptions,QString sName);
-    static QString getServerListFileName(XPLUGINMANAGER::OPTIONS *pOptions);
-    static QString getModuleFileName(XPLUGINMANAGER::OPTIONS *pOptions,QString sName);
+    static QString getInstalledJsonFileName(QString sDataPath, QString sName);
+    static QString getServerListFileName(QString sDataPath);
+    static QString getModuleFileName(QString sDataPath, QString sName);
 
     static Utils::MDATA getMDataByName(QList<MDATA> *pServerList,QString sName);
     static QList<QString> getNamesFromWebRecords(QList<WEB_RECORD> *pListWebRecords);

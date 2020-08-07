@@ -31,14 +31,31 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     setAcceptDrops(true);
 
-    Utils::loadOptions(&options);
+    QList<XOptions::ID> listIDs;
 
-    if(!XBinary::isDirectoryExists(XBinary::convertPathName(options.sRootPath)))
+    listIDs.append(XOptions::ID_STAYONTOP);
+    listIDs.append(XOptions::ID_DATAPATH);
+    listIDs.append(XOptions::ID_ROOTPATH);
+    listIDs.append(XOptions::ID_JSON);
+
+    xOptions.setValueIDs(listIDs);
+
+    QMap<XOptions::ID, QVariant> mapDefaultValues;
+
+    mapDefaultValues.insert(XOptions::ID_JSON,X_JSON_DEFAULT);
+
+    xOptions.setDefaultValues(mapDefaultValues);
+
+    xOptions.load();
+
+    xOptions.adjustStayOnTop(this);
+
+    if(!XBinary::isDirectoryExists(XBinary::convertPathName(xOptions.getRootPath())))
     {
-        options.sRootPath="";
+        xOptions.clearValue(XOptions::ID_ROOTPATH);
     }
 
-    if(options.sRootPath=="")
+    if(xOptions.getRootPath()=="")
     {
         QString sDirectoryName;
 
@@ -52,18 +69,18 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
         if(sDirectoryName!="")
         {
-            options.sRootPath=sDirectoryName;
+            xOptions.setValue(XOptions::ID_ROOTPATH,sDirectoryName);
         }
     }
 
-    if(options.sRootPath=="")
+    if(xOptions.getRootPath()=="")
     {
         exit(1);
     }
 
-    XBinary::createDirectory(XBinary::convertPathName(options.sDataPath));
-    XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"installed");
-    XBinary::createDirectory(XBinary::convertPathName(options.sDataPath)+QDir::separator()+"modules");
+    XBinary::createDirectory(XBinary::convertPathName(xOptions.getDataPath()));
+    XBinary::createDirectory(XBinary::convertPathName(xOptions.getDataPath())+QDir::separator()+"installed");
+    XBinary::createDirectory(XBinary::convertPathName(xOptions.getDataPath())+QDir::separator()+"modules");
 
     setAcceptDrops(true);
 
@@ -75,7 +92,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     }
     else
     {
-        if(!XBinary::isFileExists(Utils::getServerListFileName(&options)))
+        if(!XBinary::isFileExists(Utils::getServerListFileName(xOptions.getDataPath())))
         {
             updateJsonList();
         }
@@ -89,7 +106,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
 GuiMainWindow::~GuiMainWindow()
 {
-    Utils::saveOptions(&options);
+    xOptions.save();
 
     delete ui;
 }
@@ -221,24 +238,11 @@ void GuiMainWindow::openPlugin()
 
 void GuiMainWindow::optionsDialog()
 {
-    DialogOptions dialogOptions(this,&options);
+    DialogOptions dialogOptions(this,&xOptions);
 
     dialogOptions.exec();
 
-    Qt::WindowFlags wf=windowFlags();
-
-    if(options.bStayOnTop)
-    {
-        wf|=Qt::WindowStaysOnTopHint;
-    }
-    else
-    {
-        wf&=~(Qt::WindowStaysOnTopHint);
-    }
-
-    setWindowFlags(wf);
-
-    show();
+    xOptions.adjustStayOnTop(this);
 }
 
 void GuiMainWindow::exitProgram()
@@ -253,7 +257,7 @@ void GuiMainWindow::errorMessage(QString sMessage)
 
 void GuiMainWindow::getModules()
 {
-    modulesData=Utils::getModulesData(&options);
+    modulesData=Utils::getModulesData(xOptions.getDataPath());
 
     fillTable(ui->tableWidgetServerList,&(modulesData.listServerList),&(modulesData.mapStatus));
     fillTable(ui->tableWidgetInstalled,&(modulesData.listInstalled),&(modulesData.mapStatus));
@@ -265,7 +269,7 @@ void GuiMainWindow::openPlugin(QString sFileName)
 {
     if(Utils::isPluginValid(sFileName))
     {
-        DialogInstallModule dialogInstallModule(this,&options);
+        DialogInstallModule dialogInstallModule(this,xOptions.getDataPath(),xOptions.getRootPath());
         connect(&dialogInstallModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 
         dialogInstallModule.setFileName(sFileName);
@@ -283,8 +287,8 @@ void GuiMainWindow::updateJsonList()
 {
     Utils::WEB_RECORD record={};
 
-    record.sFileName=Utils::getServerListFileName(&options);
-    record.sLink=options.sJSONLink;
+    record.sFileName=Utils::getServerListFileName(xOptions.getDataPath());
+    record.sLink=xOptions.getJson();
 
     DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
 
@@ -317,7 +321,7 @@ void GuiMainWindow::installPlugin(QString sName)
 
         if(mdata.sName!="")
         {
-            DialogInstallModule dialogInstallModule(this,&options);
+            DialogInstallModule dialogInstallModule(this,xOptions.getDataPath(),xOptions.getRootPath());
             connect(&dialogInstallModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 
             dialogInstallModule.setMData(&mdata);
@@ -340,7 +344,7 @@ void GuiMainWindow::installPlugins(QList<QString> *pListNames)
 
         if(mdata.sName!="")
         {
-            QString sFileName=Utils::getModuleFileName(&options,mdata.sName);
+            QString sFileName=Utils::getModuleFileName(xOptions.getDataPath(),mdata.sName);
 
             if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,mdata.sSHA1))
             {
@@ -351,7 +355,7 @@ void GuiMainWindow::installPlugins(QList<QString> *pListNames)
 
     if(listFileNames.count())
     {
-        DialogInstallModuleProcess dialogInstallModuleProcess(this,&options,listFileNames);
+        DialogInstallModuleProcess dialogInstallModuleProcess(this,xOptions.getDataPath(),xOptions.getRootPath(),listFileNames);
 
         connect(&dialogInstallModuleProcess,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 
@@ -365,7 +369,7 @@ void GuiMainWindow::removePlugin(QString sName)
 {
     if(sName!="")
     {
-        DialogRemoveModule dialogRemoveModule(this,&options,sName);
+        DialogRemoveModule dialogRemoveModule(this,xOptions.getDataPath(),xOptions.getRootPath(),sName);
 
         connect(&dialogRemoveModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 

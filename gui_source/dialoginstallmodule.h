@@ -35,7 +35,7 @@ class DialogInstallModule : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstallModule(QWidget *parent, XPLUGINMANAGER::OPTIONS *pOptions);
+    explicit DialogInstallModule(QWidget *parent, QString sDataPath, QString sRootPath);
     ~DialogInstallModule();
     void setFileName(QString sModuleFileName);
     void setMData(Utils::MDATA *pMData);
@@ -50,7 +50,8 @@ signals:
 private:
     Ui::DialogInstallModule *ui;
     Utils::MDATA _mdata;
-    XPLUGINMANAGER::OPTIONS *pOptions;
+    QString sDataPath;
+    QString sRootPath;
     QString sModuleFileName;
 };
 
