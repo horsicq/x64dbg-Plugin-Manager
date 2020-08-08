@@ -10,6 +10,7 @@ TEMPLATE = app
 include(../build.pri)
 
 SOURCES += \
+    ../convertprocess.cpp \
     ../getfilefromserverprocess.cpp \
     ../installmoduleprocess.cpp \
     ../removemoduleprocess.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
     ../utils.cpp \
     ../createmoduleprocess.cpp \
     dialogabout.cpp \
+    dialogconvertprocess.cpp \
     dialogcreatemodule.cpp \
     dialogcreatemoduleprocess.cpp \
     dialoggetfilefromserverprocess.cpp \
@@ -32,6 +34,7 @@ SOURCES += \
     plugininfowidget.cpp
 
 HEADERS += \
+    ../convertprocess.h \
     ../getfilefromserverprocess.h \
     ../global.h \
     ../installmoduleprocess.h \
@@ -40,6 +43,7 @@ HEADERS += \
     ../utils.h \
     ../createmoduleprocess.h \
     dialogabout.h \
+    dialogconvertprocess.h \
     dialogcreatemodule.h \
     dialogcreatemoduleprocess.h \
     dialoggetfilefromserverprocess.h \
@@ -55,6 +59,7 @@ HEADERS += \
 
 FORMS += \
     dialogabout.ui \
+    dialogconvertprocess.ui \
     dialogcreatemodule.ui \
     dialogcreatemoduleprocess.ui \
     dialoggetfilefromserverprocess.ui \
