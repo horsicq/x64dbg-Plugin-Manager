@@ -13,6 +13,7 @@ SOURCES += \
     ../getfilefromserverprocess.cpp \
     ../installmoduleprocess.cpp \
     ../removemoduleprocess.cpp \
+    ../updategitprocess.cpp \
     ../utils.cpp \
     main_console.cpp \
     consoleoutput.cpp
@@ -23,6 +24,7 @@ HEADERS += \
     ../global.h \
     ../installmoduleprocess.h \
     ../removemoduleprocess.h \
+    ../updategitprocess.cpp \
     ../utils.h \
     consoleoutput.h
 

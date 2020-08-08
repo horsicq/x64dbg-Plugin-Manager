@@ -13,6 +13,7 @@ SOURCES += \
     ../getfilefromserverprocess.cpp \
     ../installmoduleprocess.cpp \
     ../removemoduleprocess.cpp \
+    ../updategitprocess.cpp \
     ../utils.cpp \
     ../createmoduleprocess.cpp \
     dialogabout.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
     dialogoptions.cpp \
     dialogremovemodule.cpp \
     dialogremovemoduleprocess.cpp \
+    dialogupdategitprocess.cpp \
     guimainwindow.cpp \
     main_gui.cpp \
     plugininfowidget.cpp
@@ -34,6 +36,7 @@ HEADERS += \
     ../global.h \
     ../installmoduleprocess.h \
     ../removemoduleprocess.h \
+    ../updategitprocess.h \
     ../utils.h \
     ../createmoduleprocess.h \
     dialogabout.h \
@@ -46,6 +49,7 @@ HEADERS += \
     dialogoptions.h \
     dialogremovemodule.h \
     dialogremovemoduleprocess.h \
+    dialogupdategitprocess.h \
     guimainwindow.h \
     plugininfowidget.h
 
@@ -60,6 +64,7 @@ FORMS += \
     dialogoptions.ui \
     dialogremovemodule.ui \
     dialogremovemoduleprocess.ui \
+    dialogupdategitprocess.ui \
     guimainwindow.ui \
     plugininfowidget.ui
 
