@@ -26,6 +26,7 @@
 class UpdateGitProcess : public QObject
 {
     Q_OBJECT
+
 public:
     explicit UpdateGitProcess(QObject *parent = nullptr);
 };

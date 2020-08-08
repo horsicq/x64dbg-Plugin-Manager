@@ -24,7 +24,7 @@ HEADERS += \
     ../global.h \
     ../installmoduleprocess.h \
     ../removemoduleprocess.h \
-    ../updategitprocess.cpp \
+    ../updategitprocess.h \
     ../utils.h \
     consoleoutput.h
 
