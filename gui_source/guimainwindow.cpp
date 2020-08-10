@@ -297,6 +297,15 @@ void GuiMainWindow::updateJsonList()
     connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 
     dialogGetFileFromServer.exec();
+
+    if(Utils::isGithubPresent(xOptions.getDataPath()))
+    {
+        DialogUpdateGitProcess dialogUpdateGitProcess(this,xOptions.getDataPath());
+
+        connect(&dialogUpdateGitProcess,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+
+        dialogUpdateGitProcess.exec();
+    }
 }
 
 void GuiMainWindow::installButtonSlot()

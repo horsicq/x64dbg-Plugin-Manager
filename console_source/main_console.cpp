@@ -29,6 +29,7 @@
 #include "../getfilefromserverprocess.h"
 #include "../installmoduleprocess.h"
 #include "../removemoduleprocess.h"
+#include "../updategitprocess.h"
 
 enum PLGMNGREXITCODE
 {
@@ -442,6 +443,16 @@ int main(int argc, char *argv[])
         getFileFromServerProcess.setData(QList<Utils::WEB_RECORD>()<<record);
 
         getFileFromServerProcess.process();
+
+        if(Utils::isGithubPresent(xOptions.getDataPath()))
+        {
+            UpdateGitProcess updateGitProcess;
+            QObject::connect(&updateGitProcess,SIGNAL(infoMessage(QString)),&consoleOutput,SLOT(infoMessage(QString)));
+            QObject::connect(&updateGitProcess,SIGNAL(errorMessage(QString)),&consoleOutput,SLOT(errorMessage(QString)));
+            updateGitProcess.setData(xOptions.getDataPath());
+
+            updateGitProcess.process();
+        }
 
         nReturnCode=PLGMNGREXITCODE_SERVERLISTUPDATED;
     }

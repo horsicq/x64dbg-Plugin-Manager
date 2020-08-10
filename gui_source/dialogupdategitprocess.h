@@ -22,6 +22,10 @@
 #define DIALOGUPDATEGITPROCESS_H
 
 #include <QDialog>
+#include <QThread>
+#include <QTimer>
+#include "../updategitprocess.h"
+#include "../utils.h"
 
 namespace Ui {
 class DialogUpdateGitProcess;
@@ -32,11 +36,24 @@ class DialogUpdateGitProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogUpdateGitProcess(QWidget *parent = nullptr);
+    explicit DialogUpdateGitProcess(QWidget *pParent, QString sDataPath);
     ~DialogUpdateGitProcess();
+
+private slots:
+    void on_pushButtonCancel_clicked();
+    void onCompleted(qint64 nElapsed);
+    void timerSlot();
+
+signals:
+    void errorMessage(QString sMessage);
 
 private:
     Ui::DialogUpdateGitProcess *ui;
+    QString sDataPath;
+    UpdateGitProcess *pUpdateGitProcess;
+    QThread *pThread;
+    bool bIsRun;
+    QTimer *pTimer;
 };
 
 #endif // DIALOGUPDATEGITPROCESS_H

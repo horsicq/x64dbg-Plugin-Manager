@@ -22,13 +22,32 @@
 #define UPDATEGITPROCESS_H
 
 #include <QObject>
+#include <QElapsedTimer>
+#include "utils.h"
+#include "xgithub.h"
 
 class UpdateGitProcess : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit UpdateGitProcess(QObject *parent = nullptr);
+    explicit UpdateGitProcess(QObject *pParent=nullptr);
+    void setData(QString sDataPath);
+    void stop();
+    Utils::STATS getCurrentStats();
+
+signals:
+    void errorMessage(QString sMessage);
+    void infoMessage(QString sMessage);
+    void completed(qint64 nElapsedTime);
+
+public slots:
+    void process();
+
+private:
+    QString sDataPath;
+    bool bIsStop;
+    Utils::STATS currentStats;
 };
 
 #endif // UPDATEGITPROCESS_H

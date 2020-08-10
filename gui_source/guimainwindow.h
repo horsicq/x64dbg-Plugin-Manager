@@ -26,6 +26,7 @@
 #include "dialogcreatemodule.h"
 #include "dialoginstallmodule.h"
 #include "dialogremovemodule.h"
+#include "dialogupdategitprocess.h"
 #include "dialoginfomodule.h"
 #include "dialogoptions.h"
 #include "dialoggetfilefromserverprocess.h"

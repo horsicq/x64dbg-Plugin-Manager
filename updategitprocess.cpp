@@ -20,7 +20,90 @@
 //
 #include "updategitprocess.h"
 
-UpdateGitProcess::UpdateGitProcess(QObject *parent) : QObject(parent)
+UpdateGitProcess::UpdateGitProcess(QObject *pParent) : QObject(pParent)
 {
+    bIsStop=false;
+    currentStats={};
+}
 
+void UpdateGitProcess::setData(QString sDataPath)
+{
+    this->sDataPath=sDataPath;
+}
+
+void UpdateGitProcess::stop()
+{
+    bIsStop=true;
+}
+
+Utils::STATS UpdateGitProcess::getCurrentStats()
+{
+    return currentStats;
+}
+
+void UpdateGitProcess::process()
+{
+    QElapsedTimer elapsedTimer;
+    elapsedTimer.start();
+
+    bIsStop=false;
+
+    QString sServerListFileName=Utils::getServerListFileName(sDataPath);
+
+    QList<Utils::MDATA> listMData=Utils::getModulesFromJSONFile(sServerListFileName);
+
+    int nCount=listMData.count();
+
+    int nNumbersOfGithub=0;
+
+    for(int i=0;i<nCount;i++)
+    {
+        if(listMData.at(i).type==Utils::TYPE_GITHUBZIP)
+        {
+            nNumbersOfGithub++;
+        }
+    }
+
+    currentStats.nTotalModule=nNumbersOfGithub;
+
+    for(int i=0;(i<nCount)&&(!bIsStop);i++)
+    {
+        QString sGithub=listMData.at(i).sGithub;
+        sGithub=sGithub.section("github.com/",1,1);
+
+        QString sUserName=sGithub.section("/",0,0);
+        QString sRepoName=sGithub.section("/",1,1);
+
+        XGithub github(sUserName,sRepoName);
+
+        XGithub::RELEASE_HEADER release=github.getLatestRelease();
+
+        int _nCount=release.listRecords.count();
+
+        bool bFound=false;
+
+        for(int j=0;j<_nCount;j++)
+        {
+            if(release.listRecords.at(j).sSrc.contains(listMData.at(i).sPattern))
+            {
+                bFound=true;
+
+                Utils::MDATA mdata=listMData.at(i);
+                mdata.sSrc=release.listRecords.at(j).sSrc;
+                mdata.sVersion=release.sName;
+                mdata.nSize=release.listRecords.at(j).nSize;
+
+                Utils::updateJsonFile(sServerListFileName,&mdata);
+
+                break;
+            }
+        }
+
+        if(!bFound)
+        {
+            emit errorMessage(tr("Cannot find pattern")+": "+listMData.at(i).sPattern);
+        }
+    }
+
+    emit completed(elapsedTimer.elapsed());
 }

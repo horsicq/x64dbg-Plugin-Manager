@@ -411,7 +411,14 @@ void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject)
 
     if(pMData->sSHA1!="")
     {
-        pObject->insert("SHA1",             QJsonValue::fromVariant(pMData->sSHA1));
+        pObject->insert("SHA1",         QJsonValue::fromVariant(pMData->sSHA1));
+    }
+
+    if(pMData->type==TYPE_GITHUBZIP)
+    {
+        pObject->insert("Type",         QJsonValue::fromVariant("GITHUB_ZIP"));
+        pObject->insert("Github",       QJsonValue::fromVariant(pMData->sGithub));
+        pObject->insert("Pattern",      QJsonValue::fromVariant(pMData->sPattern));
     }
 }
 
@@ -429,6 +436,19 @@ void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
     pMData->bIs64           =pObject->value("Is64").toBool();
     pMData->sSrc            =pObject->value("Src").toString();
     pMData->sSHA1           =pObject->value("SHA1").toString();
+
+    QString sType=pObject->value("Type").toString();
+
+    if(sType=="GITHUB_ZIP")
+    {
+        pMData->type        =TYPE_GITHUBZIP;
+        pMData->sGithub     =pObject->value("Github").toString();
+        pMData->sPattern    =pObject->value("Pattern").toString();
+    }
+    else
+    {
+        pMData->type        =TYPE_BUNDLE;
+    }
 }
 
 QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QString sDataPath, QList<Utils::MDATA> *pServerList, QList<Utils::MDATA> *pInstalled)
@@ -581,6 +601,74 @@ Utils::WEB_RECORD Utils::getWebRecordByName(QList<Utils::WEB_RECORD> *pListWebRe
     }
 
     return result;
+}
+
+bool Utils::isGithubPresent(QString sDataPath)
+{
+    bool bResult=false;
+
+    QList<MDATA> listMData=getModulesFromJSONFile(Utils::getServerListFileName(sDataPath));
+
+    int nCount=listMData.count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        if(listMData.at(i).type==TYPE_GITHUBZIP)
+        {
+            bResult=true;
+
+            break;
+        }
+    }
+
+    return bResult;
+}
+
+bool Utils::updateJsonFile(QString sFileName, Utils::MDATA *pMData)
+{
+    bool bResult=false;
+
+    QByteArray baData=XBinary::readFile(sFileName);
+
+    QJsonDocument jsDoc=QJsonDocument::fromJson(baData);
+
+    QJsonObject rootObj=jsDoc.object();
+    QJsonObject _rootObj;
+
+    rootObj.insert("Date",rootObj.value("Date"));
+
+    QJsonArray arrayModules=rootObj.value("Modules").toArray();
+    QJsonArray _arrayModules;
+
+    int nCount=arrayModules.count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        QJsonObject recordObject=arrayModules.at(i).toObject();
+
+        MDATA mdata={};
+
+        objectToMData(&recordObject,&mdata);
+
+        if(mdata.sName==pMData->sName)
+        {
+            mdata=*pMData;
+        }
+
+        QJsonObject _recordObject;
+
+        mDataToObject(&mdata,&_recordObject);
+
+        _arrayModules.append(_recordObject);
+    }
+
+    _rootObj.insert("Modules",_arrayModules);
+
+    QJsonDocument jsResult(_rootObj);
+
+    bResult=XBinary::writeToFile(sFileName,jsResult.toJson(QJsonDocument::Indented));
+
+    return bResult;
 }
 
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)

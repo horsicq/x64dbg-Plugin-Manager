@@ -36,6 +36,12 @@ class Utils : public QObject
     Q_OBJECT
 
 public:
+    enum TYPE
+    {
+        TYPE_BUNDLE=0,
+        TYPE_GITHUBZIP
+    };
+
     struct WEB_RECORD
     {
         QString sName;
@@ -114,6 +120,9 @@ public:
         qint64 nCompressedSize;
         QString sSrc;
         QString sSHA1;
+        TYPE type;
+        QString sGithub;
+        QString sPattern;
     };
 
     struct FILE_RECORD
@@ -173,6 +182,10 @@ public:
     static Utils::MDATA getMDataByName(QList<MDATA> *pServerList,QString sName);
     static QList<QString> getNamesFromWebRecords(QList<WEB_RECORD> *pListWebRecords);
     static Utils::WEB_RECORD getWebRecordByName(QList<WEB_RECORD> *pListWebRecords,QString sName);
+
+    static bool isGithubPresent(QString sDataPath);
+
+    static bool updateJsonFile(QString sFileName,MDATA *pMData);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
