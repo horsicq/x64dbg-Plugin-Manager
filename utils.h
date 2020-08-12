@@ -42,6 +42,17 @@ public:
         TYPE_GITHUBZIP
     };
 
+    enum ACTION
+    {
+        ACTION_UNKNOWN=0,
+        ACTION_COPYFILE,
+        ACTION_REMOVEFILE,
+        ACTION_REMOVEDIRECTORYIFEMPTY,
+        ACTION_MAKEDIRECTORY,
+        ACTION_UNPACKDIRECTORY,
+        ACTION_UNPACKFILE
+    };
+
     struct WEB_RECORD
     {
         QString sName;
@@ -80,26 +91,12 @@ public:
         bool bIsFile;
     };
 
-    struct INSTALL_RECORD
+    struct HANDLE_RECORD
     {
-        QString sFullPath;
+        QString sSrc;
         QString sPath;
-        bool bIsFile;
         QString sSHA1;
-    };
-
-    enum RRA
-    {
-        RRA_UNKNOWN=0,
-        RRA_REMOVEFILE,
-        RRA_REMOVEDIRECTORYIFEMPTY
-    };
-
-    struct REMOVE_RECORD
-    {
-        QString sFullPath;
-        QString sPath;
-        RRA action;
+        ACTION action;
     };
 
     struct MDATA
@@ -114,8 +111,9 @@ public:
         QString sInfo;
         QString sRoot;
         QString sBundleFileName;
-        QList<Utils::INSTALL_RECORD> listInstallRecords;
-        QList<Utils::REMOVE_RECORD> listRemoveRecords;
+        QList<Utils::HANDLE_RECORD> listInstallRecords;
+        QList<Utils::HANDLE_RECORD> listRemoveRecords;
+        QList<Utils::HANDLE_RECORD> listConvertRecords;
         qint64 nSize;
         qint64 nCompressedSize;
         QString sSrc;
@@ -170,6 +168,9 @@ public:
     static void mDataToObject(Utils::MDATA *pMData,QJsonObject *pObject);
     static void objectToMData(QJsonObject *pObject,Utils::MDATA *pMData);
 
+    static void handleRecordToObject(Utils::HANDLE_RECORD *pHandleRecord,QJsonObject *pObject);
+    static void objectToHandleRecord(QJsonObject *pObject,Utils::HANDLE_RECORD *pHandleRecord);
+
     static QMap<QString,STATUS> getModulesStatusMap(QString sDataPath, QList<MDATA> *pServerList, QList<MDATA> *pInstalled);
 
     static MODULES_DATA getModulesData(QString sDataPath);
@@ -178,6 +179,9 @@ public:
     static QString getInstalledJsonFileName(QString sDataPath, QString sName);
     static QString getServerListFileName(QString sDataPath);
     static QString getModuleFileName(QString sDataPath, QString sName);
+    static QString getGithubZipPath(QString sDataPath, QString sName);
+    static QString getGithubZipDownloadFileName(QString sDataPath, QString sName);
+    static QString getGithubZipModulePath(QString sDataPath, QString sName);
 
     static Utils::MDATA getMDataByName(QList<MDATA> *pServerList,QString sName);
     static QList<QString> getNamesFromWebRecords(QList<WEB_RECORD> *pListWebRecords);
@@ -186,6 +190,9 @@ public:
     static bool isGithubPresent(QString sDataPath);
 
     static bool updateJsonFile(QString sFileName,MDATA *pMData);
+
+    static QString actionIdToString(ACTION action);
+    static ACTION stringToActionId(QString sAction);
 
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);

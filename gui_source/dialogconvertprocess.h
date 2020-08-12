@@ -36,7 +36,7 @@ class DialogConvertProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData);
+    explicit DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData, QString sDataPath);
     ~DialogConvertProcess();
 
 private slots:
@@ -50,7 +50,7 @@ signals:
 private:
     Ui::DialogConvertProcess *ui;
     Utils::MDATA *pMData;
-
+    QString sDataPath;
     ConvertProcess *pConvertProcess;
     QThread *pThread;
     bool bIsRun;

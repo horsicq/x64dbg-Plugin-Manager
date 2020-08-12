@@ -21,13 +21,14 @@
 #include "dialogconvertprocess.h"
 #include "ui_dialogconvertprocess.h"
 
-DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData) :
+DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData, QString sDataPath) :
     QDialog(pParent),
     ui(new Ui::DialogConvertProcess)
 {
     ui->setupUi(this);
 
     this->pMData=pMData;
+    this->sDataPath=sDataPath;
 
     pConvertProcess=new ConvertProcess;
     pThread=new QThread;
@@ -41,7 +42,7 @@ DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMDat
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pConvertProcess->setData(pMData);
+    pConvertProcess->setData(pMData,sDataPath);
 
     bIsRun=true;
 
@@ -92,10 +93,10 @@ void DialogConvertProcess::timerSlot()
 {
     Utils::STATS stats=pConvertProcess->getCurrentStats();
 
-    ui->labelInfo->setText(stats.sFile);
+    ui->labelInfo->setText(stats.sModule);
 
-    if(stats.nTotalFile)
+    if(stats.nTotalModule)
     {
-        ui->progressBar->setValue((int)((stats.nCurrentFile*100)/stats.nTotalFile));
+        ui->progressBar->setValue((int)((stats.nCurrentModule*100)/stats.nTotalModule));
     }
 }

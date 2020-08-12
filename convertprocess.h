@@ -31,7 +31,7 @@ class ConvertProcess : public QObject
     Q_OBJECT
 public:
     explicit ConvertProcess(QObject *pParent=nullptr);
-    void setData(Utils::MDATA *pMData);
+    void setData(Utils::MDATA *pMData,QString sDataPath);
     void stop();
     Utils::STATS getCurrentStats();
 
@@ -47,7 +47,7 @@ private:
     Utils::MDATA *pMData;
     bool bIsStop;
     Utils::STATS currentStats;
-
+    QString sDataPath;
 };
 
 #endif // CONVERTPROCESS_H

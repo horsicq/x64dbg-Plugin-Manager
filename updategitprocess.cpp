@@ -28,7 +28,7 @@ UpdateGitProcess::UpdateGitProcess(QObject *pParent) : QObject(pParent)
 
 void UpdateGitProcess::setData(QString sDataPath)
 {
-    this->sDataPath=sDataPath;
+    this->sDataPath=XBinary::convertPathName(sDataPath);
 }
 
 void UpdateGitProcess::stop()
@@ -92,6 +92,7 @@ void UpdateGitProcess::process()
                 mdata.sSrc=release.listRecords.at(j).sSrc;
                 mdata.sVersion=release.sName;
                 mdata.nSize=release.listRecords.at(j).nSize;
+                mdata.sDate=release.listRecords.at(j).dt.toString("yyyy-MM-dd");
 
                 Utils::updateJsonFile(sServerListFileName,&mdata);
 

@@ -56,15 +56,21 @@ void DialogInstallModule::setFileName(QString sModuleFileName)
     }
 }
 
-void DialogInstallModule::setMData(Utils::MDATA *pMData)
+bool DialogInstallModule::setMData(Utils::MDATA *pMData)
 {
-    QString sFileName=Utils::getModuleFileName(sDataPath,pMData->sName);
+    bool bResult=false;
 
-    if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,pMData->sSHA1))
+    QString sModuleFileName=Utils::getModuleFileName(sDataPath,pMData->sName);
+
+    if(pMData->type==Utils::TYPE_GITHUBZIP)
     {
+        XBinary::createDirectory(Utils::getGithubZipPath(sDataPath,pMData->sName));
+        XBinary::createDirectory(Utils::getGithubZipModulePath(sDataPath,pMData->sName));
+        QString sGithubZipFileName=Utils::getGithubZipDownloadFileName(sDataPath,pMData->sName);
+
         Utils::WEB_RECORD record={};
 
-        record.sFileName=sFileName;
+        record.sFileName=sGithubZipFileName;
         record.sLink=pMData->sSrc;
 
         DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
@@ -72,16 +78,43 @@ void DialogInstallModule::setMData(Utils::MDATA *pMData)
         connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
         dialogGetFileFromServer.exec();
-    }
 
-    if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,pMData->sSHA1))
-    {
-        setFileName(sFileName);
+        DialogConvertProcess dialogConvertProcess(this,pMData,sDataPath);
+
+        connect(&dialogConvertProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+        dialogConvertProcess.exec();
+        // TODO Create
     }
     else
     {
-        emit errorMessage(QString("%1: %2").arg(tr("Invalid SHA1")).arg(sFileName));
+        if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,pMData->sSHA1))
+        {
+            Utils::WEB_RECORD record={};
+
+            record.sFileName=sModuleFileName;
+            record.sLink=pMData->sSrc;
+
+            DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
+
+            connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+            dialogGetFileFromServer.exec();
+        }
     }
+
+    if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,pMData->sSHA1))
+    {
+        setFileName(sModuleFileName);
+
+        bResult=true;
+    }
+    else
+    {
+        emit errorMessage(QString("%1: %2").arg(tr("Invalid SHA1")).arg(sModuleFileName));
+    }
+
+    return bResult;
 }
 
 void DialogInstallModule::on_pushButtonCancel_clicked()

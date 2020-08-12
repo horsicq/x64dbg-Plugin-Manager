@@ -335,10 +335,12 @@ void GuiMainWindow::installPlugin(QString sName)
             DialogInstallModule dialogInstallModule(this,xOptions.getDataPath(),xOptions.getRootPath());
             connect(&dialogInstallModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 
-            dialogInstallModule.setMData(&mdata);
-            dialogInstallModule.exec();
+            if(dialogInstallModule.setMData(&mdata))
+            {
+                dialogInstallModule.exec();
 
-            getModules();
+                getModules();
+            }
         }
     }
 }

@@ -26,9 +26,10 @@ ConvertProcess::ConvertProcess(QObject *pParent) : QObject(pParent)
     currentStats={};
 }
 
-void ConvertProcess::setData(Utils::MDATA *pMData)
+void ConvertProcess::setData(Utils::MDATA *pMData, QString sDataPath)
 {
     this->pMData=pMData;
+    this->sDataPath=XBinary::convertPathName(sDataPath);
 }
 
 void ConvertProcess::stop()
@@ -47,6 +48,36 @@ void ConvertProcess::process()
     elapsedTimer.start();
 
     bIsStop=false;
+
+    QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,pMData->sName);
+
+    currentStats.nTotalModule=pMData->listConvertRecords.count();
+
+    QFile file;
+    file.setFileName(Utils::getGithubZipDownloadFileName(sDataPath,pMData->sName));
+
+    if(file.open(QIODevice::ReadOnly))
+    {
+        XZip zip(&file);
+
+        QList<XArchive::RECORD> listZipRecords=zip.getRecords();
+
+        for(int i=0;(i<currentStats.nTotalModule)&&(!bIsStop);i++)
+        {
+            Utils::HANDLE_RECORD handleRecord=pMData->listConvertRecords.at(i);
+
+            if(handleRecord.action==Utils::ACTION_MAKEDIRECTORY)
+            {
+                XBinary::createDirectory(sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
+            }
+
+            currentStats.nCurrentModule=i;
+        }
+
+        file.close();
+    }
+
+
 
     emit completed(elapsedTimer.elapsed());
 }

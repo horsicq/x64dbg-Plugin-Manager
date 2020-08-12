@@ -28,8 +28,8 @@ RemoveModuleProcess::RemoveModuleProcess(QObject *parent) : QObject(parent)
 
 void RemoveModuleProcess::setData(QString sDataPath, QString sRootPath, QList<QString> listModuleNames)
 {
-    this->sDataPath=sDataPath;
-    this->sRootPath=sRootPath;
+    this->sDataPath=XBinary::convertPathName(sDataPath);
+    this->sRootPath=XBinary::convertPathName(sRootPath);
     this->listModuleNames=listModuleNames;
 }
 
@@ -61,43 +61,43 @@ void RemoveModuleProcess::process()
 
         if(XBinary::isFileExists(sFileName))
         {
-            Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(sRootPath));
+            Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,sRootPath);
 
             currentStats.nTotalFile=mdata.listRemoveRecords.count();
 
             for(qint32 j=0;(j<currentStats.nTotalFile)&&(!bIsStop);j++)
             {
-                Utils::REMOVE_RECORD record=mdata.listRemoveRecords.at(j);
+                Utils::HANDLE_RECORD record=mdata.listRemoveRecords.at(j);
 
-                if(record.action==Utils::RRA_REMOVEFILE)
+                if(record.action==Utils::ACTION_REMOVEFILE)
                 {
-                    XBinary::removeFile(record.sFullPath);
+                    XBinary::removeFile(sRootPath+QDir::separator()+record.sPath);
 
-                    if(!XBinary::isFileExists(record.sFullPath))
+                    if(!XBinary::isFileExists(sRootPath+QDir::separator()+record.sPath))
                     {
                         currentStats.sFile=QString("%1: %2").arg(tr("Remove file")).arg(record.sPath);
                         emit infoMessage(currentStats.sFile);
                     }
                     else
                     {
-                        emit errorMessage(tr("%1: %2").arg(tr("Cannot remove file")).arg(record.sFullPath));
+                        emit errorMessage(tr("%1: %2").arg(tr("Cannot remove file")).arg(sRootPath+QDir::separator()+record.sPath));
                         bIsStop=true;
                     }
                 }
-                else if(record.action==Utils::RRA_REMOVEDIRECTORYIFEMPTY)
+                else if(record.action==Utils::ACTION_REMOVEDIRECTORYIFEMPTY)
                 {
-                    if(XBinary::isDirectoryEmpty(record.sFullPath))
+                    if(XBinary::isDirectoryEmpty(sRootPath+QDir::separator()+record.sPath))
                     {
-                        XBinary::removeDirectory(record.sFullPath);
+                        XBinary::removeDirectory(sRootPath+QDir::separator()+record.sPath);
 
-                        if(!XBinary::isDirectoryExists(record.sFullPath))
+                        if(!XBinary::isDirectoryExists(sRootPath+QDir::separator()+record.sPath))
                         {
                             currentStats.sFile=QString("%1: %2").arg(tr("Remove directory")).arg(record.sPath);
                             emit infoMessage(currentStats.sFile);
                         }
                         else
                         {
-                            emit errorMessage(tr("%1: %2").arg(tr("Cannot remove directory")).arg(record.sFullPath));
+                            emit errorMessage(tr("%1: %2").arg(tr("Cannot remove directory")).arg(sRootPath+QDir::separator()+record.sPath));
                             bIsStop=true;
                         }
                     }
