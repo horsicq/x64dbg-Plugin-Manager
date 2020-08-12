@@ -22,14 +22,31 @@
 #define CONVERTPROCESS_H
 
 #include <QObject>
+#include <QElapsedTimer>
+#include "utils.h"
+#include "xzip.h"
 
 class ConvertProcess : public QObject
 {
     Q_OBJECT
 public:
-    explicit ConvertProcess(QObject *parent = nullptr);
+    explicit ConvertProcess(QObject *pParent=nullptr);
+    void setData(Utils::MDATA *pMData);
+    void stop();
+    Utils::STATS getCurrentStats();
 
 signals:
+    void errorMessage(QString sMessage);
+    void infoMessage(QString sMessage);
+    void completed(qint64 nElapsedTime);
+
+public slots:
+    void process();
+
+private:
+    Utils::MDATA *pMData;
+    bool bIsStop;
+    Utils::STATS currentStats;
 
 };
 

@@ -21,8 +21,8 @@
 #include "dialogcreatemoduleprocess.h"
 #include "ui_dialogcreatemoduleprocess.h"
 
-DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *parent, Utils::MDATA *pMData) :
-    QDialog(parent),
+DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MDATA *pMData) :
+    QDialog(pParent),
     ui(new Ui::DialogCreateModuleProcess)
 {
     ui->setupUi(this);

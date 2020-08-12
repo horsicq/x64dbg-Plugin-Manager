@@ -20,7 +20,33 @@
 //
 #include "convertprocess.h"
 
-ConvertProcess::ConvertProcess(QObject *parent) : QObject(parent)
+ConvertProcess::ConvertProcess(QObject *pParent) : QObject(pParent)
 {
+    bIsStop=false;
+    currentStats={};
+}
 
+void ConvertProcess::setData(Utils::MDATA *pMData)
+{
+    this->pMData=pMData;
+}
+
+void ConvertProcess::stop()
+{
+    bIsStop=true;
+}
+
+Utils::STATS ConvertProcess::getCurrentStats()
+{
+    return currentStats;
+}
+
+void ConvertProcess::process()
+{
+    QElapsedTimer elapsedTimer;
+    elapsedTimer.start();
+
+    bIsStop=false;
+
+    emit completed(elapsedTimer.elapsed());
 }

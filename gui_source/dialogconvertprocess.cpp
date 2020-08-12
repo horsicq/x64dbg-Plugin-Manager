@@ -21,14 +21,81 @@
 #include "dialogconvertprocess.h"
 #include "ui_dialogconvertprocess.h"
 
-DialogConvertProcess::DialogConvertProcess(QWidget *parent) :
-    QDialog(parent),
+DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData) :
+    QDialog(pParent),
     ui(new Ui::DialogConvertProcess)
 {
     ui->setupUi(this);
+
+    this->pMData=pMData;
+
+    pConvertProcess=new ConvertProcess;
+    pThread=new QThread;
+
+    pConvertProcess->moveToThread(pThread);
+
+    connect(pThread, SIGNAL(started()), pConvertProcess, SLOT(process()));
+    connect(pConvertProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
+    connect(pConvertProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+    pTimer=new QTimer(this);
+    connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
+
+    pConvertProcess->setData(pMData);
+
+    bIsRun=true;
+
+    ui->progressBar->setMaximum(100);
+    ui->progressBar->setValue(0);
+
+    pThread->start();
+    pTimer->start(100); // 0.1 sec
 }
 
 DialogConvertProcess::~DialogConvertProcess()
 {
+    if(bIsRun)
+    {
+        pConvertProcess->stop();
+    }
+
+    pTimer->stop();
+
+    pThread->quit();
+    pThread->wait();
+
     delete ui;
+
+    delete pThread;
+    delete pConvertProcess;
+}
+
+void DialogConvertProcess::on_pushButtonCancel_clicked()
+{
+    if(bIsRun)
+    {
+        pConvertProcess->stop();
+        pTimer->stop();
+        bIsRun=false;
+    }
+}
+
+void DialogConvertProcess::onCompleted(qint64 nElapsed)
+{
+    Q_UNUSED(nElapsed)
+    // TODO
+    bIsRun=false;
+    this->close();
+}
+
+void DialogConvertProcess::timerSlot()
+{
+    Utils::STATS stats=pConvertProcess->getCurrentStats();
+
+    ui->labelInfo->setText(stats.sFile);
+
+    if(stats.nTotalFile)
+    {
+        ui->progressBar->setValue((int)((stats.nCurrentFile*100)/stats.nTotalFile));
+    }
 }

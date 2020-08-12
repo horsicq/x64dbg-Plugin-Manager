@@ -22,6 +22,10 @@
 #define DIALOGCONVERTPROCESS_H
 
 #include <QDialog>
+#include <QThread>
+#include <QTimer>
+#include "../convertprocess.h"
+#include "../utils.h"
 
 namespace Ui {
 class DialogConvertProcess;
@@ -32,11 +36,25 @@ class DialogConvertProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogConvertProcess(QWidget *parent = nullptr);
+    explicit DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData);
     ~DialogConvertProcess();
+
+private slots:
+    void on_pushButtonCancel_clicked();
+    void onCompleted(qint64 nElapsed);
+    void timerSlot();
+
+signals:
+    void errorMessage(QString sMessage);
 
 private:
     Ui::DialogConvertProcess *ui;
+    Utils::MDATA *pMData;
+
+    ConvertProcess *pConvertProcess;
+    QThread *pThread;
+    bool bIsRun;
+    QTimer *pTimer;
 };
 
 #endif // DIALOGCONVERTPROCESS_H
