@@ -66,9 +66,18 @@ void ConvertProcess::process()
         {
             Utils::HANDLE_RECORD handleRecord=pMData->listConvertRecords.at(i);
 
+            // TODO errors
             if(handleRecord.action==Utils::ACTION_MAKEDIRECTORY)
             {
                 XBinary::createDirectory(sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
+            }
+            else if(handleRecord.action==Utils::ACTION_UNPACKFILE)
+            {
+                zip.decompressToFile(&listZipRecords,handleRecord.sSrc,sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
+            }
+            else if(handleRecord.action==Utils::ACTION_UNPACKDIRECTORY)
+            {
+                // TODO
             }
 
             currentStats.nCurrentModule=i;
@@ -76,8 +85,6 @@ void ConvertProcess::process()
 
         file.close();
     }
-
-
 
     emit completed(elapsedTimer.elapsed());
 }

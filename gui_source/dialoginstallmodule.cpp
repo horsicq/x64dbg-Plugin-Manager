@@ -60,12 +60,16 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
 {
     bool bResult=false;
 
+    QString sSHA1=pMData->sSHA1;
+
     QString sModuleFileName=Utils::getModuleFileName(sDataPath,pMData->sName);
 
     if(pMData->type==Utils::TYPE_GITHUBZIP)
     {
+        QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,pMData->sName);
+
         XBinary::createDirectory(Utils::getGithubZipPath(sDataPath,pMData->sName));
-        XBinary::createDirectory(Utils::getGithubZipModulePath(sDataPath,pMData->sName));
+        XBinary::createDirectory(sGithubZipModulePath);
         QString sGithubZipFileName=Utils::getGithubZipDownloadFileName(sDataPath,pMData->sName);
 
         Utils::WEB_RECORD record={};
@@ -85,10 +89,35 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
 
         dialogConvertProcess.exec();
         // TODO Create
+
+        Utils::MDATA mdata=*pMData;
+
+        mdata.sBundleFileName=Utils::getModuleFileName(sDataPath,mdata.sName);
+
+        mdata.sRoot=sGithubZipModulePath;
+
+        QString sErrorString;
+
+        if(Utils::checkMData(&mdata,&sErrorString))
+        {
+            DialogCreateModuleProcess dcmp(this,&mdata);
+
+            connect(&dcmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+            dcmp.exec();
+        }
+        else
+        {
+            emit errorMessage(sErrorString);
+        }
+
+        // TODO update
+
+        sSHA1=mdata.sSHA1;
     }
     else
     {
-        if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,pMData->sSHA1))
+        if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,sSHA1))
         {
             Utils::WEB_RECORD record={};
 
@@ -103,7 +132,7 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
         }
     }
 
-    if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,pMData->sSHA1))
+    if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,sSHA1))
     {
         setFileName(sModuleFileName);
 

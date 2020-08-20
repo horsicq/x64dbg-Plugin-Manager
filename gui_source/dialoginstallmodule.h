@@ -24,6 +24,7 @@
 #include <QDialog>
 #include "dialoginstallmoduleprocess.h"
 #include "dialogconvertprocess.h"
+#include "dialogcreatemoduleprocess.h"
 #include "dialoggetfilefromserverprocess.h"
 #include "../utils.h"
 
