@@ -152,32 +152,43 @@ void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *p
     pTableWidget->setRowCount(0);
     pTableWidget->setRowCount(nCount);
 
+    QColor colDisabled=QWidget::palette().color(QPalette::Window);
+
     for(int i=0;i<nCount;i++)
     {
+        Utils::STATUS status=pMapStatus->value(pMData->at(i).sName);
+
         QTableWidgetItem *pItemName=new QTableWidgetItem;
+        QTableWidgetItem *pItemInfo=new QTableWidgetItem;
+        QCheckBox *pCheckBoxIs32=new QCheckBox(this);
+        QCheckBox *pCheckBoxIs64=new QCheckBox(this);
+        QTableWidgetItem *pItemVersion=new QTableWidgetItem;
+
+        if(status.bUpdate)
+        {
+            // TODO Check
+            pItemName->setBackgroundColor(colDisabled);
+            pItemInfo->setBackgroundColor(colDisabled);
+            pItemVersion->setBackgroundColor(colDisabled);
+        }
+
         pItemName->setText(pMData->at(i).sName);
-        pItemName->setData(Qt::UserRole,pMData->at(i).sName);
+        pItemName->setData(Qt::UserRole,pMData->at(i).sName);       
         pTableWidget->setItem(i,CN_NAME,pItemName);
 
-        QTableWidgetItem *pItemInfo=new QTableWidgetItem;
         pItemInfo->setText(pMData->at(i).sInfo);
         pTableWidget->setItem(i,CN_INFO,pItemInfo);
 
-        QCheckBox *pCheckBoxIs32=new QCheckBox(this);
         pCheckBoxIs32->setEnabled(false);
         pCheckBoxIs32->setChecked(pMData->at(i).bIs32);
         pTableWidget->setCellWidget(i,CN_32,pCheckBoxIs32);
 
-        QCheckBox *pCheckBoxIs64=new QCheckBox(this);
         pCheckBoxIs64->setEnabled(false);
         pCheckBoxIs64->setChecked(pMData->at(i).bIs64);
         pTableWidget->setCellWidget(i,CN_64,pCheckBoxIs64);
 
-        QTableWidgetItem *pItemVersion=new QTableWidgetItem;
         pItemVersion->setText(pMData->at(i).sVersion);
         pTableWidget->setItem(i,CN_VERSION,pItemVersion);
-
-        Utils::STATUS status=pMapStatus->value(pMData->at(i).sName);
 
         if(status.bInstall||status.bUpdate)
         {
