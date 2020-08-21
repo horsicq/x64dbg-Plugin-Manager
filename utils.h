@@ -36,11 +36,6 @@ class Utils : public QObject
     Q_OBJECT
 
 public:
-    enum TYPE
-    {
-        TYPE_BUNDLE=0,
-        TYPE_GITHUBZIP
-    };
 
     enum ACTION
     {
@@ -118,9 +113,8 @@ public:
         qint64 nCompressedSize;
         QString sSrc;
         QString sSHA1;
-        TYPE type;
         QString sGithub;
-        QString sPattern;
+        QList<QString> listDownloads;
     };
 
     struct FILE_RECORD

@@ -68,7 +68,7 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
 
     if(!bHash)
     {
-        if(pMData->type==Utils::TYPE_GITHUBZIP)
+        if(pMData->sGithub!="")
         {
             QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,pMData->sName);
 

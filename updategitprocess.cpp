@@ -58,7 +58,7 @@ void UpdateGitProcess::process()
 
     for(int i=0;i<nCount;i++)
     {
-        if(listMData.at(i).type==Utils::TYPE_GITHUBZIP)
+        if(listMData.at(i).sGithub!="")
         {
             nNumbersOfGithub++;
         }
@@ -68,7 +68,7 @@ void UpdateGitProcess::process()
 
     for(int i=0;(i<nCount)&&(!bIsStop);i++)
     {
-        if(listMData.at(i).type==Utils::TYPE_GITHUBZIP)
+        if(listMData.at(i).sGithub!="")
         {
             QString sGithub=listMData.at(i).sGithub;
             sGithub=sGithub.section("github.com/",1,1);
@@ -86,12 +86,13 @@ void UpdateGitProcess::process()
 
             for(int j=0;j<_nCount;j++)
             {
-                if(release.listRecords.at(j).sSrc.contains(listMData.at(i).sPattern))
+                // TODO
+                //if(release.listRecords.at(j).sSrc.contains(listMData.at(i).sPattern))
                 {
                     bFound=true;
 
                     Utils::MDATA mdata=listMData.at(i);
-                    mdata.sSrc=release.listRecords.at(j).sSrc;
+                    mdata.sSrc=release.listRecords.at(j).sSrc; // TODO listDownloads
                     mdata.sVersion=release.sName;
                     mdata.nSize=release.listRecords.at(j).nSize;
                     mdata.sDate=release.listRecords.at(j).dt.toString("yyyy-MM-dd");
@@ -102,10 +103,10 @@ void UpdateGitProcess::process()
                 }
             }
 
-            if(!bFound)
-            {
-                emit errorMessage(tr("Cannot find pattern")+": "+listMData.at(i).sPattern);
-            }
+//            if(!bFound)
+//            {
+//                emit errorMessage(tr("Cannot find pattern")+": "+listMData.at(i).sPattern);
+//            }
         }
     }
 

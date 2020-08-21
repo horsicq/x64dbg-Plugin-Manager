@@ -366,11 +366,9 @@ void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject)
         pObject->insert("SHA1",         QJsonValue::fromVariant(pMData->sSHA1));
     }
 
-    if(pMData->type==TYPE_GITHUBZIP)
+    if(pMData->sGithub!="")
     {
-        pObject->insert("Type",         QJsonValue::fromVariant("GITHUB_ZIP"));
         pObject->insert("Github",       QJsonValue::fromVariant(pMData->sGithub));
-        pObject->insert("Pattern",      QJsonValue::fromVariant(pMData->sPattern));
     }
 
     // TODO optimize
@@ -444,19 +442,7 @@ void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
     pMData->bIs64           =pObject->value("Is64").toBool();
     pMData->sSrc            =pObject->value("Src").toString();
     pMData->sSHA1           =pObject->value("SHA1").toString();
-
-    QString sType=pObject->value("Type").toString();
-
-    if(sType=="GITHUB_ZIP")
-    {
-        pMData->type        =TYPE_GITHUBZIP;
-        pMData->sGithub     =pObject->value("Github").toString();
-        pMData->sPattern    =pObject->value("Pattern").toString();
-    }
-    else
-    {
-        pMData->type        =TYPE_BUNDLE;
-    }
+    pMData->sGithub         =pObject->value("Github").toString();
 
     // TODO optimize
     QJsonArray installArray=pObject->value("Install").toArray();
@@ -701,7 +687,7 @@ bool Utils::isGithubPresent(QString sDataPath)
 
     for(int i=0;i<nCount;i++)
     {
-        if(listMData.at(i).type==TYPE_GITHUBZIP)
+        if(listMData.at(i).sGithub!="")
         {
             bResult=true;
 

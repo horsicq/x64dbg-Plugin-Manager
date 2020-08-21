@@ -96,7 +96,7 @@ void installModules(QString sDataPath, QString sRootPath,Utils::MODULES_DATA *pM
 
             if(!bHash)
             {
-                if(mdata.type==Utils::TYPE_GITHUBZIP)
+                if(mdata.sGithub!="")
                 {
                     QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,mdata.sName);
 
