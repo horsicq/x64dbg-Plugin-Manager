@@ -49,41 +49,41 @@ void ConvertProcess::process()
 
     bIsStop=false;
 
-    QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,pMData->sName);
+    QString sGithubZipModulePath=Utils::getConvertModulePath(sDataPath,pMData->sName);
 
     currentStats.nTotalModule=pMData->listConvertRecords.count();
 
-    QFile file;
-    file.setFileName(Utils::getGithubZipDownloadFileName(sDataPath,pMData->sName));
-
-    if(file.open(QIODevice::ReadOnly))
+    for(int i=0;(i<currentStats.nTotalModule)&&(!bIsStop);i++)
     {
-        XZip zip(&file);
+        Utils::HANDLE_RECORD handleRecord=pMData->listConvertRecords.at(i);
 
-        QList<XArchive::RECORD> listZipRecords=zip.getRecords();
+        QString sFileName=Utils::getConvertDownloadFileName(sDataPath,pMData->sName,handleRecord.sPattern);
 
-        for(int i=0;(i<currentStats.nTotalModule)&&(!bIsStop);i++)
+        XZip zip;
+
+        // TODO errors
+        if(handleRecord.action==Utils::ACTION_MAKEDIRECTORY)
         {
-            Utils::HANDLE_RECORD handleRecord=pMData->listConvertRecords.at(i);
-
+            XBinary::createDirectory(sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
+        }
+        else if(handleRecord.action==Utils::ACTION_UNPACKFILE)
+        {
+            if(sFileName!="")
+            {
+                zip.decompressToFile(sFileName,handleRecord.sSrc,sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
+            }
             // TODO errors
-            if(handleRecord.action==Utils::ACTION_MAKEDIRECTORY)
+        }
+        else if(handleRecord.action==Utils::ACTION_UNPACKDIRECTORY)
+        {
+            if(sFileName!="")
             {
-                XBinary::createDirectory(sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
+                zip.decompressToPath(sFileName,handleRecord.sSrc,sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
             }
-            else if(handleRecord.action==Utils::ACTION_UNPACKFILE)
-            {
-                zip.decompressToFile(&listZipRecords,handleRecord.sSrc,sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
-            }
-            else if(handleRecord.action==Utils::ACTION_UNPACKDIRECTORY)
-            {
-                zip.decompressToPath(&listZipRecords,handleRecord.sSrc,sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
-            }
-
-            currentStats.nCurrentModule=i;
+            // TODO errors
         }
 
-        file.close();
+        currentStats.nCurrentModule=i;
     }
 
     emit completed(elapsedTimer.elapsed());

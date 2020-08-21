@@ -98,21 +98,32 @@ void installModules(QString sDataPath, QString sRootPath,Utils::MODULES_DATA *pM
             {
                 if(mdata.sGithub!="")
                 {
-                    QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,mdata.sName);
+                    QString sConvertPath=Utils::getConvertPath(sDataPath,mdata.sName);
+                    QString sDownloadModulePath=Utils::getConvertModulePath(sDataPath,mdata.sName);
 
-                    XBinary::createDirectory(Utils::getGithubZipPath(sDataPath,mdata.sName));
-                    XBinary::createDirectory(sGithubZipModulePath);
-                    QString sGithubZipFileName=Utils::getGithubZipDownloadFileName(sDataPath,mdata.sName);
+                    XBinary::createDirectory(sConvertPath);
+                    XBinary::createDirectory(sDownloadModulePath);
 
-                    Utils::WEB_RECORD record={};
+                    QList<Utils::WEB_RECORD> listWebRecords;
 
-                    record.sFileName=sGithubZipFileName;
-                    record.sLink=mdata.sSrc;
+                    int nCount=mdata.listDownloads.count();
+
+                    for(int i=0;i<nCount;i++)
+                    {
+                        Utils::WEB_RECORD record={};
+
+                        QString sLink=mdata.listDownloads.at(i);
+
+                        record.sFileName=sConvertPath+QDir::separator()+sLink.section("/",-1,-1);
+                        record.sLink=sLink;
+
+                        listWebRecords.append(record);
+                    }
 
                     GetFileFromServerProcess getFileFromServerProcess;
                     QObject::connect(&getFileFromServerProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
                     QObject::connect(&getFileFromServerProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
-                    getFileFromServerProcess.setData(QList<Utils::WEB_RECORD>()<<record);
+                    getFileFromServerProcess.setData(listWebRecords);
                     getFileFromServerProcess.process();
 
                     ConvertProcess convertProcess;
@@ -124,7 +135,7 @@ void installModules(QString sDataPath, QString sRootPath,Utils::MODULES_DATA *pM
                     Utils::MDATA _mdata=mdata;
 
                     _mdata.sBundleFileName=Utils::getModuleFileName(sDataPath,_mdata.sName);
-                    _mdata.sRoot=sGithubZipModulePath;
+                    _mdata.sRoot=sDownloadModulePath;
 
                     QString sErrorString;
 
@@ -140,6 +151,10 @@ void installModules(QString sDataPath, QString sRootPath,Utils::MODULES_DATA *pM
                     {
                         pConsoleOutput->errorMessage(sErrorString);
                     }
+
+                #ifndef QT_DEBUG
+                    XBinary::removeDirectory(sConvertPath);
+                #endif
 
                     Utils::updateJsonFile(Utils::getServerListFileName(sDataPath),&_mdata);
 

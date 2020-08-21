@@ -375,6 +375,7 @@ void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject)
     int nInstallCount=pMData->listInstallRecords.count();
     int nRemoveCount=pMData->listRemoveRecords.count();
     int nConvertCount=pMData->listConvertRecords.count();
+    int nDownloadCount=pMData->listDownloads.count();
 
     if(nInstallCount)
     {
@@ -426,6 +427,22 @@ void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject)
 
         pObject->insert("Convert",jsArray);
     }
+
+    if(nDownloadCount)
+    {
+        QJsonArray jsArray;
+
+        for(int i=0;i<nDownloadCount;i++)
+        {
+            QJsonObject recordObj;
+
+            recordObj.insert("Src",QJsonValue::fromVariant(pMData->listDownloads.at(i)));
+
+            jsArray.append(recordObj);
+        }
+
+        pObject->insert("Download",jsArray);
+    }
 }
 
 void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
@@ -448,6 +465,7 @@ void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
     QJsonArray installArray=pObject->value("Install").toArray();
     QJsonArray removeArray=pObject->value("Remove").toArray();
     QJsonArray convertArray=pObject->value("Convert").toArray();
+    QJsonArray downloadArray=pObject->value("Download").toArray();
 
     int nInstallCount=installArray.count();
 
@@ -484,6 +502,17 @@ void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
 
         pMData->listConvertRecords.append(record);
     }
+
+    int nDownloadCount=downloadArray.count();
+
+    for(int i=0;i<nDownloadCount;i++)
+    {
+        QJsonObject recordObj=downloadArray.at(i).toObject();
+
+        QString sRecord=recordObj.value("Src").toString();
+
+        pMData->listDownloads.append(sRecord);
+    }
 }
 
 void Utils::handleRecordToObject(Utils::HANDLE_RECORD *pHandleRecord, QJsonObject *pObject)
@@ -500,6 +529,11 @@ void Utils::handleRecordToObject(Utils::HANDLE_RECORD *pHandleRecord, QJsonObjec
     {
         pObject->insert("Src",          QJsonValue::fromVariant(pHandleRecord->sSrc));
     }
+
+    if(pHandleRecord->sPattern!="")
+    {
+        pObject->insert("Pattern",      QJsonValue::fromVariant(pHandleRecord->sPattern));
+    }
 }
 
 void Utils::objectToHandleRecord(QJsonObject *pObject, Utils::HANDLE_RECORD *pHandleRecord)
@@ -507,6 +541,7 @@ void Utils::objectToHandleRecord(QJsonObject *pObject, Utils::HANDLE_RECORD *pHa
     pHandleRecord->sSrc         =pObject->value("Src").toString();
     pHandleRecord->sPath        =pObject->value("Path").toString();
     pHandleRecord->sSHA1        =pObject->value("SHA1").toString();
+    pHandleRecord->sPattern     =pObject->value("Pattern").toString();
     pHandleRecord->action       =stringToActionId(pObject->value("Action").toString());
 }
 
@@ -610,17 +645,36 @@ QString Utils::getModuleFileName(QString sDataPath, QString sName)
     return XBinary::convertPathName(sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1.x64dbg.zip").arg(sName);
 }
 
-QString Utils::getGithubZipPath(QString sDataPath, QString sName)
+QString Utils::getConvertPath(QString sDataPath, QString sName)
 {
     return XBinary::convertPathName(sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1").arg(sName);
 }
 
-QString Utils::getGithubZipDownloadFileName(QString sDataPath, QString sName)
+QString Utils::getConvertDownloadFileName(QString sDataPath, QString sName, QString sPattern)
 {
-    return XBinary::convertPathName(sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1").arg(sName)+QDir::separator()+"download.zip";
+    QString sResult;
+
+    QString sConvertPath=getConvertPath(sDataPath,sName);
+
+    QDir dir(sConvertPath);
+    QList<QFileInfo> listFiles=dir.entryInfoList(QDir::Files);
+
+    int nCount=listFiles.count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        if(listFiles.at(i).baseName().contains(sPattern))
+        {
+            sResult=listFiles.at(i).absoluteFilePath();
+
+            break;
+        }
+    }
+
+    return sResult;
 }
 
-QString Utils::getGithubZipModulePath(QString sDataPath, QString sName)
+QString Utils::getConvertModulePath(QString sDataPath, QString sName)
 {
     return XBinary::convertPathName(sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1").arg(sName)+QDir::separator()+"module";
 }

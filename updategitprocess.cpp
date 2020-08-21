@@ -68,9 +68,11 @@ void UpdateGitProcess::process()
 
     for(int i=0;(i<nCount)&&(!bIsStop);i++)
     {
-        if(listMData.at(i).sGithub!="")
+        Utils::MDATA mdata=listMData.at(i);
+
+        if(mdata.sGithub!="")
         {
-            QString sGithub=listMData.at(i).sGithub;
+            QString sGithub=mdata.sGithub;
             sGithub=sGithub.section("github.com/",1,1);
 
             QString sUserName=sGithub.section("/",0,0);
@@ -82,31 +84,24 @@ void UpdateGitProcess::process()
 
             int _nCount=release.listRecords.count();
 
-            bool bFound=false;
+            QSet<QString> stDownloads;
 
             for(int j=0;j<_nCount;j++)
             {
                 // TODO
                 //if(release.listRecords.at(j).sSrc.contains(listMData.at(i).sPattern))
                 {
-                    bFound=true;
+                    stDownloads.insert(release.listRecords.at(j).sSrc);
 
-                    Utils::MDATA mdata=listMData.at(i);
-                    mdata.sSrc=release.listRecords.at(j).sSrc; // TODO listDownloads
                     mdata.sVersion=release.sName;
                     mdata.nSize=release.listRecords.at(j).nSize;
                     mdata.sDate=release.listRecords.at(j).dt.toString("yyyy-MM-dd");
-
-                    Utils::updateJsonFile(sServerListFileName,&mdata);
-
-                    break;
                 }
             }
 
-//            if(!bFound)
-//            {
-//                emit errorMessage(tr("Cannot find pattern")+": "+listMData.at(i).sPattern);
-//            }
+            mdata.listDownloads=stDownloads.toList();
+
+            Utils::updateJsonFile(sServerListFileName,&mdata);
         }
     }
 

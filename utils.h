@@ -91,6 +91,7 @@ public:
         QString sSrc;
         QString sPath;
         QString sSHA1;
+        QString sPattern;
         ACTION action;
     };
 
@@ -173,9 +174,9 @@ public:
     static QString getInstalledJsonFileName(QString sDataPath, QString sName);
     static QString getServerListFileName(QString sDataPath);
     static QString getModuleFileName(QString sDataPath, QString sName);
-    static QString getGithubZipPath(QString sDataPath, QString sName);
-    static QString getGithubZipDownloadFileName(QString sDataPath, QString sName);
-    static QString getGithubZipModulePath(QString sDataPath, QString sName);
+    static QString getConvertPath(QString sDataPath, QString sName);
+    static QString getConvertDownloadFileName(QString sDataPath, QString sName, QString sPattern);
+    static QString getConvertModulePath(QString sDataPath, QString sName);
 
     static Utils::MDATA getMDataByName(QList<MDATA> *pServerList,QString sName);
     static QList<QString> getNamesFromWebRecords(QList<WEB_RECORD> *pListWebRecords);

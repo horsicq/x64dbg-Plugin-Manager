@@ -70,18 +70,29 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
     {
         if(pMData->sGithub!="")
         {
-            QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,pMData->sName);
+            QString sConvertPath=Utils::getConvertPath(sDataPath,pMData->sName);
+            QString sDownloadModulePath=Utils::getConvertModulePath(sDataPath,pMData->sName);
 
-            XBinary::createDirectory(Utils::getGithubZipPath(sDataPath,pMData->sName));
-            XBinary::createDirectory(sGithubZipModulePath);
-            QString sGithubZipFileName=Utils::getGithubZipDownloadFileName(sDataPath,pMData->sName);
+            XBinary::createDirectory(sConvertPath);
+            XBinary::createDirectory(sDownloadModulePath);
 
-            Utils::WEB_RECORD record={};
+            QList<Utils::WEB_RECORD> listWebRecords;
 
-            record.sFileName=sGithubZipFileName;
-            record.sLink=pMData->sSrc;
+            int nCount=pMData->listDownloads.count();
 
-            DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
+            for(int i=0;i<nCount;i++)
+            {
+                Utils::WEB_RECORD record={};
+
+                QString sLink=pMData->listDownloads.at(i);
+
+                record.sFileName=sConvertPath+QDir::separator()+sLink.section("/",-1,-1);
+                record.sLink=sLink;
+
+                listWebRecords.append(record);
+            }
+
+            DialogGetFileFromServerProcess dialogGetFileFromServer(this,listWebRecords);
 
             connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
@@ -96,7 +107,7 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
             Utils::MDATA mdata=*pMData;
 
             mdata.sBundleFileName=Utils::getModuleFileName(sDataPath,mdata.sName);
-            mdata.sRoot=sGithubZipModulePath;
+            mdata.sRoot=sDownloadModulePath;
 
             QString sErrorString;
 
@@ -112,6 +123,10 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
             {
                 emit errorMessage(sErrorString);
             }
+
+        #ifndef QT_DEBUG
+            XBinary::removeDirectory(sConvertPath);
+        #endif
 
             Utils::updateJsonFile(Utils::getServerListFileName(sDataPath),&mdata);
 
