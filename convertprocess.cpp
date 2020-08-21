@@ -58,19 +58,29 @@ void ConvertProcess::process()
         Utils::HANDLE_RECORD handleRecord=pMData->listConvertRecords.at(i);
 
         QString sFileName=Utils::getConvertDownloadFileName(sDataPath,pMData->sName,handleRecord.sPattern);
+        QString sPath=sGithubZipModulePath+QDir::separator()+handleRecord.sPath;
 
         XZip zip;
 
         // TODO errors
         if(handleRecord.action==Utils::ACTION_MAKEDIRECTORY)
         {
-            XBinary::createDirectory(sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
+            XBinary::createDirectory(sPath);
+        }
+        else if(handleRecord.action==Utils::ACTION_COPYFILE)
+        {
+            if(sFileName!="")
+            {
+                XBinary::createDirectory(QFileInfo(sPath).absolutePath());
+                XBinary::copyFile(sFileName,sPath);
+            }
+            // TODO errors
         }
         else if(handleRecord.action==Utils::ACTION_UNPACKFILE)
         {
             if(sFileName!="")
             {
-                zip.decompressToFile(sFileName,handleRecord.sSrc,sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
+                zip.decompressToFile(sFileName,handleRecord.sSrc,sPath);
             }
             // TODO errors
         }
@@ -78,7 +88,7 @@ void ConvertProcess::process()
         {
             if(sFileName!="")
             {
-                zip.decompressToPath(sFileName,handleRecord.sSrc,sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
+                zip.decompressToPath(sFileName,handleRecord.sSrc,sPath);
             }
             // TODO errors
         }

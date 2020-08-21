@@ -663,7 +663,8 @@ QString Utils::getConvertDownloadFileName(QString sDataPath, QString sName, QStr
 
     for(int i=0;i<nCount;i++)
     {
-        if(listFiles.at(i).baseName().contains(sPattern))
+        QString sName=listFiles.at(i).fileName();
+        if(sName.contains(sPattern))
         {
             sResult=listFiles.at(i).absoluteFilePath();
 
