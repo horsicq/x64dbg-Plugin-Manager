@@ -20,7 +20,7 @@
 //
 #include "getfilefromserverprocess.h"
 
-GetFileFromServerProcess::GetFileFromServerProcess(QObject *parent) : QObject(parent)
+GetFileFromServerProcess::GetFileFromServerProcess(QObject *pParent) : QObject(pParent)
 {
     pReply=0;
     replyRed=0;

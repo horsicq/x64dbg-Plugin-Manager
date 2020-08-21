@@ -27,7 +27,7 @@ class ConsoleOutput : public QObject
 {
     Q_OBJECT
 public:
-    explicit ConsoleOutput(QObject *parent=nullptr);
+    explicit ConsoleOutput(QObject *pParent=nullptr);
 
 public slots:
     void infoMessage(QString sText);

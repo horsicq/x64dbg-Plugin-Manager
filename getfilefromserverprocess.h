@@ -32,7 +32,7 @@ class GetFileFromServerProcess : public QObject
 {
     Q_OBJECT
 public:
-    explicit GetFileFromServerProcess(QObject *parent=nullptr);
+    explicit GetFileFromServerProcess(QObject *pParent=nullptr);
     void setData(QList<Utils::WEB_RECORD> listWebRecords);
     void stop();
     Utils::STATS getCurrentStats();

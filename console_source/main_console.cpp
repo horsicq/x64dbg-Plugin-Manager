@@ -144,7 +144,7 @@ void installModules(QString sDataPath, QString sRootPath,Utils::MODULES_DATA *pM
                         CreateModuleProcess createModuleProcess;
                         QObject::connect(&createModuleProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
                         QObject::connect(&createModuleProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
-                        createModuleProcess.setData(&mdata,false);
+                        createModuleProcess.setData(&_mdata,false);
                         createModuleProcess.process();
                     }
                     else
