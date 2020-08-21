@@ -30,7 +30,7 @@ class RemoveModuleProcess : public QObject
     Q_OBJECT
 
 public:
-    explicit RemoveModuleProcess(QObject *parent=nullptr);
+    explicit RemoveModuleProcess(QObject *pParent=nullptr);
     void setData(QString sDataPath, QString sRootPath, QList<QString> listModuleNames);
     void stop();
     Utils::STATS getCurrentStats();

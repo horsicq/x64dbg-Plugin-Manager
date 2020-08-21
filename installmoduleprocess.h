@@ -31,7 +31,7 @@ class InstallModuleProcess : public QObject
     Q_OBJECT
 
 public:
-    explicit InstallModuleProcess(QObject *parent=nullptr);
+    explicit InstallModuleProcess(QObject *pParent=nullptr);
     void setData(QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames);
     void stop();
     Utils::STATS getCurrentStats();
