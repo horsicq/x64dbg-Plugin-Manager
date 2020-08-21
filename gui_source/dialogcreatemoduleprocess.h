@@ -36,7 +36,7 @@ class DialogCreateModuleProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogCreateModuleProcess(QWidget *pParent, Utils::MDATA *pMData);
+    explicit DialogCreateModuleProcess(QWidget *pParent, Utils::MDATA *pMData,bool bCreateInfoFile);
     ~DialogCreateModuleProcess();
 
 private slots:

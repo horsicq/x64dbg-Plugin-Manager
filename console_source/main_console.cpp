@@ -30,6 +30,7 @@
 #include "../installmoduleprocess.h"
 #include "../removemoduleprocess.h"
 #include "../updategitprocess.h"
+#include "../convertprocess.h"
 
 enum PLGMNGREXITCODE
 {
@@ -68,7 +69,6 @@ void installFiles(QString sDataPath, QString sRootPath,ConsoleOutput *pConsoleOu
             QObject::connect(&installModuleProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
             QObject::connect(&installModuleProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
             installModuleProcess.setData(sDataPath,sRootPath,QList<QString>()<<sFileName);
-
             installModuleProcess.process();
         }
         else
@@ -87,36 +87,92 @@ void installModules(QString sDataPath, QString sRootPath,Utils::MODULES_DATA *pM
         Utils::MDATA mdata=Utils::getMDataByName(&(pModulesData->listServerList),pListModuleNames->at(i));
 
         if(mdata.sName!="")
-        {
-            QString sFileName=Utils::getModuleFileName(sDataPath,mdata.sName);
+        {        
+            QString sSHA1=mdata.sSHA1;
 
-            if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,mdata.sSHA1))
+            QString sModuleFileName=Utils::getModuleFileName(sDataPath,mdata.sName);
+
+            bool bHash=XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,sSHA1);
+
+            if(!bHash)
             {
-                Utils::WEB_RECORD record={};
+                if(mdata.type==Utils::TYPE_GITHUBZIP)
+                {
+                    QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,mdata.sName);
 
-                record.sFileName=sFileName;
-                record.sLink=mdata.sSrc;
+                    XBinary::createDirectory(Utils::getGithubZipPath(sDataPath,mdata.sName));
+                    XBinary::createDirectory(sGithubZipModulePath);
+                    QString sGithubZipFileName=Utils::getGithubZipDownloadFileName(sDataPath,mdata.sName);
 
-                GetFileFromServerProcess getFileFromServerProcess;
-                QObject::connect(&getFileFromServerProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
-                QObject::connect(&getFileFromServerProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
-                getFileFromServerProcess.setData(QList<Utils::WEB_RECORD>()<<record);
+                    Utils::WEB_RECORD record={};
 
-                getFileFromServerProcess.process();
+                    record.sFileName=sGithubZipFileName;
+                    record.sLink=mdata.sSrc;
+
+                    GetFileFromServerProcess getFileFromServerProcess;
+                    QObject::connect(&getFileFromServerProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
+                    QObject::connect(&getFileFromServerProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
+                    getFileFromServerProcess.setData(QList<Utils::WEB_RECORD>()<<record);
+                    getFileFromServerProcess.process();
+
+                    ConvertProcess convertProcess;
+                    QObject::connect(&convertProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
+                    QObject::connect(&convertProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
+                    convertProcess.setData(&mdata,sDataPath);
+                    convertProcess.process();
+
+                    Utils::MDATA _mdata=mdata;
+
+                    _mdata.sBundleFileName=Utils::getModuleFileName(sDataPath,_mdata.sName);
+                    _mdata.sRoot=sGithubZipModulePath;
+
+                    QString sErrorString;
+
+                    if(Utils::checkMData(&_mdata,&sErrorString))
+                    {
+                        CreateModuleProcess createModuleProcess;
+                        QObject::connect(&createModuleProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
+                        QObject::connect(&createModuleProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
+                        createModuleProcess.setData(&mdata,false);
+                        createModuleProcess.process();
+                    }
+                    else
+                    {
+                        pConsoleOutput->errorMessage(sErrorString);
+                    }
+
+                    Utils::updateJsonFile(Utils::getServerListFileName(sDataPath),&_mdata);
+
+                    sSHA1=_mdata.sSHA1;
+                }
+                else
+                {
+                    Utils::WEB_RECORD record={};
+
+                    record.sFileName=sModuleFileName;
+                    record.sLink=mdata.sSrc;
+
+                    GetFileFromServerProcess getFileFromServerProcess;
+                    QObject::connect(&getFileFromServerProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
+                    QObject::connect(&getFileFromServerProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
+                    getFileFromServerProcess.setData(QList<Utils::WEB_RECORD>()<<record);
+                    getFileFromServerProcess.process();
+                }
+
+                bHash=XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,sSHA1);
             }
 
-            if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,mdata.sSHA1))
+            if(bHash)
             {
                 InstallModuleProcess installModuleProcess;
                 QObject::connect(&installModuleProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
                 QObject::connect(&installModuleProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
-                installModuleProcess.setData(sDataPath,sRootPath,QList<QString>()<<sFileName);
-
+                installModuleProcess.setData(sDataPath,sRootPath,QList<QString>()<<sModuleFileName);
                 installModuleProcess.process();
             }
             else
             {
-                pConsoleOutput->errorMessage(QString("Invalid SHA1: %1").arg(sFileName));
+                pConsoleOutput->errorMessage(QString("Invalid SHA1: %1").arg(sModuleFileName));
             }
         }
         else
@@ -140,7 +196,6 @@ void removeModules(QString sDataPath, QString sRootPath,Utils::MODULES_DATA *pMo
             QObject::connect(&removeModuleProcess,SIGNAL(infoMessage(QString)),pConsoleOutput,SLOT(infoMessage(QString)));
             QObject::connect(&removeModuleProcess,SIGNAL(errorMessage(QString)),pConsoleOutput,SLOT(errorMessage(QString)));
             removeModuleProcess.setData(sDataPath,sRootPath,QList<QString>()<<mdata.sName);
-
             removeModuleProcess.process();
         }
         else
@@ -369,7 +424,7 @@ int main(int argc, char *argv[])
             CreateModuleProcess createModuleProcess;
             QObject::connect(&createModuleProcess,SIGNAL(infoMessage(QString)),&consoleOutput,SLOT(infoMessage(QString)));
             QObject::connect(&createModuleProcess,SIGNAL(errorMessage(QString)),&consoleOutput,SLOT(errorMessage(QString)));
-            createModuleProcess.setData(&mdata);
+            createModuleProcess.setData(&mdata,true);
             createModuleProcess.process();
 
             nReturnCode=PLGMNGREXITCODE_PLUGINCREATED;
@@ -450,7 +505,6 @@ int main(int argc, char *argv[])
             QObject::connect(&updateGitProcess,SIGNAL(infoMessage(QString)),&consoleOutput,SLOT(infoMessage(QString)));
             QObject::connect(&updateGitProcess,SIGNAL(errorMessage(QString)),&consoleOutput,SLOT(errorMessage(QString)));
             updateGitProcess.setData(xOptions.getDataPath());
-
             updateGitProcess.process();
         }
 

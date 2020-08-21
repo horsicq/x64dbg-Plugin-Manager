@@ -68,41 +68,44 @@ void UpdateGitProcess::process()
 
     for(int i=0;(i<nCount)&&(!bIsStop);i++)
     {
-        QString sGithub=listMData.at(i).sGithub;
-        sGithub=sGithub.section("github.com/",1,1);
-
-        QString sUserName=sGithub.section("/",0,0);
-        QString sRepoName=sGithub.section("/",1,1);
-
-        XGithub github(sUserName,sRepoName);
-
-        XGithub::RELEASE_HEADER release=github.getLatestRelease();
-
-        int _nCount=release.listRecords.count();
-
-        bool bFound=false;
-
-        for(int j=0;j<_nCount;j++)
+        if(listMData.at(i).type==Utils::TYPE_GITHUBZIP)
         {
-            if(release.listRecords.at(j).sSrc.contains(listMData.at(i).sPattern))
+            QString sGithub=listMData.at(i).sGithub;
+            sGithub=sGithub.section("github.com/",1,1);
+
+            QString sUserName=sGithub.section("/",0,0);
+            QString sRepoName=sGithub.section("/",1,1);
+
+            XGithub github(sUserName,sRepoName);
+
+            XGithub::RELEASE_HEADER release=github.getLatestRelease();
+
+            int _nCount=release.listRecords.count();
+
+            bool bFound=false;
+
+            for(int j=0;j<_nCount;j++)
             {
-                bFound=true;
+                if(release.listRecords.at(j).sSrc.contains(listMData.at(i).sPattern))
+                {
+                    bFound=true;
 
-                Utils::MDATA mdata=listMData.at(i);
-                mdata.sSrc=release.listRecords.at(j).sSrc;
-                mdata.sVersion=release.sName;
-                mdata.nSize=release.listRecords.at(j).nSize;
-                mdata.sDate=release.listRecords.at(j).dt.toString("yyyy-MM-dd");
+                    Utils::MDATA mdata=listMData.at(i);
+                    mdata.sSrc=release.listRecords.at(j).sSrc;
+                    mdata.sVersion=release.sName;
+                    mdata.nSize=release.listRecords.at(j).nSize;
+                    mdata.sDate=release.listRecords.at(j).dt.toString("yyyy-MM-dd");
 
-                Utils::updateJsonFile(sServerListFileName,&mdata);
+                    Utils::updateJsonFile(sServerListFileName,&mdata);
 
-                break;
+                    break;
+                }
             }
-        }
 
-        if(!bFound)
-        {
-            emit errorMessage(tr("Cannot find pattern")+": "+listMData.at(i).sPattern);
+            if(!bFound)
+            {
+                emit errorMessage(tr("Cannot find pattern")+": "+listMData.at(i).sPattern);
+            }
         }
     }
 

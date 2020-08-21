@@ -77,7 +77,7 @@ void ConvertProcess::process()
             }
             else if(handleRecord.action==Utils::ACTION_UNPACKDIRECTORY)
             {
-                // TODO
+                zip.decompressToPath(&listZipRecords,handleRecord.sSrc,sGithubZipModulePath+QDir::separator()+handleRecord.sPath);
             }
 
             currentStats.nCurrentModule=i;

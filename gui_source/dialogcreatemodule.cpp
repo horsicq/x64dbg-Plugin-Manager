@@ -93,7 +93,7 @@ void DialogCreateModule::on_pushButtonCreate_clicked()
 
         if(Utils::checkMData(&mdata,&sErrorString))
         {
-            DialogCreateModuleProcess dcmp(this,&mdata);
+            DialogCreateModuleProcess dcmp(this,&mdata,true);
 
             connect(&dcmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 

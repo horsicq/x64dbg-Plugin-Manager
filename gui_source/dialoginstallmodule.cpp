@@ -64,60 +64,60 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
 
     QString sModuleFileName=Utils::getModuleFileName(sDataPath,pMData->sName);
 
-    if(pMData->type==Utils::TYPE_GITHUBZIP)
+    bool bHash=XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,sSHA1);
+
+    if(!bHash)
     {
-        QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,pMData->sName);
-
-        XBinary::createDirectory(Utils::getGithubZipPath(sDataPath,pMData->sName));
-        XBinary::createDirectory(sGithubZipModulePath);
-        QString sGithubZipFileName=Utils::getGithubZipDownloadFileName(sDataPath,pMData->sName);
-
-        Utils::WEB_RECORD record={};
-
-        record.sFileName=sGithubZipFileName;
-        record.sLink=pMData->sSrc;
-
-        DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
-
-        connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
-
-        dialogGetFileFromServer.exec();
-
-        DialogConvertProcess dialogConvertProcess(this,pMData,sDataPath);
-
-        connect(&dialogConvertProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
-
-        dialogConvertProcess.exec();
-        // TODO Create
-
-        Utils::MDATA mdata=*pMData;
-
-        mdata.sBundleFileName=Utils::getModuleFileName(sDataPath,mdata.sName);
-
-        mdata.sRoot=sGithubZipModulePath;
-
-        QString sErrorString;
-
-        if(Utils::checkMData(&mdata,&sErrorString))
+        if(pMData->type==Utils::TYPE_GITHUBZIP)
         {
-            DialogCreateModuleProcess dcmp(this,&mdata);
+            QString sGithubZipModulePath=Utils::getGithubZipModulePath(sDataPath,pMData->sName);
 
-            connect(&dcmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+            XBinary::createDirectory(Utils::getGithubZipPath(sDataPath,pMData->sName));
+            XBinary::createDirectory(sGithubZipModulePath);
+            QString sGithubZipFileName=Utils::getGithubZipDownloadFileName(sDataPath,pMData->sName);
 
-            dcmp.exec();
+            Utils::WEB_RECORD record={};
+
+            record.sFileName=sGithubZipFileName;
+            record.sLink=pMData->sSrc;
+
+            DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
+
+            connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+            dialogGetFileFromServer.exec();
+
+            DialogConvertProcess dialogConvertProcess(this,pMData,sDataPath);
+
+            connect(&dialogConvertProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+            dialogConvertProcess.exec();
+
+            Utils::MDATA mdata=*pMData;
+
+            mdata.sBundleFileName=Utils::getModuleFileName(sDataPath,mdata.sName);
+            mdata.sRoot=sGithubZipModulePath;
+
+            QString sErrorString;
+
+            if(Utils::checkMData(&mdata,&sErrorString))
+            {
+                DialogCreateModuleProcess dcmp(this,&mdata,false);
+
+                connect(&dcmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
+                dcmp.exec();
+            }
+            else
+            {
+                emit errorMessage(sErrorString);
+            }
+
+            Utils::updateJsonFile(Utils::getServerListFileName(sDataPath),&mdata);
+
+            sSHA1=mdata.sSHA1;
         }
         else
-        {
-            emit errorMessage(sErrorString);
-        }
-
-        // TODO update
-
-        sSHA1=mdata.sSHA1;
-    }
-    else
-    {
-        if(!XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,sSHA1))
         {
             Utils::WEB_RECORD record={};
 
@@ -130,9 +130,11 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
 
             dialogGetFileFromServer.exec();
         }
+
+        bHash=XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,sSHA1);
     }
 
-    if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sModuleFileName,sSHA1))
+    if(bHash)
     {
         setFileName(sModuleFileName);
 

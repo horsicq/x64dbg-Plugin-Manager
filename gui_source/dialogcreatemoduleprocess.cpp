@@ -21,7 +21,7 @@
 #include "dialogcreatemoduleprocess.h"
 #include "ui_dialogcreatemoduleprocess.h"
 
-DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MDATA *pMData) :
+DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MDATA *pMData, bool bCreateInfoFile) :
     QDialog(pParent),
     ui(new Ui::DialogCreateModuleProcess)
 {
@@ -41,7 +41,7 @@ DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MD
     pTimer=new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pCreateModuleProcess->setData(pMData);
+    pCreateModuleProcess->setData(pMData,bCreateInfoFile);
 
     bIsRun=true;
 

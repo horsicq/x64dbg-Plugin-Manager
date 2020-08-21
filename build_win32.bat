@@ -38,17 +38,6 @@ del Makefile.Release
 del Makefile.Debug
 
 cd %SOURCE_PATH%
-cd %SOURCE_PATH%\winloader_source
-
-Rc.exe /v rsrc.rc
-Cvtres.exe /v rsrc.res
-cl.exe /c winloader.cpp /D_USING_V110_SDK71_ /GS- /Oi-
-link.exe /SUBSYSTEM:WINDOWS winloader.obj rsrc.res user32.lib kernel32.lib shell32.lib /NODEFAULTLIB /SAFESEH:NO /SUBSYSTEM:WINDOWS,5.01 /ENTRY:entry /OUT:%SOURCE_PATH%\build\release\winloader.exe
-if exist winloader.obj del winloader.obj
-if exist rsrc.res del rsrc.res
-if exist rsrc.obj del rsrc.obj
-
-cd %SOURCE_PATH%
 
 rem rmdir /s /q release\
 mkdir %SOURCE_PATH%\release
@@ -56,31 +45,32 @@ mkdir %SOURCE_PATH%\release
 rem portable
 rmdir /s /q %SOURCE_PATH%\release\%BUILD_NAME%\
 mkdir %SOURCE_PATH%\release\%BUILD_NAME%
-mkdir %SOURCE_PATH%\release\%BUILD_NAME%\base
-mkdir %SOURCE_PATH%\release\%BUILD_NAME%\base\platforms
+mkdir %SOURCE_PATH%\release\%BUILD_NAME%\platforms
 
-copy %SOURCE_PATH%\build\release\winloader.exe %SOURCE_PATH%\release\%BUILD_NAME%\x64plgmnr.exe
-copy %SOURCE_PATH%\build\release\x64plgmnr.exe %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %SOURCE_PATH%\build\release\x64plgmnrc.exe %SOURCE_PATH%\release\%BUILD_NAME%\base\
+copy %SOURCE_PATH%\build\release\x64plgmnr.exe %SOURCE_PATH%\release\%BUILD_NAME%\
+copy %SOURCE_PATH%\build\release\x64plgmnrc.exe %SOURCE_PATH%\release\%BUILD_NAME%\
 
-copy %SOURCE_PATH%\QOpenSSL\libs\win32-msvc\libcrypto-1_1.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %SOURCE_PATH%\QOpenSSL\libs\win32-msvc\libssl-1_1.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
+copy %SOURCE_PATH%\QOpenSSL\libs\win32-msvc\libcrypto-1_1.dll %SOURCE_PATH%\release\%BUILD_NAME%\
+copy %SOURCE_PATH%\QOpenSSL\libs\win32-msvc\libssl-1_1.dll %SOURCE_PATH%\release\%BUILD_NAME%\
 
-copy %QT_PATH%\bin\Qt5Widgets.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\bin\Qt5Gui.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\bin\Qt5Core.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\bin\Qt5Network.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %QT_PATH%\plugins\platforms\qwindows.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\platforms\
-copy %SOURCE_PATH%\ssl\libeay32.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %SOURCE_PATH%\ssl\ssleay32.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
+copy %QT_PATH%\bin\Qt5Widgets.dll %SOURCE_PATH%\release\%BUILD_NAME%\
+copy %QT_PATH%\bin\Qt5Gui.dll %SOURCE_PATH%\release\%BUILD_NAME%\
+copy %QT_PATH%\bin\Qt5Core.dll %SOURCE_PATH%\release\%BUILD_NAME%\
+copy %QT_PATH%\bin\Qt5Network.dll %SOURCE_PATH%\release\%BUILD_NAME%\
+copy %QT_PATH%\plugins\platforms\qwindows.dll %SOURCE_PATH%\release\%BUILD_NAME%\platforms\
+copy %SOURCE_PATH%\ssl\libeay32.dll %SOURCE_PATH%\release\%BUILD_NAME%\
+copy %SOURCE_PATH%\ssl\ssleay32.dll %SOURCE_PATH%\release\%BUILD_NAME%\
 
-copy %VS_PATH%\VC\redist\x86\Microsoft.VC120.CRT\msvcp120.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
-copy %VS_PATH%\VC\redist\x86\Microsoft.VC120.CRT\msvcr120.dll %SOURCE_PATH%\release\%BUILD_NAME%\base\
+copy %VS_PATH%\VC\redist\x86\Microsoft.VC120.CRT\msvcp120.dll %SOURCE_PATH%\release\%BUILD_NAME%\
+copy %VS_PATH%\VC\redist\x86\Microsoft.VC120.CRT\msvcr120.dll %SOURCE_PATH%\release\%BUILD_NAME%\
 
 cd %SOURCE_PATH%\release
 if exist %BUILD_NAME%_%RELEASE_VERSION%.zip del %BUILD_NAME%_%RELEASE_VERSION%.zip
 %SEVENZIP_PATH%\7z.exe a %BUILD_NAME%_%RELEASE_VERSION%.zip %BUILD_NAME%\*
 cd %SOURCE_PATH%
+
+cd %SOURCE_PATH%\release\%BUILD_NAME%
+ren Example Example1
 
 cd %SOURCE_PATH%
 

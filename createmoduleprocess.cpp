@@ -26,9 +26,10 @@ CreateModuleProcess::CreateModuleProcess(QObject *pParent) : QObject(pParent)
     currentStats={};
 }
 
-void CreateModuleProcess::setData(Utils::MDATA *pMData)
+void CreateModuleProcess::setData(Utils::MDATA *pMData, bool bCreateInfoFile)
 {
     this->pMData=pMData;
+    this->bCreateInfoFile=bCreateInfoFile;
 }
 
 void CreateModuleProcess::stop()
@@ -73,13 +74,16 @@ void CreateModuleProcess::process()
         }
     }
 
-    if(XBinary::isFileExists(sBundleInfoFileName))
+    if(bCreateInfoFile)
     {
-        bSuccess=XBinary::removeFile(sBundleInfoFileName);
-
-        if(!bSuccess)
+        if(XBinary::isFileExists(sBundleInfoFileName))
         {
-            emit errorMessage(QString("%1: %2").arg(tr("Cannot remove")).arg(sBundleFileName));
+            bSuccess=XBinary::removeFile(sBundleInfoFileName);
+
+            if(!bSuccess)
+            {
+                emit errorMessage(QString("%1: %2").arg(tr("Cannot remove")).arg(sBundleFileName));
+            }
         }
     }
 
@@ -193,9 +197,13 @@ void CreateModuleProcess::process()
             fileResult.close();
 
             pMData->sSHA1=XBinary::getHash(XBinary::HASH_SHA1,sBundleFileName);
-            if(!XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords)))
+
+            if(bCreateInfoFile)
             {
-                emit errorMessage(QString("%1: %2").arg(tr("Cannot write data to file")).arg(sBundleInfoFileName));
+                if(!XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords)))
+                {
+                    emit errorMessage(QString("%1: %2").arg(tr("Cannot write data to file")).arg(sBundleInfoFileName));
+                }
             }
         }
     }
