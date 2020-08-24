@@ -848,7 +848,7 @@ bool Utils::updateServerList(QString sOldFileName, QString sNewFileName)
         {
             QList<Utils::MDATA> listMData=Utils::getModulesFromJSONFile(sNewFileName);
 
-            bResult=updateJsonFile(sNewFileName,listMData);
+            bResult=updateJsonFile(sOldFileName,listMData);
         }
     }
 
