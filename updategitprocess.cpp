@@ -26,9 +26,9 @@ UpdateGitProcess::UpdateGitProcess(QObject *pParent) : QObject(pParent)
     currentStats={};
 }
 
-void UpdateGitProcess::setData(QString sDataPath)
+void UpdateGitProcess::setData(QString sServerListFileName)
 {
-    this->sDataPath=XBinary::convertPathName(sDataPath);
+    this->sServerListFileName=sServerListFileName;
 }
 
 void UpdateGitProcess::stop()
@@ -47,8 +47,6 @@ void UpdateGitProcess::process()
     elapsedTimer.start();
 
     bIsStop=false;
-
-    QString sServerListFileName=Utils::getServerListFileName(sDataPath);
 
     QList<Utils::MDATA> listMData=Utils::getModulesFromJSONFile(sServerListFileName);
 

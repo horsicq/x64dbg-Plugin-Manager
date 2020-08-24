@@ -33,7 +33,7 @@ DialogRemoveModule::DialogRemoveModule(QWidget *pParent, QString sDataPath, QStr
 
     QString sFileName=Utils::getInstalledJsonFileName(sDataPath,sModuleName);
 
-    Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,XBinary::convertPathName(sRootPath));
+    Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName);
 
     ui->widgetInfo->setData(&mdata);
 }

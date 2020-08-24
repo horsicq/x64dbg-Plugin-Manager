@@ -306,9 +306,12 @@ void GuiMainWindow::openPlugin(QString sFileName)
 
 void GuiMainWindow::updateJsonList()
 {
+    QString sServerListFileName=Utils::getServerListFileName(xOptions.getDataPath());
+    QString sServerLastestListFileName=Utils::getServerLastestListFileName(xOptions.getDataPath());
+
     Utils::WEB_RECORD record={};
 
-    record.sFileName=Utils::getServerListFileName(xOptions.getDataPath());
+    record.sFileName=sServerLastestListFileName;
     record.sLink=xOptions.getJson();
     // TODO Update if date==date else replace
 
@@ -318,14 +321,16 @@ void GuiMainWindow::updateJsonList()
 
     dialogGetFileFromServer.exec();
 
-    if(Utils::isGithubPresent(xOptions.getDataPath()))
+    if(Utils::isGithubPresent(sServerLastestListFileName))
     {
-        DialogUpdateGitProcess dialogUpdateGitProcess(this,xOptions.getDataPath());
+        DialogUpdateGitProcess dialogUpdateGitProcess(this,sServerLastestListFileName);
 
         connect(&dialogUpdateGitProcess,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 
         dialogUpdateGitProcess.exec();
     }
+
+    Utils::updateServerList(sServerListFileName,sServerLastestListFileName);
 }
 
 void GuiMainWindow::installButtonSlot()

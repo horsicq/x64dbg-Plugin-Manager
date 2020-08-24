@@ -217,13 +217,13 @@ Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath)
 
         QByteArray baData=xzip.decompress(&pluginInfoRecord);
 
-        result=getMDataFromData(baData,sRootPath);
+        result=getMDataFromData(baData);
     }
 
     return result;
 }
 
-Utils::MDATA Utils::getMDataFromData(QByteArray baData, QString sRootPath)
+Utils::MDATA Utils::getMDataFromData(QByteArray baData)
 {
     Utils::MDATA result={};
 
@@ -236,13 +236,13 @@ Utils::MDATA Utils::getMDataFromData(QByteArray baData, QString sRootPath)
     return result;
 }
 
-Utils::MDATA Utils::getMDataFromJSONFile(QString sFileName, QString sRootPath)
+Utils::MDATA Utils::getMDataFromJSONFile(QString sFileName)
 {
     Utils::MDATA result={};
 
     QByteArray baData=XBinary::readFile(sFileName);
 
-    result=getMDataFromData(baData,sRootPath);
+    result=getMDataFromData(baData);
 
     return result;
 }
@@ -271,7 +271,7 @@ QList<Utils::MDATA> Utils::getInstalledModules(QString sDataPath, QString sRootP
         {
             QByteArray baData=file.readAll();
 
-            Utils::MDATA record=getMDataFromData(baData,sRootPath);
+            Utils::MDATA record=getMDataFromData(baData);
             record.sBundleFileName=sBundleName;
 
             listResult.append(record);
@@ -313,6 +313,21 @@ QList<Utils::MDATA> Utils::getModulesFromJSONFile(QString sFileName)
     return listResult;
 }
 
+QDate Utils::getDateFromJSONFile(QString sFileName)
+{
+    QDate dtResult;
+
+    QByteArray baData=XBinary::readFile(sFileName);
+
+    QJsonDocument jsDoc=QJsonDocument::fromJson(baData);
+
+    QJsonObject rootObj=jsDoc.object();
+
+    dtResult=QDate::fromString(rootObj.value("Date").toString(),"yyyy-MM-dd");
+
+    return dtResult;
+}
+
 bool Utils::createServerList(QString sListFileName, QList<QString> *pList, QString sWebPrefix, QString sDate)
 {
     bool bResult=false;
@@ -323,7 +338,7 @@ bool Utils::createServerList(QString sListFileName, QList<QString> *pList, QStri
 
     for(int i=0;i<nCount;i++)
     {
-        MDATA mdata=getMDataFromJSONFile(pList->at(i),"");
+        MDATA mdata=getMDataFromJSONFile(pList->at(i));
         mdata.sSrc=sWebPrefix+"/"+mdata.sSrc;
 
         QJsonObject record;
@@ -645,6 +660,11 @@ QString Utils::getServerListFileName(QString sDataPath)
     return XBinary::convertPathName(sDataPath)+QDir::separator()+"list.json";
 }
 
+QString Utils::getServerLastestListFileName(QString sDataPath)
+{
+    return XBinary::convertPathName(sDataPath)+QDir::separator()+"list.lastest.json";
+}
+
 QString Utils::getModuleFileName(QString sDataPath, QString sName)
 {
     return XBinary::convertPathName(sDataPath)+QDir::separator()+"modules"+QDir::separator()+QString("%1.x64dbg.zip").arg(sName);
@@ -737,11 +757,11 @@ Utils::WEB_RECORD Utils::getWebRecordByName(QList<Utils::WEB_RECORD> *pListWebRe
     return result;
 }
 
-bool Utils::isGithubPresent(QString sDataPath)
+bool Utils::isGithubPresent(QString sServerListFileName)
 {
     bool bResult=false;
 
-    QList<MDATA> listMData=getModulesFromJSONFile(Utils::getServerListFileName(sDataPath));
+    QList<MDATA> listMData=getModulesFromJSONFile(sServerListFileName);
 
     int nCount=listMData.count();
 
@@ -806,6 +826,31 @@ bool Utils::updateJsonFile(QString sFileName, QList<MDATA> listMData)
     QJsonDocument jsResult(_rootObj);
 
     bResult=XBinary::writeToFile(sFileName,jsResult.toJson(QJsonDocument::Indented));
+
+    return bResult;
+}
+
+bool Utils::updateServerList(QString sOldFileName, QString sNewFileName)
+{
+    bool bResult=false;
+
+    if(!XBinary::isFileExists(sOldFileName))
+    {
+        bResult=XBinary::copyFile(sNewFileName,sOldFileName);
+    }
+    else
+    {
+        if(Utils::getDateFromJSONFile(sNewFileName)>Utils::getDateFromJSONFile(sOldFileName))
+        {
+            bResult=XBinary::copyFile(sNewFileName,sOldFileName);
+        }
+        else
+        {
+            QList<Utils::MDATA> listMData=Utils::getModulesFromJSONFile(sNewFileName);
+
+            bResult=updateJsonFile(sNewFileName,listMData);
+        }
+    }
 
     return bResult;
 }

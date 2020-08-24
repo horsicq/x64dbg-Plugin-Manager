@@ -502,9 +502,12 @@ int main(int argc, char *argv[])
 
         consoleOutput.infoMessage(QString("Update server list."));
 
+        QString sServerListFileName=Utils::getServerListFileName(xOptions.getDataPath());
+        QString sServerLastestListFileName=Utils::getServerLastestListFileName(xOptions.getDataPath());
+
         Utils::WEB_RECORD record={};
 
-        record.sFileName=Utils::getServerListFileName(xOptions.getDataPath());
+        record.sFileName=sServerLastestListFileName;
         record.sLink=xOptions.getJson();
 
         GetFileFromServerProcess getFileFromServerProcess;
@@ -514,14 +517,16 @@ int main(int argc, char *argv[])
 
         getFileFromServerProcess.process();
 
-        if(Utils::isGithubPresent(xOptions.getDataPath()))
+        if(Utils::isGithubPresent(sServerLastestListFileName))
         {
             UpdateGitProcess updateGitProcess;
             QObject::connect(&updateGitProcess,SIGNAL(infoMessage(QString)),&consoleOutput,SLOT(infoMessage(QString)));
             QObject::connect(&updateGitProcess,SIGNAL(errorMessage(QString)),&consoleOutput,SLOT(errorMessage(QString)));
-            updateGitProcess.setData(xOptions.getDataPath());
+            updateGitProcess.setData(sServerLastestListFileName);
             updateGitProcess.process();
         }
+
+        Utils::updateServerList(sServerListFileName,sServerLastestListFileName);
 
         nReturnCode=PLGMNGREXITCODE_SERVERLISTUPDATED;
     }

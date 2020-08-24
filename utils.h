@@ -152,11 +152,12 @@ public:
     static QByteArray createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords);
     static MDATA getMDataFromZip(QString sFileName,QString sRootPath);
     static MDATA getMDataFromZip(QIODevice *pDevice,QString sRootPath);
-    static MDATA getMDataFromData(QByteArray baData, QString sRootPath);
-    static MDATA getMDataFromJSONFile(QString sFileName, QString sRootPath);
+    static MDATA getMDataFromData(QByteArray baData);
+    static MDATA getMDataFromJSONFile(QString sFileName);
 
     static QList<MDATA> getInstalledModules(QString sDataPath,QString sRootPath);
     static QList<MDATA> getModulesFromJSONFile(QString sFileName);
+    static QDate getDateFromJSONFile(QString sFileName);
 
     static bool createServerList(QString sListFileName,QList<QString> *pList,QString sWebPrefix,QString sDate);
 
@@ -173,6 +174,7 @@ public:
 
     static QString getInstalledJsonFileName(QString sDataPath, QString sName);
     static QString getServerListFileName(QString sDataPath);
+    static QString getServerLastestListFileName(QString sDataPath);
     static QString getModuleFileName(QString sDataPath, QString sName);
     static QString getConvertPath(QString sDataPath, QString sName);
     static QString getConvertDownloadFileName(QString sDataPath, QString sName, QString sPattern);
@@ -182,9 +184,10 @@ public:
     static QList<QString> getNamesFromWebRecords(QList<WEB_RECORD> *pListWebRecords);
     static Utils::WEB_RECORD getWebRecordByName(QList<WEB_RECORD> *pListWebRecords,QString sName);
 
-    static bool isGithubPresent(QString sDataPath);
+    static bool isGithubPresent(QString sServerListFileName);
 
     static bool updateJsonFile(QString sFileName, QList<MDATA> listMData);
+    static bool updateServerList(QString sOldFileName, QString sNewFileName);
 
     static QString actionIdToString(ACTION action);
     static ACTION stringToActionId(QString sAction);

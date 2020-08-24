@@ -61,7 +61,7 @@ void RemoveModuleProcess::process()
 
         if(XBinary::isFileExists(sFileName))
         {
-            Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName,sRootPath);
+            Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName);
 
             currentStats.nTotalFile=mdata.listRemoveRecords.count();
 

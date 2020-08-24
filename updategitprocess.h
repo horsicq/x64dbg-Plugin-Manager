@@ -33,7 +33,7 @@ class UpdateGitProcess : public QObject
 
 public:
     explicit UpdateGitProcess(QObject *pParent=nullptr);
-    void setData(QString sDataPath);
+    void setData(QString sServerListFileName);
     void stop();
     Utils::STATS getCurrentStats();
 
@@ -46,7 +46,7 @@ public slots:
     void process();
 
 private:
-    QString sDataPath;
+    QString sServerListFileName;
     bool bIsStop;
     Utils::STATS currentStats;
 };
