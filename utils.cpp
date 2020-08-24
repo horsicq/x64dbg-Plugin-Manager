@@ -764,7 +764,7 @@ bool Utils::updateJsonFile(QString sFileName, Utils::MDATA *pMData)
     QJsonObject rootObj=jsDoc.object();
     QJsonObject _rootObj;
 
-    rootObj.insert("Date",rootObj.value("Date"));
+    _rootObj.insert("Date",rootObj.value("Date"));
 
     QJsonArray arrayModules=rootObj.value("Modules").toArray();
     QJsonArray _arrayModules;

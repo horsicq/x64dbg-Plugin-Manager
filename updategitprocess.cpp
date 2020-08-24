@@ -80,36 +80,43 @@ void UpdateGitProcess::process()
 
             XGithub github(sUserName,sRepoName);
 
+            connect(&github,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+
             XGithub::RELEASE_HEADER release=github.getLatestRelease();
 
-            int _nCount=release.listRecords.count();
-
-            QSet<QString> stDownloads;
-
-            for(int j=0;j<_nCount;j++)
+            if(release.bValid)
             {
-                // TODO
-                //if(release.listRecords.at(j).sSrc.contains(listMData.at(i).sPattern))
+                int _nCount=release.listRecords.count();
+
+                QSet<QString> stDownloads;
+
+                for(int j=0;j<_nCount;j++)
                 {
-                    stDownloads.insert(release.listRecords.at(j).sSrc);
-
-                    if(release.sTag!="")
+                    // TODO
+                    //if(release.listRecords.at(j).sSrc.contains(listMData.at(i).sPattern))
                     {
-                        mdata.sVersion=release.sTag;
-                    }
-                    else
-                    {
-                        mdata.sVersion=release.sName;
-                    }
+                        stDownloads.insert(release.listRecords.at(j).sSrc);
 
-                    mdata.nSize=release.listRecords.at(j).nSize;
-                    mdata.sDate=release.listRecords.at(j).dt.toString("yyyy-MM-dd");
+                        if(release.sTag!="")
+                        {
+                            mdata.sVersion=release.sTag;
+                        }
+                        else
+                        {
+                            mdata.sVersion=release.sName;
+                        }
+
+                        mdata.nSize=release.listRecords.at(j).nSize;
+                        mdata.sDate=release.listRecords.at(j).dt.toString("yyyy-MM-dd");
+                    }
                 }
+
+                mdata.listDownloads=stDownloads.toList();
+
+                Utils::updateJsonFile(sServerListFileName,&mdata);
             }
 
-            mdata.listDownloads=stDownloads.toList();
 
-            Utils::updateJsonFile(sServerListFileName,&mdata);
         }
     }
 
