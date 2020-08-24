@@ -33,7 +33,7 @@ class PluginInfoWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit PluginInfoWidget(QWidget *parent = nullptr);
+    explicit PluginInfoWidget(QWidget *pParent=nullptr);
     ~PluginInfoWidget();
     void setData(Utils::MDATA *pMData);
 

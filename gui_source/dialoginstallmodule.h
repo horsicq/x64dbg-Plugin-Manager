@@ -37,7 +37,7 @@ class DialogInstallModule : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstallModule(QWidget *parent, QString sDataPath, QString sRootPath);
+    explicit DialogInstallModule(QWidget *pParent, QString sDataPath, QString sRootPath);
     ~DialogInstallModule();
     void setFileName(QString sModuleFileName);
     bool setMData(Utils::MDATA *pMData);

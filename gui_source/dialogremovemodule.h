@@ -34,7 +34,7 @@ class DialogRemoveModule : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogRemoveModule(QWidget *parent,QString sDataPath, QString sRootPath, QString sModuleName);
+    explicit DialogRemoveModule(QWidget *pParent,QString sDataPath, QString sRootPath, QString sModuleName);
     ~DialogRemoveModule();
 
 private slots:

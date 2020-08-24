@@ -61,7 +61,7 @@ class GuiMainWindow : public QMainWindow
     };
 
 public:
-    GuiMainWindow(QWidget *parent=nullptr);
+    GuiMainWindow(QWidget *pParent=nullptr);
     ~GuiMainWindow();
 
 private:
