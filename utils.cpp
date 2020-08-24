@@ -840,7 +840,7 @@ bool Utils::updateServerList(QString sOldFileName, QString sNewFileName)
     }
     else
     {
-        if(Utils::getDateFromJSONFile(sNewFileName)>Utils::getDateFromJSONFile(sOldFileName))
+        if(Utils::getDateFromJSONFile(sNewFileName).toJulianDay()>Utils::getDateFromJSONFile(sOldFileName).toJulianDay())
         {
             bResult=XBinary::copyFile(sNewFileName,sOldFileName);
         }
