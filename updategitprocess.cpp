@@ -115,8 +115,10 @@ void UpdateGitProcess::process()
 
                 Utils::updateJsonFile(sServerListFileName,&mdata);
             }
-
-
+            else
+            {
+                break;
+            }
         }
     }
 

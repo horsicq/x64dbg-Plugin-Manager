@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QElapsedTimer>
+#include <QThread>
 #include "utils.h"
 #include "xgithub.h"
 
