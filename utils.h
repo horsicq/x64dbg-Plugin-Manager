@@ -192,6 +192,8 @@ public:
     static QString actionIdToString(ACTION action);
     static ACTION stringToActionId(QString sAction);
 
+    static bool checkPattern(QString sString,Utils::MDATA *pMData);
+
 private:
     static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
 };

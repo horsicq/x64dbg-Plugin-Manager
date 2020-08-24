@@ -84,28 +84,38 @@ void UpdateGitProcess::process()
 
             if(release.bValid)
             {
-                int _nCount=release.listRecords.count();
+                mdata.sDate=release.dt.toString("yyyy-MM-dd"); // rewrite
+
+                if(release.sTag!="")
+                {
+                    mdata.sVersion=release.sTag;
+                }
+                else
+                {
+                    mdata.sVersion=release.sName;
+                }
+
+                int nNumberOfAsserts=release.listRecords.count();
 
                 QSet<QString> stDownloads;
 
-                for(int j=0;j<_nCount;j++)
+                for(int j=0;j<nNumberOfAsserts;j++)
                 {
-                    // TODO
-                    //if(release.listRecords.at(j).sSrc.contains(listMData.at(i).sPattern))
+                    if(Utils::checkPattern(release.listRecords.at(j).sSrc,&mdata))
                     {
                         stDownloads.insert(release.listRecords.at(j).sSrc);
+                    }
+                }
 
-                        if(release.sTag!="")
-                        {
-                            mdata.sVersion=release.sTag;
-                        }
-                        else
-                        {
-                            mdata.sVersion=release.sName;
-                        }
+                QList<QString> listStrings=XGithub::getDownloadLinks(release.sBody);
 
-                        mdata.nSize=release.listRecords.at(j).nSize;
-                        mdata.sDate=release.listRecords.at(j).dt.toString("yyyy-MM-dd");
+                int nNumberOfLinks=listStrings.count();
+
+                for(int j=0;j<nNumberOfLinks;j++)
+                {
+                    if(Utils::checkPattern(listStrings.at(j),&mdata))
+                    {
+                        stDownloads.insert(listStrings.at(j));
                     }
                 }
 

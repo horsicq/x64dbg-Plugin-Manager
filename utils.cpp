@@ -888,6 +888,25 @@ Utils::ACTION Utils::stringToActionId(QString sAction)
     return result;
 }
 
+bool Utils::checkPattern(QString sString, Utils::MDATA *pMData)
+{
+    bool bResult=false;
+
+    int nCount=pMData->listConvertRecords.count();
+
+    for(int i=0;i<nCount;i++)
+    {
+        if(sString.contains(pMData->listConvertRecords.at(i).sPattern))
+        {
+            bResult=true;
+
+            break;
+        }
+    }
+
+    return bResult;
+}
+
 void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)
 {
     QFileInfo fi(sCurrentPath);
