@@ -35,7 +35,7 @@ class DialogGetFileFromServerProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogGetFileFromServerProcess(QWidget *parent, QList<Utils::WEB_RECORD> listWebRecords);
+    explicit DialogGetFileFromServerProcess(QWidget *pParent, QList<Utils::WEB_RECORD> listWebRecords);
     ~DialogGetFileFromServerProcess();
 
 private slots:

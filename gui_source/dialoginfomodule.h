@@ -33,7 +33,7 @@ class DialogInfoModule : public QDialog
     Q_OBJECT
 
 public:    
-    explicit DialogInfoModule(QWidget *parent, Utils::MDATA *pMData);
+    explicit DialogInfoModule(QWidget *pParent, Utils::MDATA *pMData);
     ~DialogInfoModule();
 
 private slots:
