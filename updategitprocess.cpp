@@ -128,6 +128,8 @@ void UpdateGitProcess::process()
                 break;
             }
         }
+
+        currentStats.nCurrentModule=i+1;
     }
 
     emit completed(elapsedTimer.elapsed());
