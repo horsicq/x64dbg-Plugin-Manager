@@ -93,7 +93,15 @@ void UpdateGitProcess::process()
                 {
                     stDownloads.insert(release.listRecords.at(j).sSrc);
 
-                    mdata.sVersion=release.sName;
+                    if(release.sTag!="")
+                    {
+                        mdata.sVersion=release.sTag;
+                    }
+                    else
+                    {
+                        mdata.sVersion=release.sName;
+                    }
+
                     mdata.nSize=release.listRecords.at(j).nSize;
                     mdata.sDate=release.listRecords.at(j).dt.toString("yyyy-MM-dd");
                 }

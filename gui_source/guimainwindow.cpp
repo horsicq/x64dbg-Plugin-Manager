@@ -123,6 +123,7 @@ void GuiMainWindow::adjustTable(QTableWidget *pTableWidget)
     pTableWidget->setHorizontalHeaderItem(CN_32,            new QTableWidgetItem(tr("32")));
     pTableWidget->setHorizontalHeaderItem(CN_64,            new QTableWidgetItem(tr("64")));
     pTableWidget->setHorizontalHeaderItem(CN_VERSION,       new QTableWidgetItem(tr("Version")));
+    pTableWidget->setHorizontalHeaderItem(CN_DATE,          new QTableWidgetItem(tr("Date")));
     pTableWidget->setHorizontalHeaderItem(CN_INSTALL,       new QTableWidgetItem(""));
     pTableWidget->setHorizontalHeaderItem(CN_REMOVE,        new QTableWidgetItem(""));
 
@@ -131,6 +132,7 @@ void GuiMainWindow::adjustTable(QTableWidget *pTableWidget)
     pTableWidget->setColumnWidth(CN_32,                     10);
     pTableWidget->setColumnWidth(CN_64,                     10);
     pTableWidget->setColumnWidth(CN_VERSION,                80);
+    pTableWidget->setColumnWidth(CN_DATE,                   80);
     pTableWidget->setColumnWidth(CN_INSTALL,                60);
     pTableWidget->setColumnWidth(CN_REMOVE,                 60);
 
@@ -139,6 +141,7 @@ void GuiMainWindow::adjustTable(QTableWidget *pTableWidget)
     pTableWidget->horizontalHeader()->setSectionResizeMode(CN_32,           QHeaderView::ResizeToContents);
     pTableWidget->horizontalHeader()->setSectionResizeMode(CN_64,           QHeaderView::ResizeToContents);
     pTableWidget->horizontalHeader()->setSectionResizeMode(CN_VERSION,      QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_DATE,         QHeaderView::ResizeToContents);
     pTableWidget->horizontalHeader()->setSectionResizeMode(CN_INSTALL,      QHeaderView::Interactive);
     pTableWidget->horizontalHeader()->setSectionResizeMode(CN_REMOVE,       QHeaderView::Interactive);
 }
@@ -163,6 +166,7 @@ void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *p
         QCheckBox *pCheckBoxIs32=new QCheckBox(this);
         QCheckBox *pCheckBoxIs64=new QCheckBox(this);
         QTableWidgetItem *pItemVersion=new QTableWidgetItem;
+        QTableWidgetItem *pItemDate=new QTableWidgetItem;
 
         if(status.bUpdate)
         {
@@ -170,6 +174,7 @@ void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *p
             pItemName->setBackgroundColor(colDisabled);
             pItemInfo->setBackgroundColor(colDisabled);
             pItemVersion->setBackgroundColor(colDisabled);
+            pItemDate->setBackgroundColor(colDisabled);
         }
 
         pItemName->setText(pMData->at(i).sName);
@@ -189,6 +194,9 @@ void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *p
 
         pItemVersion->setText(pMData->at(i).sVersion);
         pTableWidget->setItem(i,CN_VERSION,pItemVersion);
+
+        pItemDate->setText(pMData->at(i).sDate);
+        pTableWidget->setItem(i,CN_DATE,pItemDate);
 
         if(status.bInstall||status.bUpdate)
         {

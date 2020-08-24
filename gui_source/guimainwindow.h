@@ -54,6 +54,7 @@ class GuiMainWindow : public QMainWindow
         CN_32,
         CN_64,
         CN_VERSION,
+        CN_DATE,
         CN_INSTALL,
         CN_REMOVE,
         CN_size
