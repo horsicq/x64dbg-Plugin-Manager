@@ -80,7 +80,7 @@ void UpdateGitProcess::process()
 
             connect(&github,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
-            XGithub::RELEASE_HEADER release=github.getLatestRelease();
+            XGithub::RELEASE_HEADER release=github.getLatestRelease(true);
 
             if(release.bValid)
             {
