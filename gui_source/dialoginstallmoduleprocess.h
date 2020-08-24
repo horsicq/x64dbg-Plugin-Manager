@@ -36,7 +36,7 @@ class DialogInstallModuleProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInstallModuleProcess(QWidget *parent, QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames);
+    explicit DialogInstallModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames);
     ~DialogInstallModuleProcess();
 
 private slots:

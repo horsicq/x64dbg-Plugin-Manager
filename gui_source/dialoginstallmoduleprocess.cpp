@@ -21,8 +21,8 @@
 #include "dialoginstallmoduleprocess.h"
 #include "ui_dialoginstallmoduleprocess.h"
 
-DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *parent, QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames) :
-    QDialog(parent),
+DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames) :
+    QDialog(pParent),
     ui(new Ui::DialogInstallModuleProcess)
 {
     ui->setupUi(this);
