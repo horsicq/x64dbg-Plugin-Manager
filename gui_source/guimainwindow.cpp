@@ -310,6 +310,7 @@ void GuiMainWindow::updateJsonList()
 
     record.sFileName=Utils::getServerListFileName(xOptions.getDataPath());
     record.sLink=xOptions.getJson();
+    // TODO Update if date==date else replace
 
     DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
 

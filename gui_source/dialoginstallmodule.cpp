@@ -128,7 +128,7 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
             XBinary::removeDirectory(sConvertPath);
         #endif
 
-            Utils::updateJsonFile(Utils::getServerListFileName(sDataPath),&mdata);
+            Utils::updateJsonFile(Utils::getServerListFileName(sDataPath),QList<Utils::MDATA>() << mdata);
 
             sSHA1=mdata.sSHA1;
         }

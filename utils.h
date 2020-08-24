@@ -184,7 +184,7 @@ public:
 
     static bool isGithubPresent(QString sDataPath);
 
-    static bool updateJsonFile(QString sFileName,MDATA *pMData);
+    static bool updateJsonFile(QString sFileName, QList<MDATA> listMData);
 
     static QString actionIdToString(ACTION action);
     static ACTION stringToActionId(QString sAction);

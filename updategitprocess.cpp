@@ -113,7 +113,7 @@ void UpdateGitProcess::process()
 
                 mdata.listDownloads=stDownloads.toList();
 
-                Utils::updateJsonFile(sServerListFileName,&mdata);
+                Utils::updateJsonFile(sServerListFileName,QList<Utils::MDATA>() << mdata);
             }
             else
             {

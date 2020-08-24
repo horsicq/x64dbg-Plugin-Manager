@@ -554,7 +554,12 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QString sDataPath, QList
     for(int i=0;i<nCount;i++)
     {
         STATUS status={};
-        status.bInstall=true;
+
+        if(pServerList->at(i).sDate!="")
+        {
+            status.bInstall=true;
+        }
+
         status.sServerListDate=pServerList->at(i).sDate;
         status.sServerListVersion=pServerList->at(i).sVersion;
         status.webRecord.sName=pServerList->at(i).sName;
@@ -585,7 +590,7 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QString sDataPath, QList
 
         if(bIsServerList)
         {
-            if((status.sServerListDate>status.sInstalledDate)&&(status.sServerListVersion!=status.sInstalledVersion))
+            if((status.sServerListDate>status.sInstalledDate)&&(status.sServerListVersion!=status.sInstalledVersion)&&(status.sServerListDate!=""))
             {
                 status.bUpdate=true;
             }
@@ -753,7 +758,7 @@ bool Utils::isGithubPresent(QString sDataPath)
     return bResult;
 }
 
-bool Utils::updateJsonFile(QString sFileName, Utils::MDATA *pMData)
+bool Utils::updateJsonFile(QString sFileName, QList<MDATA> listMData)
 {
     bool bResult=false;
 
@@ -770,6 +775,7 @@ bool Utils::updateJsonFile(QString sFileName, Utils::MDATA *pMData)
     QJsonArray _arrayModules;
 
     int nCount=arrayModules.count();
+    int _nCount=listMData.count();
 
     for(int i=0;i<nCount;i++)
     {
@@ -779,9 +785,13 @@ bool Utils::updateJsonFile(QString sFileName, Utils::MDATA *pMData)
 
         objectToMData(&recordObject,&mdata);
 
-        if(mdata.sName==pMData->sName)
+        for(int j=0;j<_nCount;j++)
         {
-            mdata=*pMData;
+            if((mdata.sName==listMData.at(j).sName)&&(listMData.at(j).sDate!=""))
+            {
+                mdata=listMData.at(j);
+                break;
+            }
         }
 
         QJsonObject _recordObject;

@@ -156,7 +156,7 @@ void installModules(QString sDataPath, QString sRootPath,Utils::MODULES_DATA *pM
                     XBinary::removeDirectory(sConvertPath);
                 #endif
 
-                    Utils::updateJsonFile(Utils::getServerListFileName(sDataPath),&_mdata);
+                    Utils::updateJsonFile(Utils::getServerListFileName(sDataPath),QList<Utils::MDATA>() << _mdata);
 
                     sSHA1=_mdata.sSHA1;
                 }
