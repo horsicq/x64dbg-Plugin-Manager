@@ -36,7 +36,7 @@ class DialogRemoveModuleProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogRemoveModuleProcess(QWidget *parent, QString sDataPath, QString sRootPath, QList<QString> listModuleNames);
+    explicit DialogRemoveModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleNames);
     ~DialogRemoveModuleProcess();
 
 private slots:

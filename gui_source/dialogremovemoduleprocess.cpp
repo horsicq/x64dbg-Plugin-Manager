@@ -21,8 +21,8 @@
 #include "dialogremovemoduleprocess.h"
 #include "ui_dialogremovemoduleprocess.h"
 
-DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *parent, QString sDataPath, QString sRootPath, QList<QString> listModuleNames) :
-    QDialog(parent),
+DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleNames) :
+    QDialog(pParent),
     ui(new Ui::DialogRemoveModuleProcess)
 {
     ui->setupUi(this);
