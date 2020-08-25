@@ -27,6 +27,7 @@ DialogInstallModule::DialogInstallModule(QWidget *pParent, QString sDataPath, QS
 {
     ui->setupUi(this);
 
+    this->pParent=pParent;
     this->sDataPath=sDataPath;
     this->sRootPath=sRootPath;
 }
@@ -92,13 +93,13 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
                 listWebRecords.append(record);
             }
 
-            DialogGetFileFromServerProcess dialogGetFileFromServer(this,listWebRecords);
+            DialogGetFileFromServerProcess dialogGetFileFromServer(pParent,listWebRecords);
 
             connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
             dialogGetFileFromServer.exec();
 
-            DialogConvertProcess dialogConvertProcess(this,pMData,sDataPath);
+            DialogConvertProcess dialogConvertProcess(pParent,pMData,sDataPath);
 
             connect(&dialogConvertProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
@@ -113,7 +114,7 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
 
             if(Utils::checkMData(&mdata,&sErrorString))
             {
-                DialogCreateModuleProcess dcmp(this,&mdata,false);
+                DialogCreateModuleProcess dcmp(pParent,&mdata,false);
 
                 connect(&dcmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
@@ -139,7 +140,7 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
             record.sFileName=sModuleFileName;
             record.sLink=pMData->sSrc;
 
-            DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
+            DialogGetFileFromServerProcess dialogGetFileFromServer(pParent,QList<Utils::WEB_RECORD>()<<record);
 
             connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 

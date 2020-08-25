@@ -51,6 +51,7 @@ signals:
 
 private:
     Ui::DialogInstallModule *ui;
+    QWidget *pParent;
     Utils::MDATA _mdata;
     QString sDataPath;
     QString sRootPath;
