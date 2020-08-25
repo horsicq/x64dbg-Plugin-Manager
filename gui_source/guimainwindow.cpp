@@ -170,7 +170,6 @@ void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *p
 
         if(status.bUpdate)
         {
-            // TODO Check
             pItemName->setBackgroundColor(colDisabled);
             pItemInfo->setBackgroundColor(colDisabled);
             pItemVersion->setBackgroundColor(colDisabled);
@@ -313,7 +312,6 @@ void GuiMainWindow::updateJsonList()
 
     record.sFileName=sServerLastestListFileName;
     record.sLink=xOptions.getJson();
-    // TODO Update if date==date else replace
 
     DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
 
