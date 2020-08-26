@@ -88,6 +88,7 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData)
                 QString sLink=pMData->listDownloads.at(i);
 
                 record.sFileName=sConvertPath+QDir::separator()+sLink.section("/",-1,-1);
+                record.sFileName=record.sFileName.remove("?raw=true");
                 record.sLink=sLink;
 
                 listWebRecords.append(record);

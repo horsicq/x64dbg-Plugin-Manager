@@ -115,6 +115,7 @@ void installModules(QString sDataPath, QString sRootPath,Utils::MODULES_DATA *pM
                         QString sLink=mdata.listDownloads.at(i);
 
                         record.sFileName=sConvertPath+QDir::separator()+sLink.section("/",-1,-1);
+                        record.sFileName=record.sFileName.remove("?raw=true");
                         record.sLink=sLink;
 
                         listWebRecords.append(record);
