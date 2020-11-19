@@ -252,6 +252,8 @@ int main(int argc, char *argv[])
     listIDs.append(XOptions::ID_DATAPATH);
     listIDs.append(XOptions::ID_ROOTPATH);
     listIDs.append(XOptions::ID_JSON);
+    listIDs.append(XOptions::ID_AUTHUSER);
+    listIDs.append(XOptions::ID_AUTHTOKEN);
 
     xOptions.setValueIDs(listIDs);
 
@@ -521,6 +523,14 @@ int main(int argc, char *argv[])
         if(Utils::isGithubPresent(sServerLastestListFileName))
         {
             UpdateGitProcess updateGitProcess;
+
+            QString authUser = xOptions.getValue(XOptions::ID_AUTHUSER).toString();
+            if(!authUser.isEmpty())
+            {
+                QString authToken = xOptions.getValue(XOptions::ID_AUTHTOKEN).toString();
+                updateGitProcess.setCredentials(authUser, authToken);
+            }
+
             QObject::connect(&updateGitProcess,SIGNAL(infoMessage(QString)),&consoleOutput,SLOT(infoMessage(QString)));
             QObject::connect(&updateGitProcess,SIGNAL(errorMessage(QString)),&consoleOutput,SLOT(errorMessage(QString)));
             updateGitProcess.setData(sServerLastestListFileName);
