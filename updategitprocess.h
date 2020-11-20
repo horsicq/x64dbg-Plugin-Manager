@@ -36,6 +36,7 @@ public:
     void setData(QString sServerListFileName);
     void stop();
     Utils::STATS getCurrentStats();
+    void setCredentials(QString sUser, QString sToken);
 
 signals:
     void errorMessage(QString sMessage);
@@ -49,6 +50,8 @@ private:
     QString sServerListFileName;
     bool bIsStop;
     Utils::STATS currentStats;
+    QString sAuthUser;
+    QString sAuthToken;
 };
 
 #endif // UPDATEGITPROCESS_H

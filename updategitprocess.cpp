@@ -77,6 +77,7 @@ void UpdateGitProcess::process()
             QString sRepoName=sGithub.section("/",1,1);
 
             XGithub github(sUserName,sRepoName);
+            github.setCredentials(sAuthUser, sAuthToken);
 
             connect(&github,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
 
@@ -133,4 +134,10 @@ void UpdateGitProcess::process()
     }
 
     emit completed(elapsedTimer.elapsed());
+}
+
+void UpdateGitProcess::setCredentials(QString sUser, QString sToken)
+{
+    sAuthUser = sUser;
+    sAuthToken = sToken;
 }
