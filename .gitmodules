@@ -10,3 +10,6 @@
 [submodule "XOptions"]
 	path = XOptions
 	url = https://github.com/horsicq/XOptions.git
+[submodule "XShortcuts"]
+	path = XShortcuts
+	url = https://github.com/horsicq/XShortcuts.git
