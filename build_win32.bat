@@ -50,9 +50,6 @@ mkdir %SOURCE_PATH%\release\%BUILD_NAME%\platforms
 copy %SOURCE_PATH%\build\release\x64plgmnr.exe %SOURCE_PATH%\release\%BUILD_NAME%\
 copy %SOURCE_PATH%\build\release\x64plgmnrc.exe %SOURCE_PATH%\release\%BUILD_NAME%\
 
-copy %SOURCE_PATH%\QOpenSSL\libs\win32-msvc\libcrypto-1_1.dll %SOURCE_PATH%\release\%BUILD_NAME%\
-copy %SOURCE_PATH%\QOpenSSL\libs\win32-msvc\libssl-1_1.dll %SOURCE_PATH%\release\%BUILD_NAME%\
-
 copy %QT_PATH%\bin\Qt5Widgets.dll %SOURCE_PATH%\release\%BUILD_NAME%\
 copy %QT_PATH%\bin\Qt5Gui.dll %SOURCE_PATH%\release\%BUILD_NAME%\
 copy %QT_PATH%\bin\Qt5Core.dll %SOURCE_PATH%\release\%BUILD_NAME%\
