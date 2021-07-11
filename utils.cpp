@@ -289,6 +289,7 @@ QList<Utils::MDATA> Utils::getModulesFromJSONFile(QString sFileName)
 
     QByteArray baData=XBinary::readFile(sFileName);
 
+    // TODO Check valid
     QJsonDocument jsDoc=QJsonDocument::fromJson(baData);
 
     QJsonObject rootObj=jsDoc.object();
@@ -605,9 +606,18 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QString sDataPath, QList
 
         if(bIsServerList)
         {
-            if((status.sServerListDate>status.sInstalledDate)&&(status.sServerListVersion!=status.sInstalledVersion)&&(status.sServerListDate!=""))
+            if( (status.sServerListDate>status.sInstalledDate)&&
+                (status.sServerListVersion!=status.sInstalledVersion)&&
+                (status.sServerListDate!=""))
             {
                 status.bUpdate=true;
+            }
+
+            if( (status.sServerListDate>status.sInstalledDate)&&
+                (status.sServerListVersion=="snapshot")&&
+                (status.sServerListDate!=""))
+            {
+                status.bUpdate=true; // For x64dbgcote
             }
         }
 
@@ -840,8 +850,16 @@ bool Utils::updateServerList(QString sOldFileName, QString sNewFileName)
     }
     else
     {
-        if(Utils::getDateFromJSONFile(sNewFileName).toJulianDay()>Utils::getDateFromJSONFile(sOldFileName).toJulianDay())
+        qint64 nJFTimeNew=Utils::getDateFromJSONFile(sNewFileName).toJulianDay();
+        qint64 nJFTime=Utils::getDateFromJSONFile(sOldFileName).toJulianDay();
+
+        if(nJFTimeNew>nJFTime)
         {
+            if(XBinary::isFileExists(sOldFileName))
+            {
+                XBinary::removeFile(sOldFileName);
+            }
+
             bResult=XBinary::copyFile(sNewFileName,sOldFileName);
         }
         else
