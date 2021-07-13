@@ -36,3 +36,9 @@ Clone project: git clone --recursive https://github.com/horsicq/x64dbg-Plugin-Ma
 Edit build_win32.bat ( check VS_PATH,  SEVENZIP_PATH, QT_PATH variables)
 
 Run build_win32.bat
+
+
+How to add new plugin
+=======
+
+You should make PR with new plugin to https://github.com/x64dbg/PluginManager/blob/master/list.json
