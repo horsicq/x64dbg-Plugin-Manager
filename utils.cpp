@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2021 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -215,7 +215,7 @@ Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath)
 
         XArchive::RECORD pluginInfoRecord=XArchive::getArchiveRecord("plugin_info.json",&listRecords);
 
-        QByteArray baData=xzip.decompress(&pluginInfoRecord);
+        QByteArray baData=xzip.decompress(&pluginInfoRecord,false,nullptr);
 
         result=getMDataFromData(baData);
     }

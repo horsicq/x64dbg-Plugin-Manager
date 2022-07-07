@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2021 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ DialogOptions::DialogOptions(QWidget *pParent, XOptions *pOptions) :
 
     this->pOptions=pOptions;
 
-    pOptions->setCheckBox(ui->checkBoxStayOnTop,XOptions::ID_STAYONTOP);
+    pOptions->setCheckBox(ui->checkBoxStayOnTop,XOptions::ID_VIEW_STAYONTOP);
     pOptions->setLineEdit(ui->lineEditRootPath,XOptions::ID_ROOTPATH);
     pOptions->setLineEdit(ui->lineEditDataPath,XOptions::ID_DATAPATH);
     pOptions->setLineEdit(ui->lineEditJSONLink,XOptions::ID_JSON);
@@ -42,7 +42,7 @@ DialogOptions::~DialogOptions()
 
 void DialogOptions::on_pushButtonOK_clicked()
 {
-    pOptions->getCheckBox(ui->checkBoxStayOnTop,XOptions::ID_STAYONTOP);
+    pOptions->getCheckBox(ui->checkBoxStayOnTop,XOptions::ID_VIEW_STAYONTOP);
     pOptions->getLineEdit(ui->lineEditRootPath,XOptions::ID_ROOTPATH);
     pOptions->getLineEdit(ui->lineEditDataPath,XOptions::ID_DATAPATH);
     pOptions->getLineEdit(ui->lineEditJSONLink,XOptions::ID_JSON);
