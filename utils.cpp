@@ -106,7 +106,9 @@ bool Utils::isPluginValid(QIODevice *pDevice)
 
     if(xzip.isValid())
     {
-        QList<XArchive::RECORD> listRecords=xzip.getRecords();
+        XBinary::PDSTRUCT pdStruct={};
+
+        QList<XArchive::RECORD> listRecords=xzip.getRecords(-1,&pdStruct);
 
         bResult=XArchive::isArchiveRecordPresent("plugin_info.json",&listRecords);
     }
@@ -211,7 +213,8 @@ Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath)
 
     if(xzip.isValid())
     {
-        QList<XArchive::RECORD> listRecords=xzip.getRecords();
+        XBinary::PDSTRUCT pdStruct={};
+        QList<XArchive::RECORD> listRecords=xzip.getRecords(-1,&pdStruct);
 
         XArchive::RECORD pluginInfoRecord=XArchive::getArchiveRecord("plugin_info.json",&listRecords);
 

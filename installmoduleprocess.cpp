@@ -66,7 +66,9 @@ void InstallModuleProcess::process()
 
             XZip zip(&file);
 
-            QList<XArchive::RECORD> listZipRecords=zip.getRecords();
+            XBinary::PDSTRUCT pdStruct={};
+
+            QList<XArchive::RECORD> listZipRecords=zip.getRecords(-1,&pdStruct);
 
             currentStats.nTotalFile=mdata.listInstallRecords.count();
 
