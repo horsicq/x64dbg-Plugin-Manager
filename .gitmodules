@@ -16,3 +16,6 @@
 [submodule "build_tools"]
 	path = build_tools
 	url = https://github.com/horsicq/build_tools
+[submodule "XUpdate"]
+	path = XUpdate
+	url = https://github.com/horsicq/XUpdate
