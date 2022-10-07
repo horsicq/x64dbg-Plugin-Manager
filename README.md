@@ -22,7 +22,7 @@ x64plgmnrc.exe -i x64core           // Install last version of x64dbg
 x64plgmnrc.exe -i AdvancedScript    // install AdvancedScript
 
 
-How to build on Windows
+# How to build on Windows
 =======
 
 Install Visual Studio 2013: https://github.com/horsicq/build_tools
@@ -38,7 +38,7 @@ Edit build_win32.bat ( check VS_PATH,  SEVENZIP_PATH, QT_PATH variables)
 Run build_win32.bat
 
 
-How to add new plugin
+# How to add new plugin
 =======
 
 You should make PR with new plugin to https://github.com/x64dbg/PluginManager/blob/master/list.json
