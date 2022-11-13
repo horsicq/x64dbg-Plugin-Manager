@@ -19,33 +19,32 @@
 // SOFTWARE.
 //
 #include "dialoginstallmoduleprocess.h"
+
 #include "ui_dialoginstallmoduleprocess.h"
 
-DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames) :
-    QDialog(pParent),
-    ui(new Ui::DialogInstallModuleProcess)
-{
+DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames)
+    : QDialog(pParent), ui(new Ui::DialogInstallModuleProcess) {
     ui->setupUi(this);
 
-    this->sDataPath=sDataPath;
-    this->sRootPath=sRootPath;
-    this->listModuleFileNames=listModuleFileNames;
+    this->sDataPath = sDataPath;
+    this->sRootPath = sRootPath;
+    this->listModuleFileNames = listModuleFileNames;
 
-    pInstallModuleProcess=new InstallModuleProcess;
-    pThread=new QThread;
+    pInstallModuleProcess = new InstallModuleProcess;
+    pThread = new QThread;
 
     pInstallModuleProcess->moveToThread(pThread);
 
     connect(pThread, SIGNAL(started()), pInstallModuleProcess, SLOT(process()));
     connect(pInstallModuleProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
-    connect(pInstallModuleProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+    connect(pInstallModuleProcess, SIGNAL(errorMessage(QString)), this, SIGNAL(errorMessage(QString)));
 
-    pTimer=new QTimer(this);
+    pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pInstallModuleProcess->setData(sDataPath,sRootPath,listModuleFileNames);
+    pInstallModuleProcess->setData(sDataPath, sRootPath, listModuleFileNames);
 
-    bIsRun=true;
+    bIsRun = true;
 
     ui->progressBarFile->setMaximum(100);
     ui->progressBarFile->setValue(0);
@@ -54,13 +53,11 @@ DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *pParent, QString
     ui->progressBarModule->setValue(0);
 
     pThread->start();
-    pTimer->start(1000); // 1 sec
+    pTimer->start(1000);  // 1 sec
 }
 
-DialogInstallModuleProcess::~DialogInstallModuleProcess()
-{
-    if(bIsRun)
-    {
+DialogInstallModuleProcess::~DialogInstallModuleProcess() {
+    if (bIsRun) {
         pInstallModuleProcess->stop();
     }
 
@@ -75,39 +72,33 @@ DialogInstallModuleProcess::~DialogInstallModuleProcess()
     delete pInstallModuleProcess;
 }
 
-void DialogInstallModuleProcess::on_pushButtonCancel_clicked()
-{
-    if(bIsRun)
-    {
+void DialogInstallModuleProcess::on_pushButtonCancel_clicked() {
+    if (bIsRun) {
         pInstallModuleProcess->stop();
         pTimer->stop();
-        bIsRun=false;
+        bIsRun = false;
     }
 }
 
-void DialogInstallModuleProcess::onCompleted(qint64 nElapsed)
-{
+void DialogInstallModuleProcess::onCompleted(qint64 nElapsed) {
     Q_UNUSED(nElapsed)
     // TODO
-    bIsRun=false;
+    bIsRun = false;
     this->close();
 }
 
-void DialogInstallModuleProcess::timerSlot()
-{
-    Utils::STATS stats=pInstallModuleProcess->getCurrentStats();
+void DialogInstallModuleProcess::timerSlot() {
+    Utils::STATS stats = pInstallModuleProcess->getCurrentStats();
 
     ui->labelInfoFile->setText(stats.sFile);
 
-    if(stats.nTotalFile)
-    {
-        ui->progressBarFile->setValue((int)((stats.nCurrentFile*100)/stats.nTotalFile));
+    if (stats.nTotalFile) {
+        ui->progressBarFile->setValue((int)((stats.nCurrentFile * 100) / stats.nTotalFile));
     }
 
     ui->labelInfoModule->setText(stats.sModule);
 
-    if(stats.nTotalModule)
-    {
-        ui->progressBarModule->setValue((int)((stats.nCurrentModule*100)/stats.nTotalModule));
+    if (stats.nTotalModule) {
+        ui->progressBarModule->setValue((int)((stats.nCurrentModule * 100) / stats.nTotalModule));
     }
 }

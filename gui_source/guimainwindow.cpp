@@ -19,12 +19,10 @@
 // SOFTWARE.
 //
 #include "guimainwindow.h"
+
 #include "ui_guimainwindow.h"
 
-GuiMainWindow::GuiMainWindow(QWidget *pParent)
-    : QMainWindow(pParent)
-    , ui(new Ui::GuiMainWindow)
-{
+GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui::GuiMainWindow) {
     ui->setupUi(this);
 
     setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
@@ -44,7 +42,7 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent)
 
     QMap<XOptions::ID, QVariant> mapDefaultValues;
 
-    mapDefaultValues.insert(XOptions::ID_JSON,X_JSON_DEFAULT);
+    mapDefaultValues.insert(XOptions::ID_JSON, X_JSON_DEFAULT);
 
     xOptions.setDefaultValues(mapDefaultValues);
 
@@ -52,50 +50,39 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent)
 
     xOptions.adjustStayOnTop(this);
 
-    if(!XBinary::isDirectoryExists(XBinary::convertPathName(xOptions.getRootPath())))
-    {
+    if (!XBinary::isDirectoryExists(XBinary::convertPathName(xOptions.getRootPath()))) {
         xOptions.clearValue(XOptions::ID_ROOTPATH);
     }
 
-    if(xOptions.getRootPath()=="")
-    {
+    if (xOptions.getRootPath() == "") {
         QString sDirectoryName;
 
-        if(QMessageBox::information(this,
-                                    tr("Information"),
-                                    tr("Please select a root directory for x64dbg"),
-                                    QMessageBox::Yes|QMessageBox::No,QMessageBox::Yes)==QMessageBox::Yes)
-        {
-            sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select root directory"));
+        if (QMessageBox::information(this, tr("Information"), tr("Please select a root directory for x64dbg"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) ==
+            QMessageBox::Yes) {
+            sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Select root directory"));
         }
 
-        if(sDirectoryName!="")
-        {
-            xOptions.setValue(XOptions::ID_ROOTPATH,sDirectoryName);
+        if (sDirectoryName != "") {
+            xOptions.setValue(XOptions::ID_ROOTPATH, sDirectoryName);
         }
     }
 
-    if(xOptions.getRootPath()=="")
-    {
+    if (xOptions.getRootPath() == "") {
         exit(1);
     }
 
     XBinary::createDirectory(XBinary::convertPathName(xOptions.getDataPath()));
-    XBinary::createDirectory(XBinary::convertPathName(xOptions.getDataPath())+QDir::separator()+"installed");
-    XBinary::createDirectory(XBinary::convertPathName(xOptions.getDataPath())+QDir::separator()+"modules");
+    XBinary::createDirectory(XBinary::convertPathName(xOptions.getDataPath()) + QDir::separator() + "installed");
+    XBinary::createDirectory(XBinary::convertPathName(xOptions.getDataPath()) + QDir::separator() + "modules");
 
     setAcceptDrops(true);
 
-    if(QCoreApplication::arguments().count()>1)
-    {
-        QString sFileName=QCoreApplication::arguments().at(1);
+    if (QCoreApplication::arguments().count() > 1) {
+        QString sFileName = QCoreApplication::arguments().at(1);
 
         openPlugin(sFileName);
-    }
-    else
-    {
-        if(!XBinary::isFileExists(Utils::getServerListFileName(xOptions.getDataPath())))
-        {
+    } else {
+        if (!XBinary::isFileExists(Utils::getServerListFileName(xOptions.getDataPath()))) {
             updateJsonList();
         }
     }
@@ -106,70 +93,65 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent)
     getModules();
 }
 
-GuiMainWindow::~GuiMainWindow()
-{
+GuiMainWindow::~GuiMainWindow() {
     xOptions.save();
 
     delete ui;
 }
 
-void GuiMainWindow::adjustTable(QTableWidget *pTableWidget)
-{
+void GuiMainWindow::adjustTable(QTableWidget *pTableWidget) {
     pTableWidget->setColumnCount(CN_size);
     pTableWidget->setRowCount(0);
 
-    pTableWidget->setHorizontalHeaderItem(CN_NAME,          new QTableWidgetItem(tr("Name")));
-    pTableWidget->setHorizontalHeaderItem(CN_INFO,          new QTableWidgetItem(tr("Information")));
-    pTableWidget->setHorizontalHeaderItem(CN_32,            new QTableWidgetItem(tr("32")));
-    pTableWidget->setHorizontalHeaderItem(CN_64,            new QTableWidgetItem(tr("64")));
-    pTableWidget->setHorizontalHeaderItem(CN_VERSION,       new QTableWidgetItem(tr("Version")));
-    pTableWidget->setHorizontalHeaderItem(CN_DATE,          new QTableWidgetItem(tr("Date")));
-    pTableWidget->setHorizontalHeaderItem(CN_INSTALL,       new QTableWidgetItem(""));
-    pTableWidget->setHorizontalHeaderItem(CN_REMOVE,        new QTableWidgetItem(""));
+    pTableWidget->setHorizontalHeaderItem(CN_NAME, new QTableWidgetItem(tr("Name")));
+    pTableWidget->setHorizontalHeaderItem(CN_INFO, new QTableWidgetItem(tr("Information")));
+    pTableWidget->setHorizontalHeaderItem(CN_32, new QTableWidgetItem(tr("32")));
+    pTableWidget->setHorizontalHeaderItem(CN_64, new QTableWidgetItem(tr("64")));
+    pTableWidget->setHorizontalHeaderItem(CN_VERSION, new QTableWidgetItem(tr("Version")));
+    pTableWidget->setHorizontalHeaderItem(CN_DATE, new QTableWidgetItem(tr("Date")));
+    pTableWidget->setHorizontalHeaderItem(CN_INSTALL, new QTableWidgetItem(""));
+    pTableWidget->setHorizontalHeaderItem(CN_REMOVE, new QTableWidgetItem(""));
 
-    pTableWidget->setColumnWidth(CN_NAME,                   100);
-    pTableWidget->setColumnWidth(CN_INFO,                   300);
-    pTableWidget->setColumnWidth(CN_32,                     10);
-    pTableWidget->setColumnWidth(CN_64,                     10);
-    pTableWidget->setColumnWidth(CN_VERSION,                80);
-    pTableWidget->setColumnWidth(CN_DATE,                   80);
-    pTableWidget->setColumnWidth(CN_INSTALL,                60);
-    pTableWidget->setColumnWidth(CN_REMOVE,                 60);
+    pTableWidget->setColumnWidth(CN_NAME, 100);
+    pTableWidget->setColumnWidth(CN_INFO, 300);
+    pTableWidget->setColumnWidth(CN_32, 10);
+    pTableWidget->setColumnWidth(CN_64, 10);
+    pTableWidget->setColumnWidth(CN_VERSION, 80);
+    pTableWidget->setColumnWidth(CN_DATE, 80);
+    pTableWidget->setColumnWidth(CN_INSTALL, 60);
+    pTableWidget->setColumnWidth(CN_REMOVE, 60);
 
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_NAME,         QHeaderView::ResizeToContents);
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_INFO,         QHeaderView::Stretch);
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_32,           QHeaderView::ResizeToContents);
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_64,           QHeaderView::ResizeToContents);
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_VERSION,      QHeaderView::ResizeToContents);
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_DATE,         QHeaderView::ResizeToContents);
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_INSTALL,      QHeaderView::Interactive);
-    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_REMOVE,       QHeaderView::Interactive);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_NAME, QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_INFO, QHeaderView::Stretch);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_32, QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_64, QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_VERSION, QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_DATE, QHeaderView::ResizeToContents);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_INSTALL, QHeaderView::Interactive);
+    pTableWidget->horizontalHeader()->setSectionResizeMode(CN_REMOVE, QHeaderView::Interactive);
 }
 
-void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *pMData, QMap<QString, Utils::STATUS> *pMapStatus)
-{
-    int nCount=pMData->count();
+void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *pMData, QMap<QString, Utils::STATUS> *pMapStatus) {
+    int nCount = pMData->count();
 
     pTableWidget->setSortingEnabled(false);
 
     pTableWidget->setRowCount(0);
     pTableWidget->setRowCount(nCount);
 
-    QColor colDisabled=QWidget::palette().color(QPalette::Window);
+    QColor colDisabled = QWidget::palette().color(QPalette::Window);
 
-    for(int i=0;i<nCount;i++)
-    {
-        Utils::STATUS status=pMapStatus->value(pMData->at(i).sName);
+    for (int i = 0; i < nCount; i++) {
+        Utils::STATUS status = pMapStatus->value(pMData->at(i).sName);
 
-        QTableWidgetItem *pItemName=new QTableWidgetItem;
-        QTableWidgetItem *pItemInfo=new QTableWidgetItem;
-        QCheckBox *pCheckBoxIs32=new QCheckBox(this);
-        QCheckBox *pCheckBoxIs64=new QCheckBox(this);
-        QTableWidgetItem *pItemVersion=new QTableWidgetItem;
-        QTableWidgetItem *pItemDate=new QTableWidgetItem;
+        QTableWidgetItem *pItemName = new QTableWidgetItem;
+        QTableWidgetItem *pItemInfo = new QTableWidgetItem;
+        QCheckBox *pCheckBoxIs32 = new QCheckBox(this);
+        QCheckBox *pCheckBoxIs64 = new QCheckBox(this);
+        QTableWidgetItem *pItemVersion = new QTableWidgetItem;
+        QTableWidgetItem *pItemDate = new QTableWidgetItem;
 
-        if(status.bUpdate)
-        {
+        if (status.bUpdate) {
             pItemName->setBackgroundColor(colDisabled);
             pItemInfo->setBackgroundColor(colDisabled);
             pItemVersion->setBackgroundColor(colDisabled);
@@ -177,189 +159,164 @@ void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *p
         }
 
         pItemName->setText(pMData->at(i).sName);
-        pItemName->setData(Qt::UserRole,pMData->at(i).sName);       
-        pTableWidget->setItem(i,CN_NAME,pItemName);
+        pItemName->setData(Qt::UserRole, pMData->at(i).sName);
+        pTableWidget->setItem(i, CN_NAME, pItemName);
 
         pItemInfo->setText(pMData->at(i).sInfo);
-        pTableWidget->setItem(i,CN_INFO,pItemInfo);
+        pTableWidget->setItem(i, CN_INFO, pItemInfo);
 
         pCheckBoxIs32->setEnabled(false);
         pCheckBoxIs32->setChecked(pMData->at(i).bIs32);
-        pTableWidget->setCellWidget(i,CN_32,pCheckBoxIs32);
+        pTableWidget->setCellWidget(i, CN_32, pCheckBoxIs32);
 
         pCheckBoxIs64->setEnabled(false);
         pCheckBoxIs64->setChecked(pMData->at(i).bIs64);
-        pTableWidget->setCellWidget(i,CN_64,pCheckBoxIs64);
+        pTableWidget->setCellWidget(i, CN_64, pCheckBoxIs64);
 
         pItemVersion->setText(pMData->at(i).sVersion);
-        pTableWidget->setItem(i,CN_VERSION,pItemVersion);
+        pTableWidget->setItem(i, CN_VERSION, pItemVersion);
 
         pItemDate->setText(pMData->at(i).sDate);
-        pTableWidget->setItem(i,CN_DATE,pItemDate);
+        pTableWidget->setItem(i, CN_DATE, pItemDate);
 
-        if(status.bInstall||status.bUpdate)
-        {
-            QToolButton *pPushButtonInstall=new QToolButton(this);
-            pPushButtonInstall->setProperty("Name",pMData->at(i).sName);
-            connect(pPushButtonInstall,SIGNAL(clicked()),this,SLOT(installButtonSlot()));
+        if (status.bInstall || status.bUpdate) {
+            QToolButton *pPushButtonInstall = new QToolButton(this);
+            pPushButtonInstall->setProperty("Name", pMData->at(i).sName);
+            connect(pPushButtonInstall, SIGNAL(clicked()), this, SLOT(installButtonSlot()));
 
-            if(status.bInstall)
-            {
+            if (status.bInstall) {
                 pPushButtonInstall->setText(tr("Install"));
-            }
-            else if(status.bUpdate)
-            {
+            } else if (status.bUpdate) {
                 pPushButtonInstall->setText(tr("Update"));
             }
 
-            pTableWidget->setCellWidget(i,CN_INSTALL,pPushButtonInstall);
+            pTableWidget->setCellWidget(i, CN_INSTALL, pPushButtonInstall);
         }
 
-        if(status.bRemove)
-        {
-            QToolButton *pPushButtonRemove=new QToolButton(this);
-            pPushButtonRemove->setProperty("Name",pMData->at(i).sName);
-            connect(pPushButtonRemove,SIGNAL(clicked()),this,SLOT(removeButtonSlot()));
+        if (status.bRemove) {
+            QToolButton *pPushButtonRemove = new QToolButton(this);
+            pPushButtonRemove->setProperty("Name", pMData->at(i).sName);
+            connect(pPushButtonRemove, SIGNAL(clicked()), this, SLOT(removeButtonSlot()));
             pPushButtonRemove->setText(tr("Remove"));
-            pTableWidget->setCellWidget(i,CN_REMOVE,pPushButtonRemove);
+            pTableWidget->setCellWidget(i, CN_REMOVE, pPushButtonRemove);
         }
     }
 
     pTableWidget->setSortingEnabled(true);
 }
 
-void GuiMainWindow::createPlugin()
-{
+void GuiMainWindow::createPlugin() {
     DialogCreateModule dialogCreateModule(this);
 
-    connect(&dialogCreateModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+    connect(&dialogCreateModule, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
     dialogCreateModule.exec();
 }
 
-void GuiMainWindow::aboutDialog()
-{
+void GuiMainWindow::aboutDialog() {
     DialogAbout dialogAbout(this);
 
     dialogAbout.exec();
 }
 
-void GuiMainWindow::openPlugin()
-{
-    QString sInitDirectory; // TODO
+void GuiMainWindow::openPlugin() {
+    QString sInitDirectory;  // TODO
 
-    QString sFileName=QFileDialog::getOpenFileName(this,tr("Open plugin"),sInitDirectory,"*.x64dbg.zip");
+    QString sFileName = QFileDialog::getOpenFileName(this, tr("Open plugin"), sInitDirectory, "*.x64dbg.zip");
 
-    if(sFileName!="")
-    {
+    if (sFileName != "") {
         openPlugin(sFileName);
     }
 }
 
-void GuiMainWindow::optionsDialog()
-{
-    DialogOptions dialogOptions(this,&xOptions);
+void GuiMainWindow::optionsDialog() {
+    DialogOptions dialogOptions(this, &xOptions);
 
     dialogOptions.exec();
 
     xOptions.adjustStayOnTop(this);
 }
 
-void GuiMainWindow::exitProgram()
-{
+void GuiMainWindow::exitProgram() {
     this->close();
 }
 
-void GuiMainWindow::errorMessage(QString sMessage)
-{
-    QMessageBox::critical(this,tr("Error"),sMessage);
+void GuiMainWindow::errorMessage(QString sMessage) {
+    QMessageBox::critical(this, tr("Error"), sMessage);
 }
 
-void GuiMainWindow::getModules()
-{
-    modulesData=Utils::getModulesData(xOptions.getDataPath());
+void GuiMainWindow::getModules() {
+    modulesData = Utils::getModulesData(xOptions.getDataPath());
 
-    fillTable(ui->tableWidgetServerList,&(modulesData.listServerList),&(modulesData.mapStatus));
-    fillTable(ui->tableWidgetInstalled,&(modulesData.listInstalled),&(modulesData.mapStatus));
+    fillTable(ui->tableWidgetServerList, &(modulesData.listServerList), &(modulesData.mapStatus));
+    fillTable(ui->tableWidgetInstalled, &(modulesData.listInstalled), &(modulesData.mapStatus));
 
     ui->pushButtonUpdateAllInstalledPlugins->setEnabled(modulesData.listUpdates.count());
 }
 
-void GuiMainWindow::openPlugin(QString sFileName)
-{
-    if(Utils::isPluginValid(sFileName))
-    {
-        DialogInstallModule dialogInstallModule(this,xOptions.getDataPath(),xOptions.getRootPath());
-        connect(&dialogInstallModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+void GuiMainWindow::openPlugin(QString sFileName) {
+    if (Utils::isPluginValid(sFileName)) {
+        DialogInstallModule dialogInstallModule(this, xOptions.getDataPath(), xOptions.getRootPath());
+        connect(&dialogInstallModule, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
         dialogInstallModule.setFileName(sFileName);
         dialogInstallModule.exec();
 
         getModules();
-    }
-    else
-    {
+    } else {
         errorMessage(QString("%1: %2").arg(tr("Invalid plugin file")).arg(sFileName));
     }
 }
 
-void GuiMainWindow::updateJsonList()
-{
-    QString sServerListFileName=Utils::getServerListFileName(xOptions.getDataPath());
-    QString sServerLastestListFileName=Utils::getServerLastestListFileName(xOptions.getDataPath());
+void GuiMainWindow::updateJsonList() {
+    QString sServerListFileName = Utils::getServerListFileName(xOptions.getDataPath());
+    QString sServerLastestListFileName = Utils::getServerLastestListFileName(xOptions.getDataPath());
 
-    Utils::WEB_RECORD record={};
+    Utils::WEB_RECORD record = {};
 
-    record.sFileName=sServerLastestListFileName;
-    record.sLink=xOptions.getJson();
+    record.sFileName = sServerLastestListFileName;
+    record.sLink = xOptions.getJson();
 
-    DialogGetFileFromServerProcess dialogGetFileFromServer(this,QList<Utils::WEB_RECORD>()<<record);
+    DialogGetFileFromServerProcess dialogGetFileFromServer(this, QList<Utils::WEB_RECORD>() << record);
 
-    connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+    connect(&dialogGetFileFromServer, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
     dialogGetFileFromServer.exec();
 
-    if(Utils::isGithubPresent(sServerLastestListFileName))
-    {
-        DialogUpdateGitProcess dialogUpdateGitProcess(this,sServerLastestListFileName);
+    if (Utils::isGithubPresent(sServerLastestListFileName)) {
+        DialogUpdateGitProcess dialogUpdateGitProcess(this, sServerLastestListFileName);
 
-        connect(&dialogUpdateGitProcess,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+        connect(&dialogUpdateGitProcess, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
         dialogUpdateGitProcess.exec();
     }
 
-    Utils::updateServerList(sServerListFileName,sServerLastestListFileName);
+    Utils::updateServerList(sServerListFileName, sServerLastestListFileName);
 }
 
-void GuiMainWindow::installButtonSlot()
-{
-    QToolButton *pPushButton=qobject_cast<QToolButton *>(sender());
-    QString sName=pPushButton->property("Name").toString();
+void GuiMainWindow::installButtonSlot() {
+    QToolButton *pPushButton = qobject_cast<QToolButton *>(sender());
+    QString sName = pPushButton->property("Name").toString();
 
     installPlugin(sName);
 }
 
-void GuiMainWindow::removeButtonSlot()
-{
-    QToolButton *pPushButton=qobject_cast<QToolButton *>(sender());
-    QString sName=pPushButton->property("Name").toString();
+void GuiMainWindow::removeButtonSlot() {
+    QToolButton *pPushButton = qobject_cast<QToolButton *>(sender());
+    QString sName = pPushButton->property("Name").toString();
 
     removePlugin(sName);
 }
 
-void GuiMainWindow::installPlugin(QString sName)
-{
-    if(sName!="")
-    {
-        Utils::MDATA mdata=Utils::getMDataByName(&(modulesData.listServerList),sName);
+void GuiMainWindow::installPlugin(QString sName) {
+    if (sName != "") {
+        Utils::MDATA mdata = Utils::getMDataByName(&(modulesData.listServerList), sName);
 
-        if(mdata.sName!="")
-        {
-            DialogInstallModule dialogInstallModule(this,xOptions.getDataPath(),xOptions.getRootPath());
-            connect(&dialogInstallModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+        if (mdata.sName != "") {
+            DialogInstallModule dialogInstallModule(this, xOptions.getDataPath(), xOptions.getRootPath());
+            connect(&dialogInstallModule, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
-            if(dialogInstallModule.setMData(&mdata))
-            {
+            if (dialogInstallModule.setMData(&mdata)) {
                 dialogInstallModule.exec();
 
                 getModules();
@@ -368,32 +325,27 @@ void GuiMainWindow::installPlugin(QString sName)
     }
 }
 
-void GuiMainWindow::installPlugins(QList<QString> *pListNames)
-{
+void GuiMainWindow::installPlugins(QList<QString> *pListNames) {
     QList<QString> listFileNames;
 
-    int nCount=pListNames->count();
+    int nCount = pListNames->count();
 
-    for(int i=0;i<nCount;i++)
-    {
-        Utils::MDATA mdata=Utils::getMDataByName(&(modulesData.listServerList),pListNames->at(i));
+    for (int i = 0; i < nCount; i++) {
+        Utils::MDATA mdata = Utils::getMDataByName(&(modulesData.listServerList), pListNames->at(i));
 
-        if(mdata.sName!="")
-        {
-            QString sFileName=Utils::getModuleFileName(xOptions.getDataPath(),mdata.sName);
+        if (mdata.sName != "") {
+            QString sFileName = Utils::getModuleFileName(xOptions.getDataPath(), mdata.sName);
 
-            if(XBinary::isFileHashValid(XBinary::HASH_SHA1,sFileName,mdata.sSHA1))
-            {
+            if (XBinary::isFileHashValid(XBinary::HASH_SHA1, sFileName, mdata.sSHA1)) {
                 listFileNames.append(sFileName);
             }
         }
     }
 
-    if(listFileNames.count())
-    {
-        DialogInstallModuleProcess dialogInstallModuleProcess(this,xOptions.getDataPath(),xOptions.getRootPath(),listFileNames);
+    if (listFileNames.count()) {
+        DialogInstallModuleProcess dialogInstallModuleProcess(this, xOptions.getDataPath(), xOptions.getRootPath(), listFileNames);
 
-        connect(&dialogInstallModuleProcess,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+        connect(&dialogInstallModuleProcess, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
         dialogInstallModuleProcess.exec();
 
@@ -401,13 +353,11 @@ void GuiMainWindow::installPlugins(QList<QString> *pListNames)
     }
 }
 
-void GuiMainWindow::removePlugin(QString sName)
-{
-    if(sName!="")
-    {
-        DialogRemoveModule dialogRemoveModule(this,xOptions.getDataPath(),xOptions.getRootPath(),sName);
+void GuiMainWindow::removePlugin(QString sName) {
+    if (sName != "") {
+        DialogRemoveModule dialogRemoveModule(this, xOptions.getDataPath(), xOptions.getRootPath(), sName);
 
-        connect(&dialogRemoveModule,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+        connect(&dialogRemoveModule, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
         dialogRemoveModule.exec();
 
@@ -415,97 +365,82 @@ void GuiMainWindow::removePlugin(QString sName)
     }
 }
 
-void GuiMainWindow::infoPlugin(Utils::MDATA *pMData)
-{
-    if(pMData->sName!="")
-    {
-        DialogInfoModule dialogInfoModule(this,pMData);
+void GuiMainWindow::infoPlugin(Utils::MDATA *pMData) {
+    if (pMData->sName != "") {
+        DialogInfoModule dialogInfoModule(this, pMData);
 
         dialogInfoModule.exec();
     }
 }
 
-void GuiMainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
-{
-    const QMimeData* mimeData=pEvent->mimeData();
+void GuiMainWindow::dragEnterEvent(QDragEnterEvent *pEvent) {
+    const QMimeData *mimeData = pEvent->mimeData();
 
-    if(mimeData->hasUrls())
-    {
-        QList<QUrl> urlList=mimeData->urls();
+    if (mimeData->hasUrls()) {
+        QList<QUrl> urlList = mimeData->urls();
 
-        if(urlList.count())
-        {
-            QString sFileName=urlList.at(0).toLocalFile();
+        if (urlList.count()) {
+            QString sFileName = urlList.at(0).toLocalFile();
 
-            if(Utils::isPluginValid(sFileName))
-            {
+            if (Utils::isPluginValid(sFileName)) {
                 pEvent->acceptProposedAction();
             }
         }
     }
 }
 
-void GuiMainWindow::dragMoveEvent(QDragMoveEvent *pEvent)
-{
+void GuiMainWindow::dragMoveEvent(QDragMoveEvent *pEvent) {
     pEvent->acceptProposedAction();
 }
 
-void GuiMainWindow::dropEvent(QDropEvent *pEvent)
-{
-    const QMimeData* mimeData=pEvent->mimeData();
+void GuiMainWindow::dropEvent(QDropEvent *pEvent) {
+    const QMimeData *mimeData = pEvent->mimeData();
 
-    if(mimeData->hasUrls())
-    {
-        QList<QUrl> urlList=mimeData->urls();
+    if (mimeData->hasUrls()) {
+        QList<QUrl> urlList = mimeData->urls();
 
-        if(urlList.count())
-        {
-            QString sFileName=urlList.at(0).toLocalFile();
+        if (urlList.count()) {
+            QString sFileName = urlList.at(0).toLocalFile();
 
-            sFileName=XBinary::convertFileName(sFileName);
+            sFileName = XBinary::convertFileName(sFileName);
 
             openPlugin(sFileName);
         }
     }
 }
 
-void GuiMainWindow::on_tableWidgetServerList_customContextMenuRequested(const QPoint &pos)
-{
-    if(ui->tableWidgetServerList->selectedItems().count())
-    {
+void GuiMainWindow::on_tableWidgetServerList_customContextMenuRequested(const QPoint &pos) {
+    if (ui->tableWidgetServerList->selectedItems().count()) {
         QMenu contextMenu(this);
 
-        QAction actionInfo(tr("Info"),this);
-        connect(&actionInfo,SIGNAL(triggered()),this,SLOT(_infoPluginServerList()));
+        QAction actionInfo(tr("Info"), this);
+        connect(&actionInfo, SIGNAL(triggered()), this, SLOT(_infoPluginServerList()));
 
-        QAction actionInstall(tr("Install"),this);
-        connect(&actionInstall,SIGNAL(triggered()),this,SLOT(_installPluginServerList()));
+        QAction actionInstall(tr("Install"), this);
+        connect(&actionInstall, SIGNAL(triggered()), this, SLOT(_installPluginServerList()));
 
-        QAction actionUpdate(tr("Update"),this);
-        connect(&actionUpdate,SIGNAL(triggered()),this,SLOT(_installPluginServerList()));
+        QAction actionUpdate(tr("Update"), this);
+        connect(&actionUpdate, SIGNAL(triggered()), this, SLOT(_installPluginServerList()));
 
-        QAction actionRemove(tr("Remove"),this);
-        connect(&actionRemove,SIGNAL(triggered()),this,SLOT(_removePluginServerList()));
+        QAction actionRemove(tr("Remove"), this);
+        connect(&actionRemove, SIGNAL(triggered()), this, SLOT(_removePluginServerList()));
 
         contextMenu.addAction(&actionInfo);
         contextMenu.addSeparator();
 
-        QString sName=ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
+        QString sName = ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
 
-        Utils::STATUS status=modulesData.mapStatus.value(sName);
+        Utils::STATUS status = modulesData.mapStatus.value(sName);
 
-        if(status.bInstall)
-        {
+        if (status.bInstall) {
             contextMenu.addAction(&actionInstall);
         }
 
-        if(status.bUpdate)
-        {
+        if (status.bUpdate) {
             contextMenu.addAction(&actionUpdate);
         }
 
-        if(status.bRemove)
-        {
+        if (status.bRemove) {
             contextMenu.addAction(&actionRemove);
         }
 
@@ -513,43 +448,38 @@ void GuiMainWindow::on_tableWidgetServerList_customContextMenuRequested(const QP
     }
 }
 
-void GuiMainWindow::on_tableWidgetInstalled_customContextMenuRequested(const QPoint &pos)
-{
-    if(ui->tableWidgetInstalled->selectedItems().count())
-    {
+void GuiMainWindow::on_tableWidgetInstalled_customContextMenuRequested(const QPoint &pos) {
+    if (ui->tableWidgetInstalled->selectedItems().count()) {
         QMenu contextMenu(this);
 
-        QAction actionInfo(tr("Info"),this);
-        connect(&actionInfo,SIGNAL(triggered()),this,SLOT(_infoPluginInstalled()));
+        QAction actionInfo(tr("Info"), this);
+        connect(&actionInfo, SIGNAL(triggered()), this, SLOT(_infoPluginInstalled()));
 
-        QAction actionInstall(tr("Install"),this);
-        connect(&actionInstall,SIGNAL(triggered()),this,SLOT(_installPluginInstalled()));
+        QAction actionInstall(tr("Install"), this);
+        connect(&actionInstall, SIGNAL(triggered()), this, SLOT(_installPluginInstalled()));
 
-        QAction actionUpdate(tr("Update"),this);
-        connect(&actionUpdate,SIGNAL(triggered()),this,SLOT(_installPluginInstalled()));
+        QAction actionUpdate(tr("Update"), this);
+        connect(&actionUpdate, SIGNAL(triggered()), this, SLOT(_installPluginInstalled()));
 
-        QAction actionRemove(tr("Remove"),this);
-        connect(&actionRemove,SIGNAL(triggered()),this,SLOT(_removePluginInstalled()));
+        QAction actionRemove(tr("Remove"), this);
+        connect(&actionRemove, SIGNAL(triggered()), this, SLOT(_removePluginInstalled()));
 
         contextMenu.addAction(&actionInfo);
         contextMenu.addSeparator();
 
-        QString sName=ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
+        QString sName = ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
 
-        Utils::STATUS status=modulesData.mapStatus.value(sName);
+        Utils::STATUS status = modulesData.mapStatus.value(sName);
 
-        if(status.bInstall)
-        {
+        if (status.bInstall) {
             contextMenu.addAction(&actionInstall);
         }
 
-        if(status.bUpdate)
-        {
+        if (status.bUpdate) {
             contextMenu.addAction(&actionUpdate);
         }
 
-        if(status.bRemove)
-        {
+        if (status.bRemove) {
             contextMenu.addAction(&actionRemove);
         }
 
@@ -557,178 +487,142 @@ void GuiMainWindow::on_tableWidgetInstalled_customContextMenuRequested(const QPo
     }
 }
 
-void GuiMainWindow::_infoPluginServerList()
-{
-    if(ui->tableWidgetServerList->selectedItems().count())
-    {
-        QString sName=ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
+void GuiMainWindow::_infoPluginServerList() {
+    if (ui->tableWidgetServerList->selectedItems().count()) {
+        QString sName = ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
 
-        Utils::MDATA mdata=Utils::getMDataByName(&(modulesData.listServerList),sName);
+        Utils::MDATA mdata = Utils::getMDataByName(&(modulesData.listServerList), sName);
 
         infoPlugin(&mdata);
     }
 }
 
-void GuiMainWindow::_installPluginServerList()
-{
-    if(ui->tableWidgetServerList->selectedItems().count())
-    {
-        QString sName=ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
+void GuiMainWindow::_installPluginServerList() {
+    if (ui->tableWidgetServerList->selectedItems().count()) {
+        QString sName = ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
 
         installPlugin(sName);
     }
 }
 
-void GuiMainWindow::_removePluginServerList()
-{
-    if(ui->tableWidgetServerList->selectedItems().count())
-    {
-        QString sName=ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
+void GuiMainWindow::_removePluginServerList() {
+    if (ui->tableWidgetServerList->selectedItems().count()) {
+        QString sName = ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
 
         removePlugin(sName);
     }
 }
 
-void GuiMainWindow::_infoPluginInstalled()
-{
-    if(ui->tableWidgetInstalled->selectedItems().count())
-    {
-        QString sName=ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
+void GuiMainWindow::_infoPluginInstalled() {
+    if (ui->tableWidgetInstalled->selectedItems().count()) {
+        QString sName = ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
 
-        Utils::MDATA mdata=Utils::getMDataByName(&(modulesData.listInstalled),sName);
+        Utils::MDATA mdata = Utils::getMDataByName(&(modulesData.listInstalled), sName);
 
         infoPlugin(&mdata);
     }
 }
 
-void GuiMainWindow::_installPluginInstalled()
-{
-    if(ui->tableWidgetInstalled->selectedItems().count())
-    {
-        QString sName=ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
+void GuiMainWindow::_installPluginInstalled() {
+    if (ui->tableWidgetInstalled->selectedItems().count()) {
+        QString sName = ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
 
         installPlugin(sName);
     }
 }
 
-void GuiMainWindow::_removePluginInstalled()
-{
-    if(ui->tableWidgetInstalled->selectedItems().count())
-    {
-        QString sName=ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
+void GuiMainWindow::_removePluginInstalled() {
+    if (ui->tableWidgetInstalled->selectedItems().count()) {
+        QString sName = ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
 
         removePlugin(sName);
     }
 }
 
-void GuiMainWindow::updateServerList()
-{
+void GuiMainWindow::updateServerList() {
     updateJsonList();
 
     getModules();
 }
 
-void GuiMainWindow::updateAllInstalledPlugins()
-{
-    DialogGetFileFromServerProcess dialogGetFileFromServer(this,modulesData.listUpdates);
+void GuiMainWindow::updateAllInstalledPlugins() {
+    DialogGetFileFromServerProcess dialogGetFileFromServer(this, modulesData.listUpdates);
 
-    connect(&dialogGetFileFromServer,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
+    connect(&dialogGetFileFromServer, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
     dialogGetFileFromServer.exec();
 
-    QList<QString> listNames=Utils::getNamesFromWebRecords(&modulesData.listUpdates);
+    QList<QString> listNames = Utils::getNamesFromWebRecords(&modulesData.listUpdates);
 
     installPlugins(&listNames);
 }
 
-void GuiMainWindow::checkForUpdates()
-{
+void GuiMainWindow::checkForUpdates() {
     QNetworkAccessManager manager(this);
     QNetworkRequest request(QUrl(X_SERVERVERSION));
-    QNetworkReply *pReply=manager.get(request);
+    QNetworkReply *pReply = manager.get(request);
     QEventLoop loop;
-    QObject::connect(pReply,SIGNAL(finished()),&loop,SLOT(quit()));
+    QObject::connect(pReply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
 
-    if(pReply->error()==QNetworkReply::NoError)
-    {
-        if(pReply->bytesAvailable())
-        {
-            QByteArray baData=pReply->readAll();
-            QString sVersion=QString(baData.data());
+    if (pReply->error() == QNetworkReply::NoError) {
+        if (pReply->bytesAvailable()) {
+            QByteArray baData = pReply->readAll();
+            QString sVersion = QString(baData.data());
 
-            if(QCoreApplication::applicationVersion().toDouble()<sVersion.toDouble())
-            {
-                if(QMessageBox::information(this,tr("Update information"),
-                                            QString("%1\r\n\r\n%2\r\n\r\n%3")
-                                            .arg(tr("New version available"))
-                                            .arg(sVersion)
-                                            .arg(tr("Go to download page?")),
-                                            QMessageBox::Yes,QMessageBox::No)==QMessageBox::Yes)
-                {
+            if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
+                if (QMessageBox::information(this, tr("Update information"),
+                                             QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available")).arg(sVersion).arg(tr("Go to download page?")), QMessageBox::Yes,
+                                             QMessageBox::No) == QMessageBox::Yes) {
                     QDesktopServices::openUrl(QUrl(X_HOMEPAGE));
                 }
-            }
-            else
-            {
-                QMessageBox::information(this,tr("Update information"),tr("No update available"));
+            } else {
+                QMessageBox::information(this, tr("Update information"), tr("No update available"));
             }
         }
-    }
-    else
-    {
-        QMessageBox::critical(this,tr("Network error"),pReply->errorString());
+    } else {
+        QMessageBox::critical(this, tr("Network error"), pReply->errorString());
     }
 
     delete pReply;
 }
 
-void GuiMainWindow::on_pushButtonUpdateServerList_clicked()
-{
+void GuiMainWindow::on_pushButtonUpdateServerList_clicked() {
     updateServerList();
 }
 
-void GuiMainWindow::on_pushButtonUpdateAllInstalledPlugins_clicked()
-{
+void GuiMainWindow::on_pushButtonUpdateAllInstalledPlugins_clicked() {
     updateAllInstalledPlugins();
 }
 
-void GuiMainWindow::on_actionExit_triggered()
-{
+void GuiMainWindow::on_actionExit_triggered() {
     exitProgram();
 }
 
-void GuiMainWindow::on_actionAbout_triggered()
-{
+void GuiMainWindow::on_actionAbout_triggered() {
     aboutDialog();
 }
 
-void GuiMainWindow::on_actionOpen_triggered()
-{
+void GuiMainWindow::on_actionOpen_triggered() {
     openPlugin();
 }
 
-void GuiMainWindow::on_actionCreate_triggered()
-{
+void GuiMainWindow::on_actionCreate_triggered() {
     createPlugin();
 }
 
-void GuiMainWindow::on_actionOptions_triggered()
-{
+void GuiMainWindow::on_actionOptions_triggered() {
     optionsDialog();
 }
 
-void GuiMainWindow::on_actionUpdate_server_list_triggered()
-{
+void GuiMainWindow::on_actionUpdate_server_list_triggered() {
     updateServerList();
 }
 
-void GuiMainWindow::on_actionUpdate_all_installed_plugins_triggered()
-{
+void GuiMainWindow::on_actionUpdate_all_installed_plugins_triggered() {
     updateAllInstalledPlugins();
 }
 
-void GuiMainWindow::on_actionCheck_for_updates_triggered()
-{
+void GuiMainWindow::on_actionCheck_for_updates_triggered() {
     checkForUpdates();
 }

@@ -23,15 +23,14 @@
 
 #include <QObject>
 
-class ConsoleOutput : public QObject
-{
+class ConsoleOutput : public QObject {
     Q_OBJECT
 public:
-    explicit ConsoleOutput(QObject *pParent=nullptr);
+    explicit ConsoleOutput(QObject *pParent = nullptr);
 
 public slots:
     void infoMessage(QString sText);
     void errorMessage(QString sText);
 };
 
-#endif // CONSOLEOUTPUT_H
+#endif  // CONSOLEOUTPUT_H

@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QThread>
 #include <QTimer>
+
 #include "../installmoduleprocess.h"
 #include "../utils.h"
 
@@ -31,8 +32,7 @@ namespace Ui {
 class DialogInstallModuleProcess;
 }
 
-class DialogInstallModuleProcess : public QDialog
-{
+class DialogInstallModuleProcess : public QDialog {
     Q_OBJECT
 
 public:
@@ -58,4 +58,4 @@ private:
     QTimer *pTimer;
 };
 
-#endif // DIALOGINSTALLMODULEPROCESS_H
+#endif  // DIALOGINSTALLMODULEPROCESS_H

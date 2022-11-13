@@ -20,68 +20,57 @@
 //
 #include "createmoduleprocess.h"
 
-CreateModuleProcess::CreateModuleProcess(QObject *pParent) : QObject(pParent)
-{
-    bIsStop=false;
-    currentStats={};
+CreateModuleProcess::CreateModuleProcess(QObject *pParent) : QObject(pParent) {
+    bIsStop = false;
+    currentStats = {};
 }
 
-void CreateModuleProcess::setData(Utils::MDATA *pMData, bool bCreateInfoFile)
-{
-    this->pMData=pMData;
-    this->bCreateInfoFile=bCreateInfoFile;
+void CreateModuleProcess::setData(Utils::MDATA *pMData, bool bCreateInfoFile) {
+    this->pMData = pMData;
+    this->bCreateInfoFile = bCreateInfoFile;
 }
 
-void CreateModuleProcess::stop()
-{
-    bIsStop=true;
+void CreateModuleProcess::stop() {
+    bIsStop = true;
 }
 
-Utils::STATS CreateModuleProcess::getCurrentStats()
-{
+Utils::STATS CreateModuleProcess::getCurrentStats() {
     return currentStats;
 }
 
-void CreateModuleProcess::process()
-{
+void CreateModuleProcess::process() {
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 
-    bIsStop=false;
+    bIsStop = false;
 
     QList<Utils::FILE_RECORD> listFileRecords;
     QList<Utils::DIRECTORY_RECORD> listDirectoryRecords;
 
-    QList<Utils::RECORD> listRecords=Utils::getRecords(XBinary::convertPathName(pMData->sRoot));
+    QList<Utils::RECORD> listRecords = Utils::getRecords(XBinary::convertPathName(pMData->sRoot));
 
-    QString sBundleFileName=pMData->sBundleFileName;
-    QString sBundleInfoFileName=pMData->sBundleFileName+".json";
+    QString sBundleFileName = pMData->sBundleFileName;
+    QString sBundleInfoFileName = pMData->sBundleFileName + ".json";
 
-    if(pMData->sDate=="")
-    {
-        pMData->sDate=QDate::currentDate().toString("yyyy-MM-dd");
+    if (pMData->sDate == "") {
+        pMData->sDate = QDate::currentDate().toString("yyyy-MM-dd");
     }
 
-    bool bSuccess=true;
+    bool bSuccess = true;
 
-    if(XBinary::isFileExists(sBundleFileName))
-    {
-        bSuccess=XBinary::removeFile(sBundleFileName);
+    if (XBinary::isFileExists(sBundleFileName)) {
+        bSuccess = XBinary::removeFile(sBundleFileName);
 
-        if(!bSuccess)
-        {
+        if (!bSuccess) {
             emit errorMessage(QString("%1: %2").arg(tr("Cannot remove")).arg(sBundleFileName));
         }
     }
 
-    if(bCreateInfoFile)
-    {
-        if(XBinary::isFileExists(sBundleInfoFileName))
-        {
-            bSuccess=XBinary::removeFile(sBundleInfoFileName);
+    if (bCreateInfoFile) {
+        if (XBinary::isFileExists(sBundleInfoFileName)) {
+            bSuccess = XBinary::removeFile(sBundleInfoFileName);
 
-            if(!bSuccess)
-            {
+            if (!bSuccess) {
                 emit errorMessage(QString("%1: %2").arg(tr("Cannot remove")).arg(sBundleFileName));
             }
         }
@@ -89,27 +78,23 @@ void CreateModuleProcess::process()
 
     QFileInfo fi(sBundleFileName);
 
-    pMData->sSrc=fi.fileName();
+    pMData->sSrc = fi.fileName();
 
-    pMData->nSize=0;
-    pMData->nCompressedSize=0;
-    currentStats.nTotalFile=listRecords.count();
+    pMData->nSize = 0;
+    pMData->nCompressedSize = 0;
+    currentStats.nTotalFile = listRecords.count();
 
-    if(bSuccess)
-    {
+    if (bSuccess) {
         QFile fileResult;
 
         fileResult.setFileName(sBundleFileName);
 
-        if(fileResult.open(QIODevice::ReadWrite))
-        {
+        if (fileResult.open(QIODevice::ReadWrite)) {
             QList<XZip::ZIPFILE_RECORD> listZipFiles;
 
-            for(int i=0;(i<currentStats.nTotalFile)&&(!bIsStop);i++)
-            {       
-                if(listRecords.at(i).bIsFile)
-                {
-                    currentStats.sFile=QString("%1: %2").arg(tr("Add file")).arg(listRecords.at(i).sPath);
+            for (int i = 0; (i < currentStats.nTotalFile) && (!bIsStop); i++) {
+                if (listRecords.at(i).bIsFile) {
+                    currentStats.sFile = QString("%1: %2").arg(tr("Add file")).arg(listRecords.at(i).sPath);
 
                     emit infoMessage(currentStats.sFile);
 
@@ -117,91 +102,82 @@ void CreateModuleProcess::process()
 
                     file.setFileName(listRecords.at(i).sFullPath);
 
-                    if(file.open(QIODevice::ReadOnly))
-                    {
-                        Utils::FILE_RECORD fileRecord={};
+                    if (file.open(QIODevice::ReadOnly)) {
+                        Utils::FILE_RECORD fileRecord = {};
 
-                        fileRecord.sFullPath=listRecords.at(i).sFullPath;
-                        fileRecord.sPath=listRecords.at(i).sPath;
-                        fileRecord.sSHA1=XBinary::getHash(XBinary::HASH_SHA1,&file);
+                        fileRecord.sFullPath = listRecords.at(i).sFullPath;
+                        fileRecord.sPath = listRecords.at(i).sPath;
+                        fileRecord.sSHA1 = XBinary::getHash(XBinary::HASH_SHA1, &file);
 
-                        XZip::ZIPFILE_RECORD zipFileRecord={};
+                        XZip::ZIPFILE_RECORD zipFileRecord = {};
 
-                        zipFileRecord.sFileName=QString("files/")+fileRecord.sPath;
-                        zipFileRecord.method=XZip::METHOD_DEFLATE;
+                        zipFileRecord.sFileName = QString("files/") + fileRecord.sPath;
+                        zipFileRecord.method = XZip::METHOD_DEFLATE;
 
-                        XZip::addLocalFileRecord(&file,&fileResult,&zipFileRecord); // TODO handle errors
+                        XZip::addLocalFileRecord(&file, &fileResult, &zipFileRecord);  // TODO handle errors
 
-                        pMData->nSize+=zipFileRecord.nUncompressedSize;
-                        pMData->nCompressedSize+=zipFileRecord.nCompressedSize;
+                        pMData->nSize += zipFileRecord.nUncompressedSize;
+                        pMData->nCompressedSize += zipFileRecord.nCompressedSize;
 
                         file.close();
 
                         listFileRecords.append(fileRecord);
                         listZipFiles.append(zipFileRecord);
                     }
-                }
-                else
-                {
-                    if(listRecords.at(i).sPath.toLower()=="x32")
-                    {
-                        pMData->bIs32=true;
+                } else {
+                    if (listRecords.at(i).sPath.toLower() == "x32") {
+                        pMData->bIs32 = true;
                     }
 
-                    if(listRecords.at(i).sPath.toLower()=="x64")
-                    {
-                        pMData->bIs64=true;
+                    if (listRecords.at(i).sPath.toLower() == "x64") {
+                        pMData->bIs64 = true;
                     }
 
-                    currentStats.sFile=QString("%1: %2").arg(tr("Add directory")).arg(listRecords.at(i).sPath);
+                    currentStats.sFile = QString("%1: %2").arg(tr("Add directory")).arg(listRecords.at(i).sPath);
 
-                    Utils::DIRECTORY_RECORD directoryRecord={};
+                    Utils::DIRECTORY_RECORD directoryRecord = {};
 
-                    directoryRecord.sFullPath=listRecords.at(i).sFullPath;
-                    directoryRecord.sPath=listRecords.at(i).sPath;
+                    directoryRecord.sFullPath = listRecords.at(i).sFullPath;
+                    directoryRecord.sPath = listRecords.at(i).sPath;
 
                     listDirectoryRecords.append(directoryRecord);
                 }
 
-                currentStats.nCurrentFile=i+1;
+                currentStats.nCurrentFile = i + 1;
             }
 
-            QByteArray baInfoFile=Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords);
+            QByteArray baInfoFile = Utils::createPluginInfo(pMData, &listFileRecords, &listDirectoryRecords);
 
             QBuffer bufferInfoFile(&baInfoFile);
 
-            if(bufferInfoFile.open(QIODevice::ReadOnly))
-            {
-                XZip::ZIPFILE_RECORD zipFileRecord={};
+            if (bufferInfoFile.open(QIODevice::ReadOnly)) {
+                XZip::ZIPFILE_RECORD zipFileRecord = {};
 
-                zipFileRecord.sFileName="plugin_info.json";
-                zipFileRecord.method=XZip::METHOD_DEFLATE;
+                zipFileRecord.sFileName = "plugin_info.json";
+                zipFileRecord.method = XZip::METHOD_DEFLATE;
 
-                XZip::addLocalFileRecord(&bufferInfoFile,&fileResult,&zipFileRecord);
+                XZip::addLocalFileRecord(&bufferInfoFile, &fileResult, &zipFileRecord);
 
-                pMData->nSize+=zipFileRecord.nUncompressedSize;
-                pMData->nCompressedSize+=zipFileRecord.nCompressedSize;
+                pMData->nSize += zipFileRecord.nUncompressedSize;
+                pMData->nCompressedSize += zipFileRecord.nCompressedSize;
 
                 listZipFiles.append(zipFileRecord);
 
                 bufferInfoFile.close();
             }
 
-            if(!bIsStop)
-            {
-                currentStats.sFile=tr("Add central directory");
+            if (!bIsStop) {
+                currentStats.sFile = tr("Add central directory");
 
-                XZip::addCentralDirectory(&fileResult,&listZipFiles,QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
+                XZip::addCentralDirectory(&fileResult, &listZipFiles, QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
             }
 
             fileResult.close();
 
-            pMData->sSHA1=XBinary::getHash(XBinary::HASH_SHA1,sBundleFileName);
+            pMData->sSHA1 = XBinary::getHash(XBinary::HASH_SHA1, sBundleFileName);
 
-            if(bCreateInfoFile)
-            {
-                if(!XBinary::writeToFile(sBundleInfoFileName,Utils::createPluginInfo(pMData,&listFileRecords,&listDirectoryRecords)))
-                {
+            if (bCreateInfoFile) {
+                if (!XBinary::writeToFile(sBundleInfoFileName, Utils::createPluginInfo(pMData, &listFileRecords, &listDirectoryRecords))) {
                     emit errorMessage(QString("%1: %2").arg(tr("Cannot write data to file")).arg(sBundleInfoFileName));
                 }
             }

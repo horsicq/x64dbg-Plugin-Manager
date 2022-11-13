@@ -21,20 +21,20 @@
 #ifndef DIALOGCREATEMODULE_H
 #define DIALOGCREATEMODULE_H
 
+#include <QDate>
 #include <QDialog>
 #include <QFileDialog>
-#include <QStandardPaths>
 #include <QSettings>
-#include <QDate>
-#include "dialogcreatemoduleprocess.h"
+#include <QStandardPaths>
+
 #include "../utils.h"
+#include "dialogcreatemoduleprocess.h"
 
 namespace Ui {
 class DialogCreateModule;
 }
 
-class DialogCreateModule : public QDialog
-{
+class DialogCreateModule : public QDialog {
     Q_OBJECT
 
 public:
@@ -65,4 +65,4 @@ private:
     Utils::MDATA mdata;
 };
 
-#endif // DIALOGCREATEMODULE_H
+#endif  // DIALOGCREATEMODULE_H

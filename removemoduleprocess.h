@@ -21,16 +21,16 @@
 #ifndef REMOVEMODULEPROCESS_H
 #define REMOVEMODULEPROCESS_H
 
-#include <QObject>
 #include <QElapsedTimer>
+#include <QObject>
+
 #include "utils.h"
 
-class RemoveModuleProcess : public QObject
-{
+class RemoveModuleProcess : public QObject {
     Q_OBJECT
 
 public:
-    explicit RemoveModuleProcess(QObject *pParent=nullptr);
+    explicit RemoveModuleProcess(QObject *pParent = nullptr);
     void setData(QString sDataPath, QString sRootPath, QList<QString> listModuleNames);
     void stop();
     Utils::STATS getCurrentStats();
@@ -51,4 +51,4 @@ private:
     Utils::STATS currentStats;
 };
 
-#endif // REMOVEMODULEPROCESS_H
+#endif  // REMOVEMODULEPROCESS_H

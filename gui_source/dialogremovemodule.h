@@ -22,19 +22,19 @@
 #define DIALOGREMOVEMODULE_H
 
 #include <QDialog>
-#include "dialogremovemoduleprocess.h"
+
 #include "../utils.h"
+#include "dialogremovemoduleprocess.h"
 
 namespace Ui {
 class DialogRemoveModule;
 }
 
-class DialogRemoveModule : public QDialog
-{
+class DialogRemoveModule : public QDialog {
     Q_OBJECT
 
 public:
-    explicit DialogRemoveModule(QWidget *pParent,QString sDataPath, QString sRootPath, QString sModuleName);
+    explicit DialogRemoveModule(QWidget *pParent, QString sDataPath, QString sRootPath, QString sModuleName);
     ~DialogRemoveModule();
 
 private slots:
@@ -51,4 +51,4 @@ private:
     QString sModuleName;
 };
 
-#endif // DIALOGREMOVEMODULE_H
+#endif  // DIALOGREMOVEMODULE_H

@@ -21,18 +21,18 @@
 #ifndef CREATEMODULEPROCESS_H
 #define CREATEMODULEPROCESS_H
 
-#include <QObject>
 #include <QElapsedTimer>
+#include <QObject>
+
 #include "utils.h"
 #include "xzip.h"
 
-class CreateModuleProcess : public QObject
-{
+class CreateModuleProcess : public QObject {
     Q_OBJECT
 
 public:
-    explicit CreateModuleProcess(QObject *pParent=nullptr);
-    void setData(Utils::MDATA *pMData,bool bCreateInfoFile);
+    explicit CreateModuleProcess(QObject *pParent = nullptr);
+    void setData(Utils::MDATA *pMData, bool bCreateInfoFile);
     void stop();
     Utils::STATS getCurrentStats();
 
@@ -51,4 +51,4 @@ private:
     bool bCreateInfoFile;
 };
 
-#endif // CREATEMODULEPROCESS_H
+#endif  // CREATEMODULEPROCESS_H

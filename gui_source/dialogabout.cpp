@@ -19,12 +19,10 @@
 // SOFTWARE.
 //
 #include "dialogabout.h"
+
 #include "ui_dialogabout.h"
 
-DialogAbout::DialogAbout(QWidget *pParent) :
-    QDialog(pParent),
-    ui(new Ui::DialogAbout)
-{
+DialogAbout::DialogAbout(QWidget *pParent) : QDialog(pParent), ui(new Ui::DialogAbout) {
     ui->setupUi(this);
 
     ui->labelInfo->setText(QString("<html><head/><body><p align=\"center\">"
@@ -35,15 +33,15 @@ DialogAbout::DialogAbout(QWidget *pParent) :
                                    "<span style=\" text-decoration: underline; color:#0000ff;\">http://ntinfo.biz</span>"
                                    "</a></p><p align=\"center\"><span style=\" font-weight:600;\">Bugerports: </span>"
                                    "<a href=\"mailto:horsicq@gmail.com\"><span style=\" text-decoration: underline; color:#0000ff;\">"
-                                   "horsicq@gmail.com</span></a></p></body></html>").arg(X_APPLICATIONVERSION).arg(__DATE__));
+                                   "horsicq@gmail.com</span></a></p></body></html>")
+                               .arg(X_APPLICATIONVERSION)
+                               .arg(__DATE__));
 }
 
-DialogAbout::~DialogAbout()
-{
+DialogAbout::~DialogAbout() {
     delete ui;
 }
 
-void DialogAbout::on_pushButtonOK_clicked()
-{
+void DialogAbout::on_pushButtonOK_clicked() {
     this->close();
 }

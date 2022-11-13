@@ -22,18 +22,18 @@
 #define DIALOGINSTALLMODULE_H
 
 #include <QDialog>
-#include "dialoginstallmoduleprocess.h"
+
+#include "../utils.h"
 #include "dialogconvertprocess.h"
 #include "dialogcreatemoduleprocess.h"
 #include "dialoggetfilefromserverprocess.h"
-#include "../utils.h"
+#include "dialoginstallmoduleprocess.h"
 
 namespace Ui {
 class DialogInstallModule;
 }
 
-class DialogInstallModule : public QDialog
-{
+class DialogInstallModule : public QDialog {
     Q_OBJECT
 
 public:
@@ -58,4 +58,4 @@ private:
     QString sModuleFileName;
 };
 
-#endif // DIALOGINSTALLMODULE_H
+#endif  // DIALOGINSTALLMODULE_H

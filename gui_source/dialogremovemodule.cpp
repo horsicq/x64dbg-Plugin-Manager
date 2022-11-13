@@ -19,40 +19,35 @@
 // SOFTWARE.
 //
 #include "dialogremovemodule.h"
+
 #include "ui_dialogremovemodule.h"
 
-DialogRemoveModule::DialogRemoveModule(QWidget *pParent, QString sDataPath, QString sRootPath, QString sModuleName) :
-    QDialog(pParent),
-    ui(new Ui::DialogRemoveModule)
-{
+DialogRemoveModule::DialogRemoveModule(QWidget *pParent, QString sDataPath, QString sRootPath, QString sModuleName) : QDialog(pParent), ui(new Ui::DialogRemoveModule) {
     ui->setupUi(this);
 
-    this->sDataPath=sDataPath;
-    this->sRootPath=sRootPath;
-    this->sModuleName=sModuleName;
+    this->sDataPath = sDataPath;
+    this->sRootPath = sRootPath;
+    this->sModuleName = sModuleName;
 
-    QString sFileName=Utils::getInstalledJsonFileName(sDataPath,sModuleName);
+    QString sFileName = Utils::getInstalledJsonFileName(sDataPath, sModuleName);
 
-    Utils::MDATA mdata=Utils::getMDataFromJSONFile(sFileName);
+    Utils::MDATA mdata = Utils::getMDataFromJSONFile(sFileName);
 
     ui->widgetInfo->setData(&mdata);
 }
 
-DialogRemoveModule::~DialogRemoveModule()
-{
+DialogRemoveModule::~DialogRemoveModule() {
     delete ui;
 }
 
-void DialogRemoveModule::on_pushButtonCancel_clicked()
-{
+void DialogRemoveModule::on_pushButtonCancel_clicked() {
     this->close();
 }
 
-void DialogRemoveModule::on_pushButtonOK_clicked()
-{
-    DialogRemoveModuleProcess drmp(this,sDataPath,sRootPath,QList<QString>()<<sModuleName);
+void DialogRemoveModule::on_pushButtonOK_clicked() {
+    DialogRemoveModuleProcess drmp(this, sDataPath, sRootPath, QList<QString>() << sModuleName);
 
-    connect(&drmp,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+    connect(&drmp, SIGNAL(errorMessage(QString)), this, SIGNAL(errorMessage(QString)));
 
     drmp.exec();
 

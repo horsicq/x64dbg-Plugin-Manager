@@ -21,17 +21,17 @@
 #ifndef CONVERTPROCESS_H
 #define CONVERTPROCESS_H
 
-#include <QObject>
 #include <QElapsedTimer>
+#include <QObject>
+
 #include "utils.h"
 #include "xzip.h"
 
-class ConvertProcess : public QObject
-{
+class ConvertProcess : public QObject {
     Q_OBJECT
 public:
-    explicit ConvertProcess(QObject *pParent=nullptr);
-    void setData(Utils::MDATA *pMData,QString sDataPath);
+    explicit ConvertProcess(QObject *pParent = nullptr);
+    void setData(Utils::MDATA *pMData, QString sDataPath);
     void stop();
     Utils::STATS getCurrentStats();
 
@@ -50,4 +50,4 @@ private:
     QString sDataPath;
 };
 
-#endif // CONVERTPROCESS_H
+#endif  // CONVERTPROCESS_H

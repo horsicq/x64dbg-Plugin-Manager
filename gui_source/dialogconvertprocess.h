@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QThread>
 #include <QTimer>
+
 #include "../convertprocess.h"
 #include "../utils.h"
 
@@ -31,8 +32,7 @@ namespace Ui {
 class DialogConvertProcess;
 }
 
-class DialogConvertProcess : public QDialog
-{
+class DialogConvertProcess : public QDialog {
     Q_OBJECT
 
 public:
@@ -57,4 +57,4 @@ private:
     QTimer *pTimer;
 };
 
-#endif // DIALOGCONVERTPROCESS_H
+#endif  // DIALOGCONVERTPROCESS_H

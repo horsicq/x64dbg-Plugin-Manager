@@ -21,25 +21,23 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <QObject>
-#include <QFileInfo>
 #include <QDir>
+#include <QFileInfo>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
+#include <QObject>
 #include <QSettings>
+
 #include "global.h"
 #include "xzip.h"
 
-class Utils : public QObject
-{
+class Utils : public QObject {
     Q_OBJECT
 
 public:
-
-    enum ACTION
-    {
-        ACTION_UNKNOWN=0,
+    enum ACTION {
+        ACTION_UNKNOWN = 0,
         ACTION_COPYFILE,
         ACTION_REMOVEFILE,
         ACTION_REMOVEDIRECTORYIFEMPTY,
@@ -48,15 +46,13 @@ public:
         ACTION_UNPACKFILE
     };
 
-    struct WEB_RECORD
-    {
+    struct WEB_RECORD {
         QString sName;
         QString sFileName;
         QString sLink;
     };
 
-    struct STATUS
-    {
+    struct STATUS {
         bool bInstall;
         bool bUpdate;
         bool bRemove;
@@ -67,8 +63,7 @@ public:
         WEB_RECORD webRecord;
     };
 
-    struct STATS
-    {
+    struct STATS {
         QString sModule;
         qint64 nTotalModule;
         qint64 nCurrentModule;
@@ -79,15 +74,13 @@ public:
         qint64 nCurrentBytes;
     };
 
-    struct RECORD
-    {
+    struct RECORD {
         QString sFullPath;
         QString sPath;
         bool bIsFile;
     };
 
-    struct HANDLE_RECORD
-    {
+    struct HANDLE_RECORD {
         QString sSrc;
         QString sPath;
         QString sSHA1;
@@ -95,8 +88,7 @@ public:
         ACTION action;
     };
 
-    struct MDATA
-    {
+    struct MDATA {
         QString sName;
         QString sVersion;
         bool bIs32;
@@ -118,56 +110,53 @@ public:
         QList<QString> listDownloads;
     };
 
-    struct FILE_RECORD
-    {
+    struct FILE_RECORD {
         QString sFullPath;
         QString sPath;
         QString sSHA1;
-//        qint64 nSize;
-//        qint64 nCompressedSize;
+        //        qint64 nSize;
+        //        qint64 nCompressedSize;
     };
 
-    struct DIRECTORY_RECORD
-    {
+    struct DIRECTORY_RECORD {
         QString sFullPath;
         QString sPath;
     };
 
-    struct MODULES_DATA
-    {
+    struct MODULES_DATA {
         QList<Utils::MDATA> listServerList;
         QList<Utils::MDATA> listInstalled;
-        QMap<QString,STATUS> mapStatus;
+        QMap<QString, STATUS> mapStatus;
         QList<WEB_RECORD> listUpdates;
     };
 
-    explicit Utils(QObject *pParent=nullptr);
+    explicit Utils(QObject *pParent = nullptr);
 
     static QList<RECORD> getRecords(QString sRootPath);
-    static bool checkMData(MDATA *pMData,QString *psErrorString);
+    static bool checkMData(MDATA *pMData, QString *psErrorString);
     static QString createBundleName(MDATA *pMData);
     static bool isPluginValid(QString sFileName);
     static bool isPluginValid(QIODevice *pDevice);
 
     static QByteArray createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords);
-    static MDATA getMDataFromZip(QString sFileName,QString sRootPath);
-    static MDATA getMDataFromZip(QIODevice *pDevice,QString sRootPath);
+    static MDATA getMDataFromZip(QString sFileName, QString sRootPath);
+    static MDATA getMDataFromZip(QIODevice *pDevice, QString sRootPath);
     static MDATA getMDataFromData(QByteArray baData);
     static MDATA getMDataFromJSONFile(QString sFileName);
 
-    static QList<MDATA> getInstalledModules(QString sDataPath,QString sRootPath);
+    static QList<MDATA> getInstalledModules(QString sDataPath, QString sRootPath);
     static QList<MDATA> getModulesFromJSONFile(QString sFileName);
     static QDate getDateFromJSONFile(QString sFileName);
 
-    static bool createServerList(QString sListFileName,QList<QString> *pList,QString sWebPrefix,QString sDate);
+    static bool createServerList(QString sListFileName, QList<QString> *pList, QString sWebPrefix, QString sDate);
 
-    static void mDataToObject(Utils::MDATA *pMData,QJsonObject *pObject);
-    static void objectToMData(QJsonObject *pObject,Utils::MDATA *pMData);
+    static void mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject);
+    static void objectToMData(QJsonObject *pObject, Utils::MDATA *pMData);
 
-    static void handleRecordToObject(Utils::HANDLE_RECORD *pHandleRecord,QJsonObject *pObject);
-    static void objectToHandleRecord(QJsonObject *pObject,Utils::HANDLE_RECORD *pHandleRecord);
+    static void handleRecordToObject(Utils::HANDLE_RECORD *pHandleRecord, QJsonObject *pObject);
+    static void objectToHandleRecord(QJsonObject *pObject, Utils::HANDLE_RECORD *pHandleRecord);
 
-    static QMap<QString,STATUS> getModulesStatusMap(QString sDataPath, QList<MDATA> *pServerList, QList<MDATA> *pInstalled);
+    static QMap<QString, STATUS> getModulesStatusMap(QString sDataPath, QList<MDATA> *pServerList, QList<MDATA> *pInstalled);
 
     static MODULES_DATA getModulesData(QString sDataPath);
     static QList<Utils::WEB_RECORD> getUpdates(QMap<QString, STATUS> *pMapStatus);
@@ -180,9 +169,9 @@ public:
     static QString getConvertDownloadFileName(QString sDataPath, QString sName, QString sPattern);
     static QString getConvertModulePath(QString sDataPath, QString sName);
 
-    static Utils::MDATA getMDataByName(QList<MDATA> *pServerList,QString sName);
+    static Utils::MDATA getMDataByName(QList<MDATA> *pServerList, QString sName);
     static QList<QString> getNamesFromWebRecords(QList<WEB_RECORD> *pListWebRecords);
-    static Utils::WEB_RECORD getWebRecordByName(QList<WEB_RECORD> *pListWebRecords,QString sName);
+    static Utils::WEB_RECORD getWebRecordByName(QList<WEB_RECORD> *pListWebRecords, QString sName);
 
     static bool isGithubPresent(QString sServerListFileName);
 
@@ -192,10 +181,10 @@ public:
     static QString actionIdToString(ACTION action);
     static ACTION stringToActionId(QString sAction);
 
-    static bool checkPattern(QString sString,Utils::MDATA *pMData);
+    static bool checkPattern(QString sString, Utils::MDATA *pMData);
 
 private:
-    static void _getRecords(QString sRootPath,QString sCurrentPath,QList<RECORD> *pListRecords);
+    static void _getRecords(QString sRootPath, QString sCurrentPath, QList<RECORD> *pListRecords);
 };
 
-#endif // UTILS_H
+#endif  // UTILS_H

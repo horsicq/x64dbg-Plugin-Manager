@@ -20,19 +20,15 @@
 //
 #include "consoleoutput.h"
 
-ConsoleOutput::ConsoleOutput(QObject *pParent) : QObject(pParent)
-{
-
+ConsoleOutput::ConsoleOutput(QObject *pParent) : QObject(pParent) {
 }
 
-void ConsoleOutput::infoMessage(QString sText)
-{
-    QString _sText=sText;
-    printf("%s\n",_sText.toLatin1().data());
+void ConsoleOutput::infoMessage(QString sText) {
+    QString _sText = sText;
+    printf("%s\n", _sText.toLatin1().data());
 }
 
-void ConsoleOutput::errorMessage(QString sText)
-{
-    QString _sText=sText;
-    printf("Error: %s\n",_sText.toLatin1().data());
+void ConsoleOutput::errorMessage(QString sText) {
+    QString _sText = sText;
+    printf("Error: %s\n", _sText.toLatin1().data());
 }

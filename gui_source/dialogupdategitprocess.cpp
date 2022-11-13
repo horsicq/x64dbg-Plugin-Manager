@@ -19,43 +19,39 @@
 // SOFTWARE.
 //
 #include "dialogupdategitprocess.h"
+
 #include "ui_dialogupdategitprocess.h"
 
-DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sDataPath) :
-    QDialog(pParent),
-    ui(new Ui::DialogUpdateGitProcess)
-{
+DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sDataPath) : QDialog(pParent), ui(new Ui::DialogUpdateGitProcess) {
     ui->setupUi(this);
 
-    this->sDataPath=sDataPath;
+    this->sDataPath = sDataPath;
 
-    pUpdateGitProcess=new UpdateGitProcess;
-    pThread=new QThread;
+    pUpdateGitProcess = new UpdateGitProcess;
+    pThread = new QThread;
 
     pUpdateGitProcess->moveToThread(pThread);
 
     connect(pThread, SIGNAL(started()), pUpdateGitProcess, SLOT(process()));
     connect(pUpdateGitProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
-    connect(pUpdateGitProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+    connect(pUpdateGitProcess, SIGNAL(errorMessage(QString)), this, SIGNAL(errorMessage(QString)));
 
-    pTimer=new QTimer(this);
+    pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
     pUpdateGitProcess->setData(sDataPath);
 
-    bIsRun=true;
+    bIsRun = true;
 
     ui->progressBar->setMaximum(100);
     ui->progressBar->setValue(0);
 
     pThread->start();
-    pTimer->start(100); // 0.1 sec
+    pTimer->start(100);  // 0.1 sec
 }
 
-DialogUpdateGitProcess::~DialogUpdateGitProcess()
-{
-    if(bIsRun)
-    {
+DialogUpdateGitProcess::~DialogUpdateGitProcess() {
+    if (bIsRun) {
         pUpdateGitProcess->stop();
     }
 
@@ -70,32 +66,27 @@ DialogUpdateGitProcess::~DialogUpdateGitProcess()
     delete pUpdateGitProcess;
 }
 
-void DialogUpdateGitProcess::on_pushButtonCancel_clicked()
-{
-    if(bIsRun)
-    {
+void DialogUpdateGitProcess::on_pushButtonCancel_clicked() {
+    if (bIsRun) {
         pUpdateGitProcess->stop();
         pTimer->stop();
-        bIsRun=false;
+        bIsRun = false;
     }
 }
 
-void DialogUpdateGitProcess::onCompleted(qint64 nElapsed)
-{
+void DialogUpdateGitProcess::onCompleted(qint64 nElapsed) {
     Q_UNUSED(nElapsed)
     // TODO
-    bIsRun=false;
+    bIsRun = false;
     this->close();
 }
 
-void DialogUpdateGitProcess::timerSlot()
-{
-    Utils::STATS stats=pUpdateGitProcess->getCurrentStats();
+void DialogUpdateGitProcess::timerSlot() {
+    Utils::STATS stats = pUpdateGitProcess->getCurrentStats();
 
     ui->labelInfo->setText(stats.sFile);
 
-    if(stats.nTotalModule)
-    {
-        ui->progressBar->setValue((int)((stats.nCurrentModule*100)/stats.nTotalModule));
+    if (stats.nTotalModule) {
+        ui->progressBar->setValue((int)((stats.nCurrentModule * 100) / stats.nTotalModule));
     }
 }

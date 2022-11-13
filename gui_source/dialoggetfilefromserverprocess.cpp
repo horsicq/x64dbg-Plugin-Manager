@@ -19,32 +19,31 @@
 // SOFTWARE.
 //
 #include "dialoggetfilefromserverprocess.h"
+
 #include "ui_dialoggetfilefromserverprocess.h"
 
-DialogGetFileFromServerProcess::DialogGetFileFromServerProcess(QWidget *pParent, QList<Utils::WEB_RECORD> listWebRecords) :
-    QDialog(pParent),
-    ui(new Ui::DialogGetFileFromServerProcess)
-{
+DialogGetFileFromServerProcess::DialogGetFileFromServerProcess(QWidget *pParent, QList<Utils::WEB_RECORD> listWebRecords)
+    : QDialog(pParent), ui(new Ui::DialogGetFileFromServerProcess) {
     ui->setupUi(this);
 
-    pGetFileFromServerProcess=new GetFileFromServerProcess;
-    pThread=new QThread;
+    pGetFileFromServerProcess = new GetFileFromServerProcess;
+    pThread = new QThread;
 
     pGetFileFromServerProcess->moveToThread(pThread);
 
     connect(pThread, SIGNAL(started()), pGetFileFromServerProcess, SLOT(process()));
     connect(pGetFileFromServerProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
-    connect(pGetFileFromServerProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+    connect(pGetFileFromServerProcess, SIGNAL(errorMessage(QString)), this, SIGNAL(errorMessage(QString)));
 
-    bIsRun=false;
+    bIsRun = false;
 
     pGetFileFromServerProcess->setData(listWebRecords);
 
-    bIsRun=true;
+    bIsRun = true;
 
     pThread->start();
 
-    pTimer=new QTimer(this);
+    pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
     ui->progressBarModule->setMaximum(100);
@@ -53,13 +52,11 @@ DialogGetFileFromServerProcess::DialogGetFileFromServerProcess(QWidget *pParent,
     ui->progressBarBytes->setMaximum(100);
     ui->progressBarBytes->setValue(0);
 
-    pTimer->start(100); // 0.1 sec
+    pTimer->start(100);  // 0.1 sec
 }
 
-DialogGetFileFromServerProcess::~DialogGetFileFromServerProcess()
-{
-    if(bIsRun)
-    {
+DialogGetFileFromServerProcess::~DialogGetFileFromServerProcess() {
+    if (bIsRun) {
         pGetFileFromServerProcess->stop();
     }
 
@@ -74,37 +71,31 @@ DialogGetFileFromServerProcess::~DialogGetFileFromServerProcess()
     delete pGetFileFromServerProcess;
 }
 
-void DialogGetFileFromServerProcess::on_pushButtonCancel_clicked()
-{
-    if(bIsRun)
-    {
+void DialogGetFileFromServerProcess::on_pushButtonCancel_clicked() {
+    if (bIsRun) {
         pGetFileFromServerProcess->stop();
         pTimer->stop();
-        bIsRun=false;
+        bIsRun = false;
     }
 }
 
-void DialogGetFileFromServerProcess::onCompleted(qint64 nElapsed)
-{
+void DialogGetFileFromServerProcess::onCompleted(qint64 nElapsed) {
     Q_UNUSED(nElapsed)
     // TODO
-    bIsRun=false;
+    bIsRun = false;
     this->close();
 }
 
-void DialogGetFileFromServerProcess::timerSlot()
-{
-    Utils::STATS stats=pGetFileFromServerProcess->getCurrentStats();
+void DialogGetFileFromServerProcess::timerSlot() {
+    Utils::STATS stats = pGetFileFromServerProcess->getCurrentStats();
 
     ui->labelInfoModule->setText(stats.sModule);
 
-    if(stats.nTotalModule)
-    {
-        ui->progressBarModule->setValue((int)((stats.nCurrentModule*100)/stats.nTotalModule));
+    if (stats.nTotalModule) {
+        ui->progressBarModule->setValue((int)((stats.nCurrentModule * 100) / stats.nTotalModule));
     }
 
-    if(stats.nTotalBytes)
-    {
-        ui->progressBarBytes->setValue((int)((stats.nCurrentBytes*100)/stats.nTotalBytes));
+    if (stats.nTotalBytes) {
+        ui->progressBarBytes->setValue((int)((stats.nCurrentBytes * 100) / stats.nTotalBytes));
     }
 }

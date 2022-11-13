@@ -21,17 +21,17 @@
 #ifndef INSTALLMODULEPROCESS_H
 #define INSTALLMODULEPROCESS_H
 
-#include <QObject>
 #include <QElapsedTimer>
+#include <QObject>
+
 #include "utils.h"
 #include "xzip.h"
 
-class InstallModuleProcess : public QObject
-{
+class InstallModuleProcess : public QObject {
     Q_OBJECT
 
 public:
-    explicit InstallModuleProcess(QObject *pParent=nullptr);
+    explicit InstallModuleProcess(QObject *pParent = nullptr);
     void setData(QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames);
     void stop();
     Utils::STATS getCurrentStats();
@@ -52,4 +52,4 @@ private:
     Utils::STATS currentStats;
 };
 
-#endif // INSTALLMODULEPROCESS_H
+#endif  // INSTALLMODULEPROCESS_H

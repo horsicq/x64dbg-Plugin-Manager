@@ -24,14 +24,14 @@
 #include <QDialog>
 #include <QThread>
 #include <QTimer>
+
 #include "../getfilefromserverprocess.h"
 
 namespace Ui {
 class DialogGetFileFromServerProcess;
 }
 
-class DialogGetFileFromServerProcess : public QDialog
-{
+class DialogGetFileFromServerProcess : public QDialog {
     Q_OBJECT
 
 public:
@@ -54,4 +54,4 @@ private:
     QTimer *pTimer;
 };
 
-#endif // DIALOGGETFILEFROMSERVERPROCESS_H
+#endif  // DIALOGGETFILEFROMSERVERPROCESS_H

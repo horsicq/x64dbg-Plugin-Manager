@@ -19,58 +19,49 @@
 // SOFTWARE.
 //
 #include "dialogoptions.h"
+
 #include "ui_dialogoptions.h"
 
-DialogOptions::DialogOptions(QWidget *pParent, XOptions *pOptions) :
-    QDialog(pParent),
-    ui(new Ui::DialogOptions)
-{
+DialogOptions::DialogOptions(QWidget *pParent, XOptions *pOptions) : QDialog(pParent), ui(new Ui::DialogOptions) {
     ui->setupUi(this);
 
-    this->pOptions=pOptions;
+    this->pOptions = pOptions;
 
-    pOptions->setCheckBox(ui->checkBoxStayOnTop,XOptions::ID_VIEW_STAYONTOP);
-    pOptions->setLineEdit(ui->lineEditRootPath,XOptions::ID_ROOTPATH);
-    pOptions->setLineEdit(ui->lineEditDataPath,XOptions::ID_DATAPATH);
-    pOptions->setLineEdit(ui->lineEditJSONLink,XOptions::ID_JSON);
+    pOptions->setCheckBox(ui->checkBoxStayOnTop, XOptions::ID_VIEW_STAYONTOP);
+    pOptions->setLineEdit(ui->lineEditRootPath, XOptions::ID_ROOTPATH);
+    pOptions->setLineEdit(ui->lineEditDataPath, XOptions::ID_DATAPATH);
+    pOptions->setLineEdit(ui->lineEditJSONLink, XOptions::ID_JSON);
 }
 
-DialogOptions::~DialogOptions()
-{
+DialogOptions::~DialogOptions() {
     delete ui;
 }
 
-void DialogOptions::on_pushButtonOK_clicked()
-{
-    pOptions->getCheckBox(ui->checkBoxStayOnTop,XOptions::ID_VIEW_STAYONTOP);
-    pOptions->getLineEdit(ui->lineEditRootPath,XOptions::ID_ROOTPATH);
-    pOptions->getLineEdit(ui->lineEditDataPath,XOptions::ID_DATAPATH);
-    pOptions->getLineEdit(ui->lineEditJSONLink,XOptions::ID_JSON);
+void DialogOptions::on_pushButtonOK_clicked() {
+    pOptions->getCheckBox(ui->checkBoxStayOnTop, XOptions::ID_VIEW_STAYONTOP);
+    pOptions->getLineEdit(ui->lineEditRootPath, XOptions::ID_ROOTPATH);
+    pOptions->getLineEdit(ui->lineEditDataPath, XOptions::ID_DATAPATH);
+    pOptions->getLineEdit(ui->lineEditJSONLink, XOptions::ID_JSON);
 
     this->close();
 }
 
-void DialogOptions::on_pushButtonCancel_clicked()
-{
+void DialogOptions::on_pushButtonCancel_clicked() {
     this->close();
 }
 
-void DialogOptions::on_toolButtonRootPath_clicked()
-{
-    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select root directory"),XBinary::convertPathName(ui->lineEditRootPath->text()));
+void DialogOptions::on_toolButtonRootPath_clicked() {
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Select root directory"), XBinary::convertPathName(ui->lineEditRootPath->text()));
 
-    if(sDirectoryName!="")
-    {
+    if (sDirectoryName != "") {
         ui->lineEditRootPath->setText(sDirectoryName);
     }
 }
 
-void DialogOptions::on_toolButtonDataPath_clicked()
-{
-    QString sDirectoryName=QFileDialog::getExistingDirectory(this,tr("Select data directory"),XBinary::convertPathName(ui->lineEditDataPath->text()));
+void DialogOptions::on_toolButtonDataPath_clicked() {
+    QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Select data directory"), XBinary::convertPathName(ui->lineEditDataPath->text()));
 
-    if(sDirectoryName!="")
-    {
+    if (sDirectoryName != "") {
         ui->lineEditDataPath->setText(sDirectoryName);
     }
 }

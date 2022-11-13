@@ -19,43 +19,39 @@
 // SOFTWARE.
 //
 #include "dialogcreatemoduleprocess.h"
+
 #include "ui_dialogcreatemoduleprocess.h"
 
-DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MDATA *pMData, bool bCreateInfoFile) :
-    QDialog(pParent),
-    ui(new Ui::DialogCreateModuleProcess)
-{
+DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MDATA *pMData, bool bCreateInfoFile) : QDialog(pParent), ui(new Ui::DialogCreateModuleProcess) {
     ui->setupUi(this);
 
-    this->pMData=pMData;
+    this->pMData = pMData;
 
-    pCreateModuleProcess=new CreateModuleProcess;
-    pThread=new QThread;
+    pCreateModuleProcess = new CreateModuleProcess;
+    pThread = new QThread;
 
     pCreateModuleProcess->moveToThread(pThread);
 
     connect(pThread, SIGNAL(started()), pCreateModuleProcess, SLOT(process()));
     connect(pCreateModuleProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
-    connect(pCreateModuleProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+    connect(pCreateModuleProcess, SIGNAL(errorMessage(QString)), this, SIGNAL(errorMessage(QString)));
 
-    pTimer=new QTimer(this);
+    pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pCreateModuleProcess->setData(pMData,bCreateInfoFile);
+    pCreateModuleProcess->setData(pMData, bCreateInfoFile);
 
-    bIsRun=true;
+    bIsRun = true;
 
     ui->progressBar->setMaximum(100);
     ui->progressBar->setValue(0);
 
     pThread->start();
-    pTimer->start(1000); // 1 sec
+    pTimer->start(1000);  // 1 sec
 }
 
-DialogCreateModuleProcess::~DialogCreateModuleProcess()
-{
-    if(bIsRun)
-    {
+DialogCreateModuleProcess::~DialogCreateModuleProcess() {
+    if (bIsRun) {
         pCreateModuleProcess->stop();
     }
 
@@ -70,32 +66,27 @@ DialogCreateModuleProcess::~DialogCreateModuleProcess()
     delete pCreateModuleProcess;
 }
 
-void DialogCreateModuleProcess::on_pushButtonCancel_clicked()
-{
-    if(bIsRun)
-    {
+void DialogCreateModuleProcess::on_pushButtonCancel_clicked() {
+    if (bIsRun) {
         pCreateModuleProcess->stop();
         pTimer->stop();
-        bIsRun=false;
+        bIsRun = false;
     }
 }
 
-void DialogCreateModuleProcess::onCompleted(qint64 nElapsed)
-{
+void DialogCreateModuleProcess::onCompleted(qint64 nElapsed) {
     Q_UNUSED(nElapsed)
     // TODO
-    bIsRun=false;
+    bIsRun = false;
     this->close();
 }
 
-void DialogCreateModuleProcess::timerSlot()
-{
-    Utils::STATS stats=pCreateModuleProcess->getCurrentStats();
+void DialogCreateModuleProcess::timerSlot() {
+    Utils::STATS stats = pCreateModuleProcess->getCurrentStats();
 
     ui->labelInfo->setText(stats.sFile);
 
-    if(stats.nTotalFile)
-    {
-        ui->progressBar->setValue((int)((stats.nCurrentFile*100)/stats.nTotalFile));
+    if (stats.nTotalFile) {
+        ui->progressBar->setValue((int)((stats.nCurrentFile * 100) / stats.nTotalFile));
     }
 }

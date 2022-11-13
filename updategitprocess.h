@@ -21,18 +21,18 @@
 #ifndef UPDATEGITPROCESS_H
 #define UPDATEGITPROCESS_H
 
-#include <QObject>
 #include <QElapsedTimer>
+#include <QObject>
 #include <QThread>
+
 #include "utils.h"
 #include "xgithub.h"
 
-class UpdateGitProcess : public QObject
-{
+class UpdateGitProcess : public QObject {
     Q_OBJECT
 
 public:
-    explicit UpdateGitProcess(QObject *pParent=nullptr);
+    explicit UpdateGitProcess(QObject *pParent = nullptr);
     void setData(QString sServerListFileName);
     void stop();
     Utils::STATS getCurrentStats();
@@ -54,4 +54,4 @@ private:
     QString sAuthToken;
 };
 
-#endif // UPDATEGITPROCESS_H
+#endif  // UPDATEGITPROCESS_H

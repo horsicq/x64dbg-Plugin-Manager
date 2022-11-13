@@ -33,4 +33,4 @@
 
 #define X_JSON_DEFAULT "https://raw.githubusercontent.com/x64dbg/PluginManager/master/list.json"
 
-#endif // _GLOBAL_H
+#endif  // _GLOBAL_H

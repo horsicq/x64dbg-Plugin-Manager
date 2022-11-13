@@ -19,33 +19,32 @@
 // SOFTWARE.
 //
 #include "dialogremovemoduleprocess.h"
+
 #include "ui_dialogremovemoduleprocess.h"
 
-DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleNames) :
-    QDialog(pParent),
-    ui(new Ui::DialogRemoveModuleProcess)
-{
+DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleNames)
+    : QDialog(pParent), ui(new Ui::DialogRemoveModuleProcess) {
     ui->setupUi(this);
 
-    this->sDataPath=sDataPath;
-    this->sRootPath=sRootPath;
-    this->listModuleNames=listModuleNames;
+    this->sDataPath = sDataPath;
+    this->sRootPath = sRootPath;
+    this->listModuleNames = listModuleNames;
 
-    pRemoveModuleProcess=new RemoveModuleProcess;
-    pThread=new QThread;
+    pRemoveModuleProcess = new RemoveModuleProcess;
+    pThread = new QThread;
 
     pRemoveModuleProcess->moveToThread(pThread);
 
     connect(pThread, SIGNAL(started()), pRemoveModuleProcess, SLOT(process()));
     connect(pRemoveModuleProcess, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
-    connect(pRemoveModuleProcess,SIGNAL(errorMessage(QString)),this,SIGNAL(errorMessage(QString)));
+    connect(pRemoveModuleProcess, SIGNAL(errorMessage(QString)), this, SIGNAL(errorMessage(QString)));
 
-    pTimer=new QTimer(this);
+    pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pRemoveModuleProcess->setData(sDataPath,sRootPath,listModuleNames);
+    pRemoveModuleProcess->setData(sDataPath, sRootPath, listModuleNames);
 
-    bIsRun=true;
+    bIsRun = true;
 
     ui->progressBarFile->setMaximum(100);
     ui->progressBarFile->setValue(0);
@@ -54,13 +53,11 @@ DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *pParent, QString s
     ui->progressBarModule->setValue(0);
 
     pThread->start();
-    pTimer->start(1000); // 1 sec
+    pTimer->start(1000);  // 1 sec
 }
 
-DialogRemoveModuleProcess::~DialogRemoveModuleProcess()
-{
-    if(bIsRun)
-    {
+DialogRemoveModuleProcess::~DialogRemoveModuleProcess() {
+    if (bIsRun) {
         pRemoveModuleProcess->stop();
     }
 
@@ -75,39 +72,33 @@ DialogRemoveModuleProcess::~DialogRemoveModuleProcess()
     delete pRemoveModuleProcess;
 }
 
-void DialogRemoveModuleProcess::on_pushButtonCancel_clicked()
-{
-    if(bIsRun)
-    {
+void DialogRemoveModuleProcess::on_pushButtonCancel_clicked() {
+    if (bIsRun) {
         pRemoveModuleProcess->stop();
         pTimer->stop();
-        bIsRun=false;
+        bIsRun = false;
     }
 }
 
-void DialogRemoveModuleProcess::onCompleted(qint64 nElapsed)
-{
+void DialogRemoveModuleProcess::onCompleted(qint64 nElapsed) {
     Q_UNUSED(nElapsed)
     // TODO
-    bIsRun=false;
+    bIsRun = false;
     this->close();
 }
 
-void DialogRemoveModuleProcess::timerSlot()
-{
-    Utils::STATS stats=pRemoveModuleProcess->getCurrentStats();
+void DialogRemoveModuleProcess::timerSlot() {
+    Utils::STATS stats = pRemoveModuleProcess->getCurrentStats();
 
     ui->labelInfoFile->setText(stats.sFile);
 
-    if(stats.nTotalFile)
-    {
-        ui->progressBarFile->setValue((int)((stats.nCurrentFile*100)/stats.nTotalFile));
+    if (stats.nTotalFile) {
+        ui->progressBarFile->setValue((int)((stats.nCurrentFile * 100) / stats.nTotalFile));
     }
 
     ui->labelInfoModule->setText(stats.sModule);
 
-    if(stats.nTotalModule)
-    {
-        ui->progressBarModule->setValue((int)((stats.nCurrentModule*100)/stats.nTotalModule));
+    if (stats.nTotalModule) {
+        ui->progressBarModule->setValue((int)((stats.nCurrentModule * 100) / stats.nTotalModule));
     }
 }

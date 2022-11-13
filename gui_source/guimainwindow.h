@@ -21,35 +21,36 @@
 #ifndef GUIMAINWINDOW_H
 #define GUIMAINWINDOW_H
 
-#include <QMainWindow>
-#include "../global.h"
-#include "dialogcreatemodule.h"
-#include "dialoginstallmodule.h"
-#include "dialogremovemodule.h"
-#include "dialogupdategitprocess.h"
-#include "dialoginfomodule.h"
-#include "dialogoptions.h"
-#include "dialoggetfilefromserverprocess.h"
-#include "dialogabout.h"
-#include <QMessageBox>
 #include <QCheckBox>
-#include <QToolButton>
+#include <QDesktopServices>
 #include <QDragEnterEvent>
+#include <QMainWindow>
+#include <QMessageBox>
 #include <QMimeData>
 #include <QTableWidget>
-#include <QDesktopServices>
+#include <QToolButton>
+
+#include "../global.h"
+#include "dialogabout.h"
+#include "dialogcreatemodule.h"
+#include "dialoggetfilefromserverprocess.h"
+#include "dialoginfomodule.h"
+#include "dialoginstallmodule.h"
+#include "dialogoptions.h"
+#include "dialogremovemodule.h"
+#include "dialogupdategitprocess.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class GuiMainWindow; }
+namespace Ui {
+class GuiMainWindow;
+}
 QT_END_NAMESPACE
 
-class GuiMainWindow : public QMainWindow
-{
+class GuiMainWindow : public QMainWindow {
     Q_OBJECT
 
-    enum CN
-    {
-        CN_NAME=0,
+    enum CN {
+        CN_NAME = 0,
         CN_INFO,
         CN_32,
         CN_64,
@@ -61,12 +62,12 @@ class GuiMainWindow : public QMainWindow
     };
 
 public:
-    GuiMainWindow(QWidget *pParent=nullptr);
+    GuiMainWindow(QWidget *pParent = nullptr);
     ~GuiMainWindow();
 
 private:
     void adjustTable(QTableWidget *pTableWidget);
-    void fillTable(QTableWidget *pTableWidget,QList<Utils::MDATA> *pMData,QMap<QString,Utils::STATUS> *pMapStatus);
+    void fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *pMData, QMap<QString, Utils::STATUS> *pMapStatus);
 
 private slots:
     void createPlugin();
@@ -116,4 +117,4 @@ private:
     XOptions xOptions;
     Utils::MODULES_DATA modulesData;
 };
-#endif // GUIMAINWINDOW_H
+#endif  // GUIMAINWINDOW_H

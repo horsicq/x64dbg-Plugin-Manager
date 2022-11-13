@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QThread>
 #include <QTimer>
+
 #include "../updategitprocess.h"
 #include "../utils.h"
 
@@ -31,8 +32,7 @@ namespace Ui {
 class DialogUpdateGitProcess;
 }
 
-class DialogUpdateGitProcess : public QDialog
-{
+class DialogUpdateGitProcess : public QDialog {
     Q_OBJECT
 
 public:
@@ -56,4 +56,4 @@ private:
     QTimer *pTimer;
 };
 
-#endif // DIALOGUPDATEGITPROCESS_H
+#endif  // DIALOGUPDATEGITPROCESS_H

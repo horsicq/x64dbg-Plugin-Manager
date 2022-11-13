@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QThread>
 #include <QTimer>
+
 #include "../removemoduleprocess.h"
 #include "../utils.h"
 
@@ -31,8 +32,7 @@ namespace Ui {
 class DialogRemoveModuleProcess;
 }
 
-class DialogRemoveModuleProcess : public QDialog
-{
+class DialogRemoveModuleProcess : public QDialog {
     Q_OBJECT
 
 public:
@@ -58,4 +58,4 @@ private:
     QTimer *pTimer;
 };
 
-#endif // DIALOGREMOVEMODULEPROCESS_H
+#endif  // DIALOGREMOVEMODULEPROCESS_H

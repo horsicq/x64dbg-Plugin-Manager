@@ -21,18 +21,18 @@
 #ifndef GETFILEFROMSERVERPROCESS_H
 #define GETFILEFROMSERVERPROCESS_H
 
-#include <QObject>
 #include <QElapsedTimer>
 #include <QNetworkAccessManager>
-#include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
+
 #include "utils.h"
 
-class GetFileFromServerProcess : public QObject
-{
+class GetFileFromServerProcess : public QObject {
     Q_OBJECT
 public:
-    explicit GetFileFromServerProcess(QObject *pParent=nullptr);
+    explicit GetFileFromServerProcess(QObject *pParent = nullptr);
     void setData(QList<Utils::WEB_RECORD> listWebRecords);
     void stop();
     Utils::STATS getCurrentStats();
@@ -44,7 +44,7 @@ signals:
 
 public slots:
     void process();
-    void _downloadProgress(qint64 bytesReceived,qint64 bytesTotal);
+    void _downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
 private:
     bool bIsStop;
@@ -54,4 +54,4 @@ private:
     Utils::STATS currentStats;
 };
 
-#endif // GETFILEFROMSERVERPROCESS_H
+#endif  // GETFILEFROMSERVERPROCESS_H
