@@ -20,25 +20,30 @@
 //
 #include "createmoduleprocess.h"
 
-CreateModuleProcess::CreateModuleProcess(QObject *pParent) : QObject(pParent) {
+CreateModuleProcess::CreateModuleProcess(QObject *pParent) : QObject(pParent)
+{
     bIsStop = false;
     currentStats = {};
 }
 
-void CreateModuleProcess::setData(Utils::MDATA *pMData, bool bCreateInfoFile) {
+void CreateModuleProcess::setData(Utils::MDATA *pMData, bool bCreateInfoFile)
+{
     this->pMData = pMData;
     this->bCreateInfoFile = bCreateInfoFile;
 }
 
-void CreateModuleProcess::stop() {
+void CreateModuleProcess::stop()
+{
     bIsStop = true;
 }
 
-Utils::STATS CreateModuleProcess::getCurrentStats() {
+Utils::STATS CreateModuleProcess::getCurrentStats()
+{
     return currentStats;
 }
 
-void CreateModuleProcess::process() {
+void CreateModuleProcess::process()
+{
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 

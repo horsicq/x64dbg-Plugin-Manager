@@ -22,7 +22,8 @@
 
 #include "ui_dialogabout.h"
 
-DialogAbout::DialogAbout(QWidget *pParent) : QDialog(pParent), ui(new Ui::DialogAbout) {
+DialogAbout::DialogAbout(QWidget *pParent) : QDialog(pParent), ui(new Ui::DialogAbout)
+{
     ui->setupUi(this);
 
     ui->labelInfo->setText(QString("<html><head/><body><p align=\"center\">"
@@ -38,10 +39,12 @@ DialogAbout::DialogAbout(QWidget *pParent) : QDialog(pParent), ui(new Ui::Dialog
                                .arg(__DATE__));
 }
 
-DialogAbout::~DialogAbout() {
+DialogAbout::~DialogAbout()
+{
     delete ui;
 }
 
-void DialogAbout::on_pushButtonOK_clicked() {
+void DialogAbout::on_pushButtonOK_clicked()
+{
     this->close();
 }

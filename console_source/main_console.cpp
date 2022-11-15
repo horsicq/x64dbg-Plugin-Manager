@@ -56,7 +56,8 @@ enum PLGMNGREXITCODE {
     PLGMNGREXITCODE_NOUPDATESAVAILABLE,
 };
 
-void installFiles(QString sDataPath, QString sRootPath, ConsoleOutput *pConsoleOutput, QList<QString> *pListFileNames) {
+void installFiles(QString sDataPath, QString sRootPath, ConsoleOutput *pConsoleOutput, QList<QString> *pListFileNames)
+{
     int nCount = pListFileNames->count();
 
     for (int i = 0; i < nCount; i++) {
@@ -73,7 +74,8 @@ void installFiles(QString sDataPath, QString sRootPath, ConsoleOutput *pConsoleO
     }
 }
 
-void installModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *pModulesData, ConsoleOutput *pConsoleOutput, QList<QString> *pListModuleNames) {
+void installModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *pModulesData, ConsoleOutput *pConsoleOutput, QList<QString> *pListModuleNames)
+{
     int nCount = pListModuleNames->count();
 
     for (int i = 0; i < nCount; i++) {
@@ -177,7 +179,8 @@ void installModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *p
     }
 }
 
-void removeModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *pModulesData, ConsoleOutput *pConsoleOutput, QList<QString> *pListModuleNames) {
+void removeModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *pModulesData, ConsoleOutput *pConsoleOutput, QList<QString> *pListModuleNames)
+{
     int nCount = pListModuleNames->count();
 
     for (int i = 0; i < nCount; i++) {
@@ -195,7 +198,8 @@ void removeModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *pM
     }
 }
 
-void showModules(ConsoleOutput *pConsoleOutput, QList<Utils::MDATA> *pList) {
+void showModules(ConsoleOutput *pConsoleOutput, QList<Utils::MDATA> *pList)
+{
     int nCount = pList->count();
 
     for (int i = 0; i < nCount; i++) {
@@ -205,7 +209,8 @@ void showModules(ConsoleOutput *pConsoleOutput, QList<Utils::MDATA> *pList) {
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     int nReturnCode = PLGMNGREXITCODE_NOARGS;
 
     QCoreApplication::setOrganizationName(X_ORGANIZATIONNAME);

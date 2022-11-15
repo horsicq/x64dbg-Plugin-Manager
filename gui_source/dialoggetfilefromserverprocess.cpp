@@ -23,7 +23,8 @@
 #include "ui_dialoggetfilefromserverprocess.h"
 
 DialogGetFileFromServerProcess::DialogGetFileFromServerProcess(QWidget *pParent, QList<Utils::WEB_RECORD> listWebRecords)
-    : QDialog(pParent), ui(new Ui::DialogGetFileFromServerProcess) {
+    : QDialog(pParent), ui(new Ui::DialogGetFileFromServerProcess)
+{
     ui->setupUi(this);
 
     pGetFileFromServerProcess = new GetFileFromServerProcess;
@@ -55,7 +56,8 @@ DialogGetFileFromServerProcess::DialogGetFileFromServerProcess(QWidget *pParent,
     pTimer->start(100);  // 0.1 sec
 }
 
-DialogGetFileFromServerProcess::~DialogGetFileFromServerProcess() {
+DialogGetFileFromServerProcess::~DialogGetFileFromServerProcess()
+{
     if (bIsRun) {
         pGetFileFromServerProcess->stop();
     }
@@ -71,7 +73,8 @@ DialogGetFileFromServerProcess::~DialogGetFileFromServerProcess() {
     delete pGetFileFromServerProcess;
 }
 
-void DialogGetFileFromServerProcess::on_pushButtonCancel_clicked() {
+void DialogGetFileFromServerProcess::on_pushButtonCancel_clicked()
+{
     if (bIsRun) {
         pGetFileFromServerProcess->stop();
         pTimer->stop();
@@ -79,14 +82,16 @@ void DialogGetFileFromServerProcess::on_pushButtonCancel_clicked() {
     }
 }
 
-void DialogGetFileFromServerProcess::onCompleted(qint64 nElapsed) {
+void DialogGetFileFromServerProcess::onCompleted(qint64 nElapsed)
+{
     Q_UNUSED(nElapsed)
     // TODO
     bIsRun = false;
     this->close();
 }
 
-void DialogGetFileFromServerProcess::timerSlot() {
+void DialogGetFileFromServerProcess::timerSlot()
+{
     Utils::STATS stats = pGetFileFromServerProcess->getCurrentStats();
 
     ui->labelInfoModule->setText(stats.sModule);

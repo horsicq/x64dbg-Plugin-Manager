@@ -20,17 +20,20 @@
 //
 #include "getfilefromserverprocess.h"
 
-GetFileFromServerProcess::GetFileFromServerProcess(QObject *pParent) : QObject(pParent) {
+GetFileFromServerProcess::GetFileFromServerProcess(QObject *pParent) : QObject(pParent)
+{
     pReply = 0;
     replyRed = 0;
     currentStats = {};
 }
 
-void GetFileFromServerProcess::setData(QList<Utils::WEB_RECORD> listWebRecords) {
+void GetFileFromServerProcess::setData(QList<Utils::WEB_RECORD> listWebRecords)
+{
     this->listWebRecords = listWebRecords;
 }
 
-void GetFileFromServerProcess::stop() {
+void GetFileFromServerProcess::stop()
+{
     bIsStop = true;
 
     if (pReply) {
@@ -42,11 +45,13 @@ void GetFileFromServerProcess::stop() {
     }
 }
 
-Utils::STATS GetFileFromServerProcess::getCurrentStats() {
+Utils::STATS GetFileFromServerProcess::getCurrentStats()
+{
     return currentStats;
 }
 
-void GetFileFromServerProcess::process() {
+void GetFileFromServerProcess::process()
+{
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 
@@ -126,7 +131,8 @@ void GetFileFromServerProcess::process() {
     emit completed(elapsedTimer.elapsed());
 }
 
-void GetFileFromServerProcess::_downloadProgress(qint64 bytesReceived, qint64 bytesTotal) {
+void GetFileFromServerProcess::_downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
     currentStats.nTotalBytes = bytesTotal;
     currentStats.nCurrentBytes = bytesReceived;
 }

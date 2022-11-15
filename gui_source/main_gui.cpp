@@ -23,7 +23,8 @@
 
 #include "guimainwindow.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QCoreApplication::setOrganizationName(X_ORGANIZATIONNAME);

@@ -22,16 +22,19 @@
 
 #include "ui_dialoginfomodule.h"
 
-DialogInfoModule::DialogInfoModule(QWidget *pParent, Utils::MDATA *pMData) : QDialog(pParent), ui(new Ui::DialogInfoModule) {
+DialogInfoModule::DialogInfoModule(QWidget *pParent, Utils::MDATA *pMData) : QDialog(pParent), ui(new Ui::DialogInfoModule)
+{
     ui->setupUi(this);
 
     ui->widgetInfo->setData(pMData);
 }
 
-DialogInfoModule::~DialogInfoModule() {
+DialogInfoModule::~DialogInfoModule()
+{
     delete ui;
 }
 
-void DialogInfoModule::on_pushButtonOK_clicked() {
+void DialogInfoModule::on_pushButtonOK_clicked()
+{
     this->close();
 }

@@ -22,7 +22,8 @@
 
 #include "ui_dialogremovemodule.h"
 
-DialogRemoveModule::DialogRemoveModule(QWidget *pParent, QString sDataPath, QString sRootPath, QString sModuleName) : QDialog(pParent), ui(new Ui::DialogRemoveModule) {
+DialogRemoveModule::DialogRemoveModule(QWidget *pParent, QString sDataPath, QString sRootPath, QString sModuleName) : QDialog(pParent), ui(new Ui::DialogRemoveModule)
+{
     ui->setupUi(this);
 
     this->sDataPath = sDataPath;
@@ -36,15 +37,18 @@ DialogRemoveModule::DialogRemoveModule(QWidget *pParent, QString sDataPath, QStr
     ui->widgetInfo->setData(&mdata);
 }
 
-DialogRemoveModule::~DialogRemoveModule() {
+DialogRemoveModule::~DialogRemoveModule()
+{
     delete ui;
 }
 
-void DialogRemoveModule::on_pushButtonCancel_clicked() {
+void DialogRemoveModule::on_pushButtonCancel_clicked()
+{
     this->close();
 }
 
-void DialogRemoveModule::on_pushButtonOK_clicked() {
+void DialogRemoveModule::on_pushButtonOK_clicked()
+{
     DialogRemoveModuleProcess drmp(this, sDataPath, sRootPath, QList<QString>() << sModuleName);
 
     connect(&drmp, SIGNAL(errorMessage(QString)), this, SIGNAL(errorMessage(QString)));

@@ -22,7 +22,8 @@
 
 #include "ui_dialogconvertprocess.h"
 
-DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData, QString sDataPath) : QDialog(pParent), ui(new Ui::DialogConvertProcess) {
+DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData, QString sDataPath) : QDialog(pParent), ui(new Ui::DialogConvertProcess)
+{
     ui->setupUi(this);
 
     this->pMData = pMData;
@@ -51,7 +52,8 @@ DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMDat
     pTimer->start(100);  // 0.1 sec
 }
 
-DialogConvertProcess::~DialogConvertProcess() {
+DialogConvertProcess::~DialogConvertProcess()
+{
     if (bIsRun) {
         pConvertProcess->stop();
     }
@@ -67,7 +69,8 @@ DialogConvertProcess::~DialogConvertProcess() {
     delete pConvertProcess;
 }
 
-void DialogConvertProcess::on_pushButtonCancel_clicked() {
+void DialogConvertProcess::on_pushButtonCancel_clicked()
+{
     if (bIsRun) {
         pConvertProcess->stop();
         pTimer->stop();
@@ -75,14 +78,16 @@ void DialogConvertProcess::on_pushButtonCancel_clicked() {
     }
 }
 
-void DialogConvertProcess::onCompleted(qint64 nElapsed) {
+void DialogConvertProcess::onCompleted(qint64 nElapsed)
+{
     Q_UNUSED(nElapsed)
     // TODO
     bIsRun = false;
     this->close();
 }
 
-void DialogConvertProcess::timerSlot() {
+void DialogConvertProcess::timerSlot()
+{
     Utils::STATS stats = pConvertProcess->getCurrentStats();
 
     ui->labelInfo->setText(stats.sModule);

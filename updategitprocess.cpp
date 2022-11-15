@@ -20,24 +20,29 @@
 //
 #include "updategitprocess.h"
 
-UpdateGitProcess::UpdateGitProcess(QObject *pParent) : QObject(pParent) {
+UpdateGitProcess::UpdateGitProcess(QObject *pParent) : QObject(pParent)
+{
     bIsStop = false;
     currentStats = {};
 }
 
-void UpdateGitProcess::setData(QString sServerListFileName) {
+void UpdateGitProcess::setData(QString sServerListFileName)
+{
     this->sServerListFileName = sServerListFileName;
 }
 
-void UpdateGitProcess::stop() {
+void UpdateGitProcess::stop()
+{
     bIsStop = true;
 }
 
-Utils::STATS UpdateGitProcess::getCurrentStats() {
+Utils::STATS UpdateGitProcess::getCurrentStats()
+{
     return currentStats;
 }
 
-void UpdateGitProcess::process() {
+void UpdateGitProcess::process()
+{
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 
@@ -117,7 +122,8 @@ void UpdateGitProcess::process() {
     emit completed(elapsedTimer.elapsed());
 }
 
-void UpdateGitProcess::setCredentials(QString sUser, QString sToken) {
+void UpdateGitProcess::setCredentials(QString sUser, QString sToken)
+{
     sAuthUser = sUser;
     sAuthToken = sToken;
 }

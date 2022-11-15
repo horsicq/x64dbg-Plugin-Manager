@@ -22,7 +22,8 @@
 
 #include "ui_guimainwindow.h"
 
-GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui::GuiMainWindow) {
+GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui::GuiMainWindow)
+{
     ui->setupUi(this);
 
     setWindowTitle(QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
@@ -93,13 +94,15 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
     getModules();
 }
 
-GuiMainWindow::~GuiMainWindow() {
+GuiMainWindow::~GuiMainWindow()
+{
     xOptions.save();
 
     delete ui;
 }
 
-void GuiMainWindow::adjustTable(QTableWidget *pTableWidget) {
+void GuiMainWindow::adjustTable(QTableWidget *pTableWidget)
+{
     pTableWidget->setColumnCount(CN_size);
     pTableWidget->setRowCount(0);
 
@@ -131,7 +134,8 @@ void GuiMainWindow::adjustTable(QTableWidget *pTableWidget) {
     pTableWidget->horizontalHeader()->setSectionResizeMode(CN_REMOVE, QHeaderView::Interactive);
 }
 
-void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *pMData, QMap<QString, Utils::STATUS> *pMapStatus) {
+void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *pMData, QMap<QString, Utils::STATUS> *pMapStatus)
+{
     int nCount = pMData->count();
 
     pTableWidget->setSortingEnabled(false);
@@ -205,7 +209,8 @@ void GuiMainWindow::fillTable(QTableWidget *pTableWidget, QList<Utils::MDATA> *p
     pTableWidget->setSortingEnabled(true);
 }
 
-void GuiMainWindow::createPlugin() {
+void GuiMainWindow::createPlugin()
+{
     DialogCreateModule dialogCreateModule(this);
 
     connect(&dialogCreateModule, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
@@ -213,13 +218,15 @@ void GuiMainWindow::createPlugin() {
     dialogCreateModule.exec();
 }
 
-void GuiMainWindow::aboutDialog() {
+void GuiMainWindow::aboutDialog()
+{
     DialogAbout dialogAbout(this);
 
     dialogAbout.exec();
 }
 
-void GuiMainWindow::openPlugin() {
+void GuiMainWindow::openPlugin()
+{
     QString sInitDirectory;  // TODO
 
     QString sFileName = QFileDialog::getOpenFileName(this, tr("Open plugin"), sInitDirectory, "*.x64dbg.zip");
@@ -229,7 +236,8 @@ void GuiMainWindow::openPlugin() {
     }
 }
 
-void GuiMainWindow::optionsDialog() {
+void GuiMainWindow::optionsDialog()
+{
     DialogOptions dialogOptions(this, &xOptions);
 
     dialogOptions.exec();
@@ -237,15 +245,18 @@ void GuiMainWindow::optionsDialog() {
     xOptions.adjustStayOnTop(this);
 }
 
-void GuiMainWindow::exitProgram() {
+void GuiMainWindow::exitProgram()
+{
     this->close();
 }
 
-void GuiMainWindow::errorMessage(QString sMessage) {
+void GuiMainWindow::errorMessage(QString sMessage)
+{
     QMessageBox::critical(this, tr("Error"), sMessage);
 }
 
-void GuiMainWindow::getModules() {
+void GuiMainWindow::getModules()
+{
     modulesData = Utils::getModulesData(xOptions.getDataPath());
 
     fillTable(ui->tableWidgetServerList, &(modulesData.listServerList), &(modulesData.mapStatus));
@@ -254,7 +265,8 @@ void GuiMainWindow::getModules() {
     ui->pushButtonUpdateAllInstalledPlugins->setEnabled(modulesData.listUpdates.count());
 }
 
-void GuiMainWindow::openPlugin(QString sFileName) {
+void GuiMainWindow::openPlugin(QString sFileName)
+{
     if (Utils::isPluginValid(sFileName)) {
         DialogInstallModule dialogInstallModule(this, xOptions.getDataPath(), xOptions.getRootPath());
         connect(&dialogInstallModule, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
@@ -268,7 +280,8 @@ void GuiMainWindow::openPlugin(QString sFileName) {
     }
 }
 
-void GuiMainWindow::updateJsonList() {
+void GuiMainWindow::updateJsonList()
+{
     QString sServerListFileName = Utils::getServerListFileName(xOptions.getDataPath());
     QString sServerLastestListFileName = Utils::getServerLastestListFileName(xOptions.getDataPath());
 
@@ -294,21 +307,24 @@ void GuiMainWindow::updateJsonList() {
     Utils::updateServerList(sServerListFileName, sServerLastestListFileName);
 }
 
-void GuiMainWindow::installButtonSlot() {
+void GuiMainWindow::installButtonSlot()
+{
     QToolButton *pPushButton = qobject_cast<QToolButton *>(sender());
     QString sName = pPushButton->property("Name").toString();
 
     installPlugin(sName);
 }
 
-void GuiMainWindow::removeButtonSlot() {
+void GuiMainWindow::removeButtonSlot()
+{
     QToolButton *pPushButton = qobject_cast<QToolButton *>(sender());
     QString sName = pPushButton->property("Name").toString();
 
     removePlugin(sName);
 }
 
-void GuiMainWindow::installPlugin(QString sName) {
+void GuiMainWindow::installPlugin(QString sName)
+{
     if (sName != "") {
         Utils::MDATA mdata = Utils::getMDataByName(&(modulesData.listServerList), sName);
 
@@ -325,7 +341,8 @@ void GuiMainWindow::installPlugin(QString sName) {
     }
 }
 
-void GuiMainWindow::installPlugins(QList<QString> *pListNames) {
+void GuiMainWindow::installPlugins(QList<QString> *pListNames)
+{
     QList<QString> listFileNames;
 
     int nCount = pListNames->count();
@@ -353,7 +370,8 @@ void GuiMainWindow::installPlugins(QList<QString> *pListNames) {
     }
 }
 
-void GuiMainWindow::removePlugin(QString sName) {
+void GuiMainWindow::removePlugin(QString sName)
+{
     if (sName != "") {
         DialogRemoveModule dialogRemoveModule(this, xOptions.getDataPath(), xOptions.getRootPath(), sName);
 
@@ -365,7 +383,8 @@ void GuiMainWindow::removePlugin(QString sName) {
     }
 }
 
-void GuiMainWindow::infoPlugin(Utils::MDATA *pMData) {
+void GuiMainWindow::infoPlugin(Utils::MDATA *pMData)
+{
     if (pMData->sName != "") {
         DialogInfoModule dialogInfoModule(this, pMData);
 
@@ -373,7 +392,8 @@ void GuiMainWindow::infoPlugin(Utils::MDATA *pMData) {
     }
 }
 
-void GuiMainWindow::dragEnterEvent(QDragEnterEvent *pEvent) {
+void GuiMainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
+{
     const QMimeData *mimeData = pEvent->mimeData();
 
     if (mimeData->hasUrls()) {
@@ -389,11 +409,13 @@ void GuiMainWindow::dragEnterEvent(QDragEnterEvent *pEvent) {
     }
 }
 
-void GuiMainWindow::dragMoveEvent(QDragMoveEvent *pEvent) {
+void GuiMainWindow::dragMoveEvent(QDragMoveEvent *pEvent)
+{
     pEvent->acceptProposedAction();
 }
 
-void GuiMainWindow::dropEvent(QDropEvent *pEvent) {
+void GuiMainWindow::dropEvent(QDropEvent *pEvent)
+{
     const QMimeData *mimeData = pEvent->mimeData();
 
     if (mimeData->hasUrls()) {
@@ -409,7 +431,8 @@ void GuiMainWindow::dropEvent(QDropEvent *pEvent) {
     }
 }
 
-void GuiMainWindow::on_tableWidgetServerList_customContextMenuRequested(const QPoint &pos) {
+void GuiMainWindow::on_tableWidgetServerList_customContextMenuRequested(const QPoint &pos)
+{
     if (ui->tableWidgetServerList->selectedItems().count()) {
         QMenu contextMenu(this);
 
@@ -448,7 +471,8 @@ void GuiMainWindow::on_tableWidgetServerList_customContextMenuRequested(const QP
     }
 }
 
-void GuiMainWindow::on_tableWidgetInstalled_customContextMenuRequested(const QPoint &pos) {
+void GuiMainWindow::on_tableWidgetInstalled_customContextMenuRequested(const QPoint &pos)
+{
     if (ui->tableWidgetInstalled->selectedItems().count()) {
         QMenu contextMenu(this);
 
@@ -487,7 +511,8 @@ void GuiMainWindow::on_tableWidgetInstalled_customContextMenuRequested(const QPo
     }
 }
 
-void GuiMainWindow::_infoPluginServerList() {
+void GuiMainWindow::_infoPluginServerList()
+{
     if (ui->tableWidgetServerList->selectedItems().count()) {
         QString sName = ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
 
@@ -497,7 +522,8 @@ void GuiMainWindow::_infoPluginServerList() {
     }
 }
 
-void GuiMainWindow::_installPluginServerList() {
+void GuiMainWindow::_installPluginServerList()
+{
     if (ui->tableWidgetServerList->selectedItems().count()) {
         QString sName = ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
 
@@ -505,7 +531,8 @@ void GuiMainWindow::_installPluginServerList() {
     }
 }
 
-void GuiMainWindow::_removePluginServerList() {
+void GuiMainWindow::_removePluginServerList()
+{
     if (ui->tableWidgetServerList->selectedItems().count()) {
         QString sName = ui->tableWidgetServerList->selectedItems().at(0)->data(Qt::UserRole).toString();
 
@@ -513,7 +540,8 @@ void GuiMainWindow::_removePluginServerList() {
     }
 }
 
-void GuiMainWindow::_infoPluginInstalled() {
+void GuiMainWindow::_infoPluginInstalled()
+{
     if (ui->tableWidgetInstalled->selectedItems().count()) {
         QString sName = ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
 
@@ -523,7 +551,8 @@ void GuiMainWindow::_infoPluginInstalled() {
     }
 }
 
-void GuiMainWindow::_installPluginInstalled() {
+void GuiMainWindow::_installPluginInstalled()
+{
     if (ui->tableWidgetInstalled->selectedItems().count()) {
         QString sName = ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
 
@@ -531,7 +560,8 @@ void GuiMainWindow::_installPluginInstalled() {
     }
 }
 
-void GuiMainWindow::_removePluginInstalled() {
+void GuiMainWindow::_removePluginInstalled()
+{
     if (ui->tableWidgetInstalled->selectedItems().count()) {
         QString sName = ui->tableWidgetInstalled->selectedItems().at(0)->data(Qt::UserRole).toString();
 
@@ -539,13 +569,15 @@ void GuiMainWindow::_removePluginInstalled() {
     }
 }
 
-void GuiMainWindow::updateServerList() {
+void GuiMainWindow::updateServerList()
+{
     updateJsonList();
 
     getModules();
 }
 
-void GuiMainWindow::updateAllInstalledPlugins() {
+void GuiMainWindow::updateAllInstalledPlugins()
+{
     DialogGetFileFromServerProcess dialogGetFileFromServer(this, modulesData.listUpdates);
 
     connect(&dialogGetFileFromServer, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
@@ -557,7 +589,8 @@ void GuiMainWindow::updateAllInstalledPlugins() {
     installPlugins(&listNames);
 }
 
-void GuiMainWindow::checkForUpdates() {
+void GuiMainWindow::checkForUpdates()
+{
     QNetworkAccessManager manager(this);
     QNetworkRequest request(QUrl(X_SERVERVERSION));
     QNetworkReply *pReply = manager.get(request);
@@ -587,42 +620,52 @@ void GuiMainWindow::checkForUpdates() {
     delete pReply;
 }
 
-void GuiMainWindow::on_pushButtonUpdateServerList_clicked() {
+void GuiMainWindow::on_pushButtonUpdateServerList_clicked()
+{
     updateServerList();
 }
 
-void GuiMainWindow::on_pushButtonUpdateAllInstalledPlugins_clicked() {
+void GuiMainWindow::on_pushButtonUpdateAllInstalledPlugins_clicked()
+{
     updateAllInstalledPlugins();
 }
 
-void GuiMainWindow::on_actionExit_triggered() {
+void GuiMainWindow::on_actionExit_triggered()
+{
     exitProgram();
 }
 
-void GuiMainWindow::on_actionAbout_triggered() {
+void GuiMainWindow::on_actionAbout_triggered()
+{
     aboutDialog();
 }
 
-void GuiMainWindow::on_actionOpen_triggered() {
+void GuiMainWindow::on_actionOpen_triggered()
+{
     openPlugin();
 }
 
-void GuiMainWindow::on_actionCreate_triggered() {
+void GuiMainWindow::on_actionCreate_triggered()
+{
     createPlugin();
 }
 
-void GuiMainWindow::on_actionOptions_triggered() {
+void GuiMainWindow::on_actionOptions_triggered()
+{
     optionsDialog();
 }
 
-void GuiMainWindow::on_actionUpdate_server_list_triggered() {
+void GuiMainWindow::on_actionUpdate_server_list_triggered()
+{
     updateServerList();
 }
 
-void GuiMainWindow::on_actionUpdate_all_installed_plugins_triggered() {
+void GuiMainWindow::on_actionUpdate_all_installed_plugins_triggered()
+{
     updateAllInstalledPlugins();
 }
 
-void GuiMainWindow::on_actionCheck_for_updates_triggered() {
+void GuiMainWindow::on_actionCheck_for_updates_triggered()
+{
     checkForUpdates();
 }

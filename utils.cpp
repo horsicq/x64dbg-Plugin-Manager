@@ -20,10 +20,12 @@
 //
 #include "utils.h"
 
-Utils::Utils(QObject *pParent) : QObject(pParent) {
+Utils::Utils(QObject *pParent) : QObject(pParent)
+{
 }
 
-QList<Utils::RECORD> Utils::getRecords(QString sRootPath) {
+QList<Utils::RECORD> Utils::getRecords(QString sRootPath)
+{
     QList<Utils::RECORD> listResult;
 
     QFileInfo fi(sRootPath);
@@ -35,7 +37,8 @@ QList<Utils::RECORD> Utils::getRecords(QString sRootPath) {
     return listResult;
 }
 
-bool Utils::checkMData(Utils::MDATA *pMData, QString *psErrorString) {
+bool Utils::checkMData(Utils::MDATA *pMData, QString *psErrorString)
+{
     bool bResult = true;
 
     if (bResult && (pMData->sName == "")) {
@@ -58,7 +61,8 @@ bool Utils::checkMData(Utils::MDATA *pMData, QString *psErrorString) {
     return bResult;
 }
 
-QString Utils::createBundleName(Utils::MDATA *pMData) {
+QString Utils::createBundleName(Utils::MDATA *pMData)
+{
     QString sResult;
 
     sResult += pMData->sName;
@@ -70,7 +74,8 @@ QString Utils::createBundleName(Utils::MDATA *pMData) {
     return sResult;
 }
 
-bool Utils::isPluginValid(QString sFileName) {
+bool Utils::isPluginValid(QString sFileName)
+{
     bool bResult = false;
 
     QFile file;
@@ -86,7 +91,8 @@ bool Utils::isPluginValid(QString sFileName) {
     return bResult;
 }
 
-bool Utils::isPluginValid(QIODevice *pDevice) {
+bool Utils::isPluginValid(QIODevice *pDevice)
+{
     bool bResult = false;
 
     XZip xzip(pDevice);
@@ -102,7 +108,8 @@ bool Utils::isPluginValid(QIODevice *pDevice) {
     return bResult;
 }
 
-QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords) {
+QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords)
+{
     QByteArray baResult;
 
     QJsonObject recordObject;
@@ -166,7 +173,8 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
     return baResult;
 }
 
-Utils::MDATA Utils::getMDataFromZip(QString sFileName, QString sRootPath) {
+Utils::MDATA Utils::getMDataFromZip(QString sFileName, QString sRootPath)
+{
     Utils::MDATA result = {};
 
     QFile file;
@@ -182,7 +190,8 @@ Utils::MDATA Utils::getMDataFromZip(QString sFileName, QString sRootPath) {
     return result;
 }
 
-Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath) {
+Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath)
+{
     Utils::MDATA result = {};
 
     result.sRoot = sRootPath;
@@ -203,7 +212,8 @@ Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath) {
     return result;
 }
 
-Utils::MDATA Utils::getMDataFromData(QByteArray baData) {
+Utils::MDATA Utils::getMDataFromData(QByteArray baData)
+{
     Utils::MDATA result = {};
 
     QJsonDocument jsDoc = QJsonDocument::fromJson(baData);
@@ -215,7 +225,8 @@ Utils::MDATA Utils::getMDataFromData(QByteArray baData) {
     return result;
 }
 
-Utils::MDATA Utils::getMDataFromJSONFile(QString sFileName) {
+Utils::MDATA Utils::getMDataFromJSONFile(QString sFileName)
+{
     Utils::MDATA result = {};
 
     QByteArray baData = XBinary::readFile(sFileName);
@@ -225,7 +236,8 @@ Utils::MDATA Utils::getMDataFromJSONFile(QString sFileName) {
     return result;
 }
 
-QList<Utils::MDATA> Utils::getInstalledModules(QString sDataPath, QString sRootPath) {
+QList<Utils::MDATA> Utils::getInstalledModules(QString sDataPath, QString sRootPath)
+{
     QList<Utils::MDATA> listResult;
 
     sDataPath = XBinary::convertPathName(sDataPath);
@@ -258,7 +270,8 @@ QList<Utils::MDATA> Utils::getInstalledModules(QString sDataPath, QString sRootP
     return listResult;
 }
 
-QList<Utils::MDATA> Utils::getModulesFromJSONFile(QString sFileName) {
+QList<Utils::MDATA> Utils::getModulesFromJSONFile(QString sFileName)
+{
     QList<Utils::MDATA> listResult;
 
     QByteArray baData = XBinary::readFile(sFileName);
@@ -287,7 +300,8 @@ QList<Utils::MDATA> Utils::getModulesFromJSONFile(QString sFileName) {
     return listResult;
 }
 
-QDate Utils::getDateFromJSONFile(QString sFileName) {
+QDate Utils::getDateFromJSONFile(QString sFileName)
+{
     QDate dtResult;
 
     QByteArray baData = XBinary::readFile(sFileName);
@@ -301,7 +315,8 @@ QDate Utils::getDateFromJSONFile(QString sFileName) {
     return dtResult;
 }
 
-bool Utils::createServerList(QString sListFileName, QList<QString> *pList, QString sWebPrefix, QString sDate) {
+bool Utils::createServerList(QString sListFileName, QList<QString> *pList, QString sWebPrefix, QString sDate)
+{
     bool bResult = false;
 
     QJsonArray arrayModules;
@@ -333,7 +348,8 @@ bool Utils::createServerList(QString sListFileName, QList<QString> *pList, QStri
     return bResult;
 }
 
-void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject) {
+void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject)
+{
     pObject->insert("Name", QJsonValue::fromVariant(pMData->sName));
     pObject->insert("Version", QJsonValue::fromVariant(pMData->sVersion));
     pObject->insert("Date", QJsonValue::fromVariant(pMData->sDate));
@@ -420,7 +436,8 @@ void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject) {
     }
 }
 
-void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData) {
+void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
+{
     pMData->sName = pObject->value("Name").toString();
     pMData->sVersion = pObject->value("Version").toString();
     pMData->sDate = pObject->value("Date").toString();
@@ -485,7 +502,8 @@ void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData) {
     }
 }
 
-void Utils::handleRecordToObject(Utils::HANDLE_RECORD *pHandleRecord, QJsonObject *pObject) {
+void Utils::handleRecordToObject(Utils::HANDLE_RECORD *pHandleRecord, QJsonObject *pObject)
+{
     pObject->insert("Path", QJsonValue::fromVariant(pHandleRecord->sPath));
     pObject->insert("Action", QJsonValue::fromVariant(actionIdToString(pHandleRecord->action)));
 
@@ -502,7 +520,8 @@ void Utils::handleRecordToObject(Utils::HANDLE_RECORD *pHandleRecord, QJsonObjec
     }
 }
 
-void Utils::objectToHandleRecord(QJsonObject *pObject, Utils::HANDLE_RECORD *pHandleRecord) {
+void Utils::objectToHandleRecord(QJsonObject *pObject, Utils::HANDLE_RECORD *pHandleRecord)
+{
     pHandleRecord->sSrc = pObject->value("Src").toString();
     pHandleRecord->sPath = pObject->value("Path").toString();
     pHandleRecord->sSHA1 = pObject->value("SHA1").toString();
@@ -510,7 +529,8 @@ void Utils::objectToHandleRecord(QJsonObject *pObject, Utils::HANDLE_RECORD *pHa
     pHandleRecord->action = stringToActionId(pObject->value("Action").toString());
 }
 
-QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QString sDataPath, QList<Utils::MDATA> *pServerList, QList<Utils::MDATA> *pInstalled) {
+QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QString sDataPath, QList<Utils::MDATA> *pServerList, QList<Utils::MDATA> *pInstalled)
+{
     QMap<QString, Utils::STATUS> mapResult;
 
     int nCount = pServerList->count();
@@ -564,7 +584,8 @@ QMap<QString, Utils::STATUS> Utils::getModulesStatusMap(QString sDataPath, QList
     return mapResult;
 }
 
-Utils::MODULES_DATA Utils::getModulesData(QString sDataPath) {
+Utils::MODULES_DATA Utils::getModulesData(QString sDataPath)
+{
     MODULES_DATA result = {};
 
     result.listServerList = Utils::getModulesFromJSONFile(Utils::getServerListFileName(sDataPath));
@@ -575,7 +596,8 @@ Utils::MODULES_DATA Utils::getModulesData(QString sDataPath) {
     return result;
 }
 
-QList<Utils::WEB_RECORD> Utils::getUpdates(QMap<QString, STATUS> *pMapStatus) {
+QList<Utils::WEB_RECORD> Utils::getUpdates(QMap<QString, STATUS> *pMapStatus)
+{
     QList<Utils::WEB_RECORD> listResult;
 
     QList<STATUS> listStatuses = pMapStatus->values();
@@ -593,27 +615,33 @@ QList<Utils::WEB_RECORD> Utils::getUpdates(QMap<QString, STATUS> *pMapStatus) {
     return listResult;
 }
 
-QString Utils::getInstalledJsonFileName(QString sDataPath, QString sName) {
+QString Utils::getInstalledJsonFileName(QString sDataPath, QString sName)
+{
     return XBinary::convertPathName(sDataPath) + QDir::separator() + "installed" + QDir::separator() + QString("%1.json").arg(sName);
 }
 
-QString Utils::getServerListFileName(QString sDataPath) {
+QString Utils::getServerListFileName(QString sDataPath)
+{
     return XBinary::convertPathName(sDataPath) + QDir::separator() + "list.json";
 }
 
-QString Utils::getServerLastestListFileName(QString sDataPath) {
+QString Utils::getServerLastestListFileName(QString sDataPath)
+{
     return XBinary::convertPathName(sDataPath) + QDir::separator() + "list.lastest.json";
 }
 
-QString Utils::getModuleFileName(QString sDataPath, QString sName) {
+QString Utils::getModuleFileName(QString sDataPath, QString sName)
+{
     return XBinary::convertPathName(sDataPath) + QDir::separator() + "modules" + QDir::separator() + QString("%1.x64dbg.zip").arg(sName);
 }
 
-QString Utils::getConvertPath(QString sDataPath, QString sName) {
+QString Utils::getConvertPath(QString sDataPath, QString sName)
+{
     return XBinary::convertPathName(sDataPath) + QDir::separator() + "modules" + QDir::separator() + QString("%1").arg(sName);
 }
 
-QString Utils::getConvertDownloadFileName(QString sDataPath, QString sName, QString sPattern) {
+QString Utils::getConvertDownloadFileName(QString sDataPath, QString sName, QString sPattern)
+{
     QString sResult;
 
     QString sConvertPath = getConvertPath(sDataPath, sName);
@@ -635,11 +663,13 @@ QString Utils::getConvertDownloadFileName(QString sDataPath, QString sName, QStr
     return sResult;
 }
 
-QString Utils::getConvertModulePath(QString sDataPath, QString sName) {
+QString Utils::getConvertModulePath(QString sDataPath, QString sName)
+{
     return XBinary::convertPathName(sDataPath) + QDir::separator() + "modules" + QDir::separator() + QString("%1").arg(sName) + QDir::separator() + "module";
 }
 
-Utils::MDATA Utils::getMDataByName(QList<MDATA> *pServerList, QString sName) {
+Utils::MDATA Utils::getMDataByName(QList<MDATA> *pServerList, QString sName)
+{
     Utils::MDATA result = {};
 
     int nCount = pServerList->count();
@@ -655,7 +685,8 @@ Utils::MDATA Utils::getMDataByName(QList<MDATA> *pServerList, QString sName) {
     return result;
 }
 
-QList<QString> Utils::getNamesFromWebRecords(QList<Utils::WEB_RECORD> *pListWebRecords) {
+QList<QString> Utils::getNamesFromWebRecords(QList<Utils::WEB_RECORD> *pListWebRecords)
+{
     QList<QString> listResult;
 
     int nCount = pListWebRecords->count();
@@ -667,7 +698,8 @@ QList<QString> Utils::getNamesFromWebRecords(QList<Utils::WEB_RECORD> *pListWebR
     return listResult;
 }
 
-Utils::WEB_RECORD Utils::getWebRecordByName(QList<Utils::WEB_RECORD> *pListWebRecords, QString sName) {
+Utils::WEB_RECORD Utils::getWebRecordByName(QList<Utils::WEB_RECORD> *pListWebRecords, QString sName)
+{
     Utils::WEB_RECORD result = {};
 
     int nCount = pListWebRecords->count();
@@ -683,7 +715,8 @@ Utils::WEB_RECORD Utils::getWebRecordByName(QList<Utils::WEB_RECORD> *pListWebRe
     return result;
 }
 
-bool Utils::isGithubPresent(QString sServerListFileName) {
+bool Utils::isGithubPresent(QString sServerListFileName)
+{
     bool bResult = false;
 
     QList<MDATA> listMData = getModulesFromJSONFile(sServerListFileName);
@@ -701,7 +734,8 @@ bool Utils::isGithubPresent(QString sServerListFileName) {
     return bResult;
 }
 
-bool Utils::updateJsonFile(QString sFileName, QList<MDATA> listMData) {
+bool Utils::updateJsonFile(QString sFileName, QList<MDATA> listMData)
+{
     bool bResult = false;
 
     QByteArray baData = XBinary::readFile(sFileName);
@@ -749,7 +783,8 @@ bool Utils::updateJsonFile(QString sFileName, QList<MDATA> listMData) {
     return bResult;
 }
 
-bool Utils::updateServerList(QString sOldFileName, QString sNewFileName) {
+bool Utils::updateServerList(QString sOldFileName, QString sNewFileName)
+{
     bool bResult = false;
 
     if (!XBinary::isFileExists(sOldFileName)) {
@@ -774,7 +809,8 @@ bool Utils::updateServerList(QString sOldFileName, QString sNewFileName) {
     return bResult;
 }
 
-QString Utils::actionIdToString(Utils::ACTION action) {
+QString Utils::actionIdToString(Utils::ACTION action)
+{
     QString sResult = "unknown";
 
     switch (action) {
@@ -804,7 +840,8 @@ QString Utils::actionIdToString(Utils::ACTION action) {
     return sResult;
 }
 
-Utils::ACTION Utils::stringToActionId(QString sAction) {
+Utils::ACTION Utils::stringToActionId(QString sAction)
+{
     Utils::ACTION result = ACTION_UNKNOWN;
 
     if (sAction == "unknown")
@@ -825,7 +862,8 @@ Utils::ACTION Utils::stringToActionId(QString sAction) {
     return result;
 }
 
-bool Utils::checkPattern(QString sString, Utils::MDATA *pMData) {
+bool Utils::checkPattern(QString sString, Utils::MDATA *pMData)
+{
     bool bResult = false;
 
     int nCount = pMData->listConvertRecords.count();
@@ -841,7 +879,8 @@ bool Utils::checkPattern(QString sString, Utils::MDATA *pMData) {
     return bResult;
 }
 
-void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords) {
+void Utils::_getRecords(QString sRootPath, QString sCurrentPath, QList<Utils::RECORD> *pListRecords)
+{
     QFileInfo fi(sCurrentPath);
 
     RECORD record = {};

@@ -22,7 +22,8 @@
 
 #include "ui_dialogcreatemoduleprocess.h"
 
-DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MDATA *pMData, bool bCreateInfoFile) : QDialog(pParent), ui(new Ui::DialogCreateModuleProcess) {
+DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MDATA *pMData, bool bCreateInfoFile) : QDialog(pParent), ui(new Ui::DialogCreateModuleProcess)
+{
     ui->setupUi(this);
 
     this->pMData = pMData;
@@ -50,7 +51,8 @@ DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MD
     pTimer->start(1000);  // 1 sec
 }
 
-DialogCreateModuleProcess::~DialogCreateModuleProcess() {
+DialogCreateModuleProcess::~DialogCreateModuleProcess()
+{
     if (bIsRun) {
         pCreateModuleProcess->stop();
     }
@@ -66,7 +68,8 @@ DialogCreateModuleProcess::~DialogCreateModuleProcess() {
     delete pCreateModuleProcess;
 }
 
-void DialogCreateModuleProcess::on_pushButtonCancel_clicked() {
+void DialogCreateModuleProcess::on_pushButtonCancel_clicked()
+{
     if (bIsRun) {
         pCreateModuleProcess->stop();
         pTimer->stop();
@@ -74,14 +77,16 @@ void DialogCreateModuleProcess::on_pushButtonCancel_clicked() {
     }
 }
 
-void DialogCreateModuleProcess::onCompleted(qint64 nElapsed) {
+void DialogCreateModuleProcess::onCompleted(qint64 nElapsed)
+{
     Q_UNUSED(nElapsed)
     // TODO
     bIsRun = false;
     this->close();
 }
 
-void DialogCreateModuleProcess::timerSlot() {
+void DialogCreateModuleProcess::timerSlot()
+{
     Utils::STATS stats = pCreateModuleProcess->getCurrentStats();
 
     ui->labelInfo->setText(stats.sFile);

@@ -22,7 +22,8 @@
 
 #include "ui_dialoginstallmodule.h"
 
-DialogInstallModule::DialogInstallModule(QWidget *pParent, QString sDataPath, QString sRootPath) : QDialog(pParent), ui(new Ui::DialogInstallModule) {
+DialogInstallModule::DialogInstallModule(QWidget *pParent, QString sDataPath, QString sRootPath) : QDialog(pParent), ui(new Ui::DialogInstallModule)
+{
     ui->setupUi(this);
 
     this->pParent = pParent;
@@ -30,11 +31,13 @@ DialogInstallModule::DialogInstallModule(QWidget *pParent, QString sDataPath, QS
     this->sRootPath = sRootPath;
 }
 
-DialogInstallModule::~DialogInstallModule() {
+DialogInstallModule::~DialogInstallModule()
+{
     delete ui;
 }
 
-void DialogInstallModule::setFileName(QString sModuleFileName) {
+void DialogInstallModule::setFileName(QString sModuleFileName)
+{
     this->sModuleFileName = sModuleFileName;
 
     _mdata = Utils::getMDataFromZip(sModuleFileName, XBinary::convertPathName(sRootPath));
@@ -52,7 +55,8 @@ void DialogInstallModule::setFileName(QString sModuleFileName) {
     }
 }
 
-bool DialogInstallModule::setMData(Utils::MDATA *pMData) {
+bool DialogInstallModule::setMData(Utils::MDATA *pMData)
+{
     bool bResult = false;
 
     QString sSHA1 = pMData->sSHA1;
@@ -148,11 +152,13 @@ bool DialogInstallModule::setMData(Utils::MDATA *pMData) {
     return bResult;
 }
 
-void DialogInstallModule::on_pushButtonCancel_clicked() {
+void DialogInstallModule::on_pushButtonCancel_clicked()
+{
     this->close();
 }
 
-void DialogInstallModule::on_pushButtonOK_clicked() {
+void DialogInstallModule::on_pushButtonOK_clicked()
+{
     DialogInstallModuleProcess dimp(this, sDataPath, sRootPath, QList<QString>() << sModuleFileName);
 
     connect(&dimp, SIGNAL(errorMessage(QString)), this, SIGNAL(errorMessage(QString)));

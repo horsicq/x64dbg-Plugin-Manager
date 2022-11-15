@@ -20,26 +20,31 @@
 //
 #include "installmoduleprocess.h"
 
-InstallModuleProcess::InstallModuleProcess(QObject *pParent) : QObject(pParent) {
+InstallModuleProcess::InstallModuleProcess(QObject *pParent) : QObject(pParent)
+{
     bIsStop = false;
     currentStats = {};
 }
 
-void InstallModuleProcess::setData(QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames) {
+void InstallModuleProcess::setData(QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames)
+{
     this->sDataPath = XBinary::convertPathName(sDataPath);
     this->sRootPath = XBinary::convertPathName(sRootPath);
     this->listModuleFileNames = listModuleFileNames;
 }
 
-void InstallModuleProcess::stop() {
+void InstallModuleProcess::stop()
+{
     bIsStop = true;
 }
 
-Utils::STATS InstallModuleProcess::getCurrentStats() {
+Utils::STATS InstallModuleProcess::getCurrentStats()
+{
     return currentStats;
 }
 
-void InstallModuleProcess::process() {
+void InstallModuleProcess::process()
+{
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 

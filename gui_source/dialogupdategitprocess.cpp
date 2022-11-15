@@ -22,7 +22,8 @@
 
 #include "ui_dialogupdategitprocess.h"
 
-DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sDataPath) : QDialog(pParent), ui(new Ui::DialogUpdateGitProcess) {
+DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sDataPath) : QDialog(pParent), ui(new Ui::DialogUpdateGitProcess)
+{
     ui->setupUi(this);
 
     this->sDataPath = sDataPath;
@@ -50,7 +51,8 @@ DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sDataPa
     pTimer->start(100);  // 0.1 sec
 }
 
-DialogUpdateGitProcess::~DialogUpdateGitProcess() {
+DialogUpdateGitProcess::~DialogUpdateGitProcess()
+{
     if (bIsRun) {
         pUpdateGitProcess->stop();
     }
@@ -66,7 +68,8 @@ DialogUpdateGitProcess::~DialogUpdateGitProcess() {
     delete pUpdateGitProcess;
 }
 
-void DialogUpdateGitProcess::on_pushButtonCancel_clicked() {
+void DialogUpdateGitProcess::on_pushButtonCancel_clicked()
+{
     if (bIsRun) {
         pUpdateGitProcess->stop();
         pTimer->stop();
@@ -74,14 +77,16 @@ void DialogUpdateGitProcess::on_pushButtonCancel_clicked() {
     }
 }
 
-void DialogUpdateGitProcess::onCompleted(qint64 nElapsed) {
+void DialogUpdateGitProcess::onCompleted(qint64 nElapsed)
+{
     Q_UNUSED(nElapsed)
     // TODO
     bIsRun = false;
     this->close();
 }
 
-void DialogUpdateGitProcess::timerSlot() {
+void DialogUpdateGitProcess::timerSlot()
+{
     Utils::STATS stats = pUpdateGitProcess->getCurrentStats();
 
     ui->labelInfo->setText(stats.sFile);

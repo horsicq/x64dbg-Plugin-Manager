@@ -20,25 +20,30 @@
 //
 #include "convertprocess.h"
 
-ConvertProcess::ConvertProcess(QObject *pParent) : QObject(pParent) {
+ConvertProcess::ConvertProcess(QObject *pParent) : QObject(pParent)
+{
     bIsStop = false;
     currentStats = {};
 }
 
-void ConvertProcess::setData(Utils::MDATA *pMData, QString sDataPath) {
+void ConvertProcess::setData(Utils::MDATA *pMData, QString sDataPath)
+{
     this->pMData = pMData;
     this->sDataPath = XBinary::convertPathName(sDataPath);
 }
 
-void ConvertProcess::stop() {
+void ConvertProcess::stop()
+{
     bIsStop = true;
 }
 
-Utils::STATS ConvertProcess::getCurrentStats() {
+Utils::STATS ConvertProcess::getCurrentStats()
+{
     return currentStats;
 }
 
-void ConvertProcess::process() {
+void ConvertProcess::process()
+{
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 

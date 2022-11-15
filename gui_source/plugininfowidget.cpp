@@ -22,15 +22,18 @@
 
 #include "ui_plugininfowidget.h"
 
-PluginInfoWidget::PluginInfoWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::PluginInfoWidget) {
+PluginInfoWidget::PluginInfoWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::PluginInfoWidget)
+{
     ui->setupUi(this);
 }
 
-PluginInfoWidget::~PluginInfoWidget() {
+PluginInfoWidget::~PluginInfoWidget()
+{
     delete ui;
 }
 
-void PluginInfoWidget::setData(Utils::MDATA *pMData) {
+void PluginInfoWidget::setData(Utils::MDATA *pMData)
+{
     QString sText;
 
     sText += QString("<b>%1:</b> %2<br />").arg(tr("Name")).arg(pMData->sName);

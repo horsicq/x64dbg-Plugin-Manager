@@ -23,7 +23,8 @@
 #include "ui_dialogremovemoduleprocess.h"
 
 DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleNames)
-    : QDialog(pParent), ui(new Ui::DialogRemoveModuleProcess) {
+    : QDialog(pParent), ui(new Ui::DialogRemoveModuleProcess)
+{
     ui->setupUi(this);
 
     this->sDataPath = sDataPath;
@@ -56,7 +57,8 @@ DialogRemoveModuleProcess::DialogRemoveModuleProcess(QWidget *pParent, QString s
     pTimer->start(1000);  // 1 sec
 }
 
-DialogRemoveModuleProcess::~DialogRemoveModuleProcess() {
+DialogRemoveModuleProcess::~DialogRemoveModuleProcess()
+{
     if (bIsRun) {
         pRemoveModuleProcess->stop();
     }
@@ -72,7 +74,8 @@ DialogRemoveModuleProcess::~DialogRemoveModuleProcess() {
     delete pRemoveModuleProcess;
 }
 
-void DialogRemoveModuleProcess::on_pushButtonCancel_clicked() {
+void DialogRemoveModuleProcess::on_pushButtonCancel_clicked()
+{
     if (bIsRun) {
         pRemoveModuleProcess->stop();
         pTimer->stop();
@@ -80,14 +83,16 @@ void DialogRemoveModuleProcess::on_pushButtonCancel_clicked() {
     }
 }
 
-void DialogRemoveModuleProcess::onCompleted(qint64 nElapsed) {
+void DialogRemoveModuleProcess::onCompleted(qint64 nElapsed)
+{
     Q_UNUSED(nElapsed)
     // TODO
     bIsRun = false;
     this->close();
 }
 
-void DialogRemoveModuleProcess::timerSlot() {
+void DialogRemoveModuleProcess::timerSlot()
+{
     Utils::STATS stats = pRemoveModuleProcess->getCurrentStats();
 
     ui->labelInfoFile->setText(stats.sFile);

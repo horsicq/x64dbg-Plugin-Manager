@@ -20,26 +20,31 @@
 //
 #include "removemoduleprocess.h"
 
-RemoveModuleProcess::RemoveModuleProcess(QObject *pParent) : QObject(pParent) {
+RemoveModuleProcess::RemoveModuleProcess(QObject *pParent) : QObject(pParent)
+{
     bIsStop = false;
     currentStats = {};
 }
 
-void RemoveModuleProcess::setData(QString sDataPath, QString sRootPath, QList<QString> listModuleNames) {
+void RemoveModuleProcess::setData(QString sDataPath, QString sRootPath, QList<QString> listModuleNames)
+{
     this->sDataPath = XBinary::convertPathName(sDataPath);
     this->sRootPath = XBinary::convertPathName(sRootPath);
     this->listModuleNames = listModuleNames;
 }
 
-void RemoveModuleProcess::stop() {
+void RemoveModuleProcess::stop()
+{
     bIsStop = true;
 }
 
-Utils::STATS RemoveModuleProcess::getCurrentStats() {
+Utils::STATS RemoveModuleProcess::getCurrentStats()
+{
     return currentStats;
 }
 
-void RemoveModuleProcess::process() {
+void RemoveModuleProcess::process()
+{
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 

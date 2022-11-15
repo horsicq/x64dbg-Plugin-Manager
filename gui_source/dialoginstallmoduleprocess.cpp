@@ -23,7 +23,8 @@
 #include "ui_dialoginstallmoduleprocess.h"
 
 DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *pParent, QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames)
-    : QDialog(pParent), ui(new Ui::DialogInstallModuleProcess) {
+    : QDialog(pParent), ui(new Ui::DialogInstallModuleProcess)
+{
     ui->setupUi(this);
 
     this->sDataPath = sDataPath;
@@ -56,7 +57,8 @@ DialogInstallModuleProcess::DialogInstallModuleProcess(QWidget *pParent, QString
     pTimer->start(1000);  // 1 sec
 }
 
-DialogInstallModuleProcess::~DialogInstallModuleProcess() {
+DialogInstallModuleProcess::~DialogInstallModuleProcess()
+{
     if (bIsRun) {
         pInstallModuleProcess->stop();
     }
@@ -72,7 +74,8 @@ DialogInstallModuleProcess::~DialogInstallModuleProcess() {
     delete pInstallModuleProcess;
 }
 
-void DialogInstallModuleProcess::on_pushButtonCancel_clicked() {
+void DialogInstallModuleProcess::on_pushButtonCancel_clicked()
+{
     if (bIsRun) {
         pInstallModuleProcess->stop();
         pTimer->stop();
@@ -80,14 +83,16 @@ void DialogInstallModuleProcess::on_pushButtonCancel_clicked() {
     }
 }
 
-void DialogInstallModuleProcess::onCompleted(qint64 nElapsed) {
+void DialogInstallModuleProcess::onCompleted(qint64 nElapsed)
+{
     Q_UNUSED(nElapsed)
     // TODO
     bIsRun = false;
     this->close();
 }
 
-void DialogInstallModuleProcess::timerSlot() {
+void DialogInstallModuleProcess::timerSlot()
+{
     Utils::STATS stats = pInstallModuleProcess->getCurrentStats();
 
     ui->labelInfoFile->setText(stats.sFile);

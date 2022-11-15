@@ -22,7 +22,8 @@
 
 #include "ui_dialogcreatemodule.h"
 
-DialogCreateModule::DialogCreateModule(QWidget *pParent) : QDialog(pParent), ui(new Ui::DialogCreateModule) {
+DialogCreateModule::DialogCreateModule(QWidget *pParent) : QDialog(pParent), ui(new Ui::DialogCreateModule)
+{
     ui->setupUi(this);
 
     mdata = {};
@@ -31,11 +32,13 @@ DialogCreateModule::DialogCreateModule(QWidget *pParent) : QDialog(pParent), ui(
     ui->pushButtonSave->setEnabled(false);
 }
 
-DialogCreateModule::~DialogCreateModule() {
+DialogCreateModule::~DialogCreateModule()
+{
     delete ui;
 }
 
-void DialogCreateModule::on_pushButtonLoad_clicked() {
+void DialogCreateModule::on_pushButtonLoad_clicked()
+{
     //    QString sInitDirectory=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     QString sInitDirectory;
 
@@ -54,7 +57,8 @@ void DialogCreateModule::on_pushButtonLoad_clicked() {
     }
 }
 
-void DialogCreateModule::on_pushButtonSave_clicked() {
+void DialogCreateModule::on_pushButtonSave_clicked()
+{
     //    QString sFileName=QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+QDir::separator()+ui->lineEditName->text()+".pro.ini";
     QString sFileName;
 
@@ -73,7 +77,8 @@ void DialogCreateModule::on_pushButtonSave_clicked() {
     }
 }
 
-void DialogCreateModule::on_pushButtonCreate_clicked() {
+void DialogCreateModule::on_pushButtonCreate_clicked()
+{
     QString sFileName = Utils::createBundleName(&mdata) + ".x64dbg.zip";
     sFileName = QFileDialog::getSaveFileName(this, tr("Save plugin bundle"), sFileName, "*.x64dbg.zip");
 
@@ -94,7 +99,8 @@ void DialogCreateModule::on_pushButtonCreate_clicked() {
     }
 }
 
-void DialogCreateModule::on_toolButtonRoot_clicked() {
+void DialogCreateModule::on_toolButtonRoot_clicked()
+{
     QString sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Select plugin root directory"), ui->lineEditRoot->text());
 
     if (sDirectoryName != "") {
@@ -102,7 +108,8 @@ void DialogCreateModule::on_toolButtonRoot_clicked() {
     }
 }
 
-void DialogCreateModule::on_lineEditRoot_textChanged(const QString &sDirectoryName) {
+void DialogCreateModule::on_lineEditRoot_textChanged(const QString &sDirectoryName)
+{
     mdata.sRoot = "";
 
     QString _sDirectoryName = sDirectoryName;
@@ -130,11 +137,13 @@ void DialogCreateModule::on_lineEditRoot_textChanged(const QString &sDirectoryNa
     }
 }
 
-void DialogCreateModule::on_pushButtonCancel_clicked() {
+void DialogCreateModule::on_pushButtonCancel_clicked()
+{
     this->close();
 }
 
-void DialogCreateModule::on_lineEditName_textChanged(const QString &sName) {
+void DialogCreateModule::on_lineEditName_textChanged(const QString &sName)
+{
     QSignalBlocker(ui->lineEditName);
 
     QString _sName = sName;
@@ -149,31 +158,38 @@ void DialogCreateModule::on_lineEditName_textChanged(const QString &sName) {
     ui->pushButtonSave->setEnabled(_sName != "");
 }
 
-void DialogCreateModule::on_lineEditVersion_textChanged(const QString &sVersion) {
+void DialogCreateModule::on_lineEditVersion_textChanged(const QString &sVersion)
+{
     // TODO Checks
     mdata.sVersion = sVersion;
 }
 
-void DialogCreateModule::on_pushButtonCurrentDate_clicked() {
+void DialogCreateModule::on_pushButtonCurrentDate_clicked()
+{
     _currentDate();
 }
 
-void DialogCreateModule::_currentDate() {
+void DialogCreateModule::_currentDate()
+{
     ui->dateEdit->setDate(QDate::currentDate());
 }
 
-void DialogCreateModule::on_dateEdit_dateChanged(const QDate &date) {
+void DialogCreateModule::on_dateEdit_dateChanged(const QDate &date)
+{
     mdata.sDate = date.toString("yyyy-MM-dd");
 }
 
-void DialogCreateModule::on_lineEditInfo_textChanged(const QString &sInfo) {
+void DialogCreateModule::on_lineEditInfo_textChanged(const QString &sInfo)
+{
     mdata.sInfo = sInfo;
 }
 
-void DialogCreateModule::on_lineEditAuthor_textChanged(const QString &sAuthor) {
+void DialogCreateModule::on_lineEditAuthor_textChanged(const QString &sAuthor)
+{
     mdata.sAuthor = sAuthor;
 }
 
-void DialogCreateModule::on_lineEditBugreport_textChanged(const QString &sBugreport) {
+void DialogCreateModule::on_lineEditBugreport_textChanged(const QString &sBugreport)
+{
     mdata.sBugreport = sBugreport;
 }
