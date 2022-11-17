@@ -20,7 +20,8 @@
 //
 #include "convertprocess.h"
 
-ConvertProcess::ConvertProcess(QObject *pParent) : QObject(pParent)
+ConvertProcess::ConvertProcess(QObject *pParent)
+    : QObject(pParent)
 {
     bIsStop = false;
     currentStats = {};

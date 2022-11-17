@@ -20,7 +20,8 @@
 //
 #include "installmoduleprocess.h"
 
-InstallModuleProcess::InstallModuleProcess(QObject *pParent) : QObject(pParent)
+InstallModuleProcess::InstallModuleProcess(QObject *pParent)
+    : QObject(pParent)
 {
     bIsStop = false;
     currentStats = {};

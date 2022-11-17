@@ -20,7 +20,8 @@
 //
 #include "createmoduleprocess.h"
 
-CreateModuleProcess::CreateModuleProcess(QObject *pParent) : QObject(pParent)
+CreateModuleProcess::CreateModuleProcess(QObject *pParent)
+    : QObject(pParent)
 {
     bIsStop = false;
     currentStats = {};

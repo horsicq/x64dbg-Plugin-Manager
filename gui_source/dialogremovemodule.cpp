@@ -22,7 +22,8 @@
 
 #include "ui_dialogremovemodule.h"
 
-DialogRemoveModule::DialogRemoveModule(QWidget *pParent, QString sDataPath, QString sRootPath, QString sModuleName) : QDialog(pParent), ui(new Ui::DialogRemoveModule)
+DialogRemoveModule::DialogRemoveModule(QWidget *pParent, QString sDataPath, QString sRootPath, QString sModuleName)
+    : QDialog(pParent), ui(new Ui::DialogRemoveModule)
 {
     ui->setupUi(this);
 

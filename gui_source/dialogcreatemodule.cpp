@@ -22,7 +22,8 @@
 
 #include "ui_dialogcreatemodule.h"
 
-DialogCreateModule::DialogCreateModule(QWidget *pParent) : QDialog(pParent), ui(new Ui::DialogCreateModule)
+DialogCreateModule::DialogCreateModule(QWidget *pParent)
+    : QDialog(pParent), ui(new Ui::DialogCreateModule)
 {
     ui->setupUi(this);
 

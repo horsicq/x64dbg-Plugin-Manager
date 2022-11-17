@@ -20,7 +20,8 @@
 //
 #include "removemoduleprocess.h"
 
-RemoveModuleProcess::RemoveModuleProcess(QObject *pParent) : QObject(pParent)
+RemoveModuleProcess::RemoveModuleProcess(QObject *pParent)
+    : QObject(pParent)
 {
     bIsStop = false;
     currentStats = {};
