@@ -22,8 +22,7 @@
 
 #include "ui_plugininfowidget.h"
 
-PluginInfoWidget::PluginInfoWidget(QWidget *pParent)
-    : QWidget(pParent), ui(new Ui::PluginInfoWidget)
+PluginInfoWidget::PluginInfoWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::PluginInfoWidget)
 {
     ui->setupUi(this);
 }

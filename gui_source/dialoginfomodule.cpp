@@ -22,8 +22,7 @@
 
 #include "ui_dialoginfomodule.h"
 
-DialogInfoModule::DialogInfoModule(QWidget *pParent, Utils::MDATA *pMData)
-    : QDialog(pParent), ui(new Ui::DialogInfoModule)
+DialogInfoModule::DialogInfoModule(QWidget *pParent, Utils::MDATA *pMData) : QDialog(pParent), ui(new Ui::DialogInfoModule)
 {
     ui->setupUi(this);
 

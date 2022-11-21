@@ -20,8 +20,7 @@
 //
 #include "updategitprocess.h"
 
-UpdateGitProcess::UpdateGitProcess(QObject *pParent)
-    : QObject(pParent)
+UpdateGitProcess::UpdateGitProcess(QObject *pParent) : QObject(pParent)
 {
     bIsStop = false;
     currentStats = {};

@@ -22,8 +22,7 @@
 
 #include "ui_dialogupdategitprocess.h"
 
-DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sDataPath)
-    : QDialog(pParent), ui(new Ui::DialogUpdateGitProcess)
+DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sDataPath) : QDialog(pParent), ui(new Ui::DialogUpdateGitProcess)
 {
     ui->setupUi(this);
 

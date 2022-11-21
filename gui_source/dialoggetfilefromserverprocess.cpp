@@ -22,8 +22,7 @@
 
 #include "ui_dialoggetfilefromserverprocess.h"
 
-DialogGetFileFromServerProcess::DialogGetFileFromServerProcess(QWidget *pParent, QList<Utils::WEB_RECORD> listWebRecords)
-    : QDialog(pParent), ui(new Ui::DialogGetFileFromServerProcess)
+DialogGetFileFromServerProcess::DialogGetFileFromServerProcess(QWidget *pParent, QList<Utils::WEB_RECORD> listWebRecords) : QDialog(pParent), ui(new Ui::DialogGetFileFromServerProcess)
 {
     ui->setupUi(this);
 

@@ -522,8 +522,8 @@ int main(int argc, char *argv[])
         Utils::updateServerList(sServerListFileName, sServerLastestListFileName);
 
         nReturnCode = PLGMNGREXITCODE_SERVERLISTUPDATED;
-    } else if (parser.isSet(clInstallPlugin) || parser.isSet(clInstallFile) || parser.isSet(clUpdatePlugin) || parser.isSet(clRemovePlugin) ||
-               parser.isSet(clUpdateAllInstalledPlugins) || parser.isSet(clShowServerList) || parser.isSet(clShowInstalled) || parser.isSet(clShowUpdates)) {
+    } else if (parser.isSet(clInstallPlugin) || parser.isSet(clInstallFile) || parser.isSet(clUpdatePlugin) || parser.isSet(clRemovePlugin) || parser.isSet(clUpdateAllInstalledPlugins) ||
+               parser.isSet(clShowServerList) || parser.isSet(clShowInstalled) || parser.isSet(clShowUpdates)) {
         bProcess = true;
 
         if (bRootPathPresent && bDataPathPresent) {

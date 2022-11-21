@@ -22,8 +22,7 @@
 
 #include "ui_dialogconvertprocess.h"
 
-DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData, QString sDataPath)
-    : QDialog(pParent), ui(new Ui::DialogConvertProcess)
+DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMData, QString sDataPath) : QDialog(pParent), ui(new Ui::DialogConvertProcess)
 {
     ui->setupUi(this);
 

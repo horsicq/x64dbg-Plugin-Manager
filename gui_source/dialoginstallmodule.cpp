@@ -22,8 +22,7 @@
 
 #include "ui_dialoginstallmodule.h"
 
-DialogInstallModule::DialogInstallModule(QWidget *pParent, QString sDataPath, QString sRootPath)
-    : QDialog(pParent), ui(new Ui::DialogInstallModule)
+DialogInstallModule::DialogInstallModule(QWidget *pParent, QString sDataPath, QString sRootPath) : QDialog(pParent), ui(new Ui::DialogInstallModule)
 {
     ui->setupUi(this);
 
