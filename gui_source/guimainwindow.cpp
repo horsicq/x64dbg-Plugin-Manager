@@ -58,7 +58,8 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
     if (xOptions.getRootPath() == "") {
         QString sDirectoryName;
 
-        if (QMessageBox::information(this, tr("Information"), tr("Please select a root directory for x64dbg"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::Yes) {
+        if (QMessageBox::information(this, tr("Information"), tr("Please select a root directory for x64dbg"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) ==
+            QMessageBox::Yes) {
             sDirectoryName = QFileDialog::getExistingDirectory(this, tr("Select root directory"));
         }
 
@@ -603,8 +604,9 @@ void GuiMainWindow::checkForUpdates()
             QString sVersion = QString(baData.data());
 
             if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
-                if (QMessageBox::information(this, tr("Update information"), QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available")).arg(sVersion).arg(tr("Go to download page?")),
-                                             QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
+                if (QMessageBox::information(this, tr("Update information"),
+                                             QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available")).arg(sVersion).arg(tr("Go to download page?")), QMessageBox::Yes,
+                                             QMessageBox::No) == QMessageBox::Yes) {
                     QDesktopServices::openUrl(QUrl(X_HOMEPAGE));
                 }
             } else {
