@@ -605,8 +605,8 @@ void GuiMainWindow::checkForUpdates()
 
             if (QCoreApplication::applicationVersion().toDouble() < sVersion.toDouble()) {
                 if (QMessageBox::information(this, tr("Update information"),
-                                             QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available")).arg(sVersion).arg(tr("Go to download page?")), QMessageBox::Yes,
-                                             QMessageBox::No) == QMessageBox::Yes) {
+                                             QString("%1\r\n\r\n%2\r\n\r\n%3").arg(tr("New version available")).arg(sVersion).arg(tr("Go to download page?")),
+                                             QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes) {
                     QDesktopServices::openUrl(QUrl(X_HOMEPAGE));
                 }
             } else {
