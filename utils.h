@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -135,12 +135,12 @@ public:
     static QList<RECORD> getRecords(QString sRootPath);
     static bool checkMData(MDATA *pMData, QString *psErrorString);
     static QString createBundleName(MDATA *pMData);
-    static bool isPluginValid(QString sFileName);
-    static bool isPluginValid(QIODevice *pDevice);
+    static bool isPluginValid(QString sFileName, XBinary::PDSTRUCT *pPdStruct);
+    static bool isPluginValid(QIODevice *pDevice, XBinary::PDSTRUCT *pPdStruct);
 
     static QByteArray createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECORD> *pListFileRecords, QList<Utils::DIRECTORY_RECORD> *pListDirectoryRecords);
-    static MDATA getMDataFromZip(QString sFileName, QString sRootPath);
-    static MDATA getMDataFromZip(QIODevice *pDevice, QString sRootPath);
+    static MDATA getMDataFromZip(QString sFileName, QString sRootPath, XBinary::PDSTRUCT *pPdStruct);
+    static MDATA getMDataFromZip(QIODevice *pDevice, QString sRootPath, XBinary::PDSTRUCT *pPdStruct);
     static MDATA getMDataFromData(QByteArray baData);
     static MDATA getMDataFromJSONFile(QString sFileName);
 

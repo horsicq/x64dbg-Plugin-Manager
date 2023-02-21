@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,20 @@
 
 CreateModuleProcess::CreateModuleProcess(QObject *pParent) : QObject(pParent)
 {
-    bIsStop = false;
     currentStats = {};
+    g_pPdStruct = nullptr;
 }
 
-void CreateModuleProcess::setData(Utils::MDATA *pMData, bool bCreateInfoFile)
+void CreateModuleProcess::setData(Utils::MDATA *pMData, bool bCreateInfoFile, XBinary::PDSTRUCT *pPdStruct)
 {
     this->pMData = pMData;
     this->bCreateInfoFile = bCreateInfoFile;
+    this->g_pPdStruct = pPdStruct;
 }
 
 void CreateModuleProcess::stop()
 {
-    bIsStop = true;
+    g_pPdStruct->bIsStop = true;
 }
 
 Utils::STATS CreateModuleProcess::getCurrentStats()
@@ -46,8 +47,6 @@ void CreateModuleProcess::process()
 {
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
-
-    bIsStop = false;
 
     QList<Utils::FILE_RECORD> listFileRecords;
     QList<Utils::DIRECTORY_RECORD> listDirectoryRecords;
@@ -97,7 +96,7 @@ void CreateModuleProcess::process()
         if (fileResult.open(QIODevice::ReadWrite)) {
             QList<XZip::ZIPFILE_RECORD> listZipFiles;
 
-            for (int i = 0; (i < currentStats.nTotalFile) && (!bIsStop); i++) {
+            for (int i = 0; (i < currentStats.nTotalFile) && (!(g_pPdStruct->bIsStop)); i++) {
                 if (listRecords.at(i).bIsFile) {
                     currentStats.sFile = QString("%1: %2").arg(tr("Add file")).arg(listRecords.at(i).sPath);
 
@@ -171,7 +170,7 @@ void CreateModuleProcess::process()
                 bufferInfoFile.close();
             }
 
-            if (!bIsStop) {
+            if (!(g_pPdStruct->bIsStop)) {
                 currentStats.sFile = tr("Add central directory");
 
                 XZip::addCentralDirectory(&fileResult, &listZipFiles, QString("%1 v%2").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));

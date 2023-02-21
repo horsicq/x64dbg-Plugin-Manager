@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -60,13 +60,15 @@ void installFiles(QString sDataPath, QString sRootPath, ConsoleOutput *pConsoleO
 {
     int nCount = pListFileNames->count();
 
+    XBinary::PDSTRUCT pdStructEmpty = XBinary::createPdStruct();
+
     for (int i = 0; i < nCount; i++) {
         QString sFileName = pListFileNames->at(i);
-        if (Utils::isPluginValid(sFileName)) {
+        if (Utils::isPluginValid(sFileName, &pdStructEmpty)) {
             InstallModuleProcess installModuleProcess;
             QObject::connect(&installModuleProcess, SIGNAL(infoMessage(QString)), pConsoleOutput, SLOT(infoMessage(QString)));
             QObject::connect(&installModuleProcess, SIGNAL(errorMessage(QString)), pConsoleOutput, SLOT(errorMessage(QString)));
-            installModuleProcess.setData(sDataPath, sRootPath, QList<QString>() << sFileName);
+            installModuleProcess.setData(sDataPath, sRootPath, QList<QString>() << sFileName, &pdStructEmpty);
             installModuleProcess.process();
         } else {
             pConsoleOutput->errorMessage(QString("Invalid plugin file: %1").arg(sFileName));
@@ -77,6 +79,8 @@ void installFiles(QString sDataPath, QString sRootPath, ConsoleOutput *pConsoleO
 void installModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *pModulesData, ConsoleOutput *pConsoleOutput, QList<QString> *pListModuleNames)
 {
     int nCount = pListModuleNames->count();
+
+    XBinary::PDSTRUCT pdStructEmpty = XBinary::createPdStruct();
 
     for (int i = 0; i < nCount; i++) {
         Utils::MDATA mdata = Utils::getMDataByName(&(pModulesData->listServerList), pListModuleNames->at(i));
@@ -121,7 +125,7 @@ void installModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *p
                     ConvertProcess convertProcess;
                     QObject::connect(&convertProcess, SIGNAL(infoMessage(QString)), pConsoleOutput, SLOT(infoMessage(QString)));
                     QObject::connect(&convertProcess, SIGNAL(errorMessage(QString)), pConsoleOutput, SLOT(errorMessage(QString)));
-                    convertProcess.setData(&mdata, sDataPath);
+                    convertProcess.setData(&mdata, sDataPath, &pdStructEmpty);
                     convertProcess.process();
 
                     Utils::MDATA _mdata = mdata;
@@ -135,7 +139,7 @@ void installModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *p
                         CreateModuleProcess createModuleProcess;
                         QObject::connect(&createModuleProcess, SIGNAL(infoMessage(QString)), pConsoleOutput, SLOT(infoMessage(QString)));
                         QObject::connect(&createModuleProcess, SIGNAL(errorMessage(QString)), pConsoleOutput, SLOT(errorMessage(QString)));
-                        createModuleProcess.setData(&_mdata, false);
+                        createModuleProcess.setData(&_mdata, false, &pdStructEmpty);
                         createModuleProcess.process();
                     } else {
                         pConsoleOutput->errorMessage(sErrorString);
@@ -168,7 +172,7 @@ void installModules(QString sDataPath, QString sRootPath, Utils::MODULES_DATA *p
                 InstallModuleProcess installModuleProcess;
                 QObject::connect(&installModuleProcess, SIGNAL(infoMessage(QString)), pConsoleOutput, SLOT(infoMessage(QString)));
                 QObject::connect(&installModuleProcess, SIGNAL(errorMessage(QString)), pConsoleOutput, SLOT(errorMessage(QString)));
-                installModuleProcess.setData(sDataPath, sRootPath, QList<QString>() << sModuleFileName);
+                installModuleProcess.setData(sDataPath, sRootPath, QList<QString>() << sModuleFileName, &pdStructEmpty);
                 installModuleProcess.process();
             } else {
                 pConsoleOutput->errorMessage(QString("Invalid SHA1: %1").arg(sModuleFileName));
@@ -245,7 +249,7 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     QString sDescription;
     sDescription.append(QString("%1 v%2\n").arg(X_APPLICATIONNAME).arg(X_APPLICATIONVERSION));
-    sDescription.append(QString("%1\n").arg("Copyright(C) 2019-2022 hors<horsicq@gmail.com> Web: http://ntinfo.biz"));
+    sDescription.append(QString("%1\n").arg("Copyright(C) 2019-2023 hors<horsicq@gmail.com> Web: http://ntinfo.biz"));
     parser.setApplicationDescription(sDescription);
     parser.addHelpOption();
     parser.addVersionOption();
@@ -439,10 +443,12 @@ int main(int argc, char *argv[])
         QString sErrorString;
 
         if (Utils::checkMData(&mdata, &sErrorString)) {
+            XBinary::PDSTRUCT pdStructEmpty = XBinary::createPdStruct();
+
             CreateModuleProcess createModuleProcess;
             QObject::connect(&createModuleProcess, SIGNAL(infoMessage(QString)), &consoleOutput, SLOT(infoMessage(QString)));
             QObject::connect(&createModuleProcess, SIGNAL(errorMessage(QString)), &consoleOutput, SLOT(errorMessage(QString)));
-            createModuleProcess.setData(&mdata, true);
+            createModuleProcess.setData(&mdata, true, &pdStructEmpty);
             createModuleProcess.process();
 
             nReturnCode = PLGMNGREXITCODE_PLUGINCREATED;

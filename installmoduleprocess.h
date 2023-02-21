@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ class InstallModuleProcess : public QObject {
 
 public:
     explicit InstallModuleProcess(QObject *pParent = nullptr);
-    void setData(QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames);
+    void setData(QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames, XBinary::PDSTRUCT *pPdStruct);
     void stop();
     Utils::STATS getCurrentStats();
 
@@ -48,7 +48,7 @@ private:
     QString sDataPath;
     QString sRootPath;
     QList<QString> listModuleFileNames;
-    bool bIsStop;
+    XBinary::PDSTRUCT *g_pPdStruct;
     Utils::STATS currentStats;
 };
 

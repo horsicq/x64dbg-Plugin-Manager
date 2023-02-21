@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -74,7 +74,7 @@ QString Utils::createBundleName(Utils::MDATA *pMData)
     return sResult;
 }
 
-bool Utils::isPluginValid(QString sFileName)
+bool Utils::isPluginValid(QString sFileName, XBinary::PDSTRUCT *pPdStruct)
 {
     bool bResult = false;
 
@@ -83,7 +83,7 @@ bool Utils::isPluginValid(QString sFileName)
     file.setFileName(sFileName);
 
     if (file.open(QIODevice::ReadOnly)) {
-        bResult = isPluginValid(&file);
+        bResult = isPluginValid(&file, pPdStruct);
 
         file.close();
     }
@@ -91,18 +91,16 @@ bool Utils::isPluginValid(QString sFileName)
     return bResult;
 }
 
-bool Utils::isPluginValid(QIODevice *pDevice)
+bool Utils::isPluginValid(QIODevice *pDevice, XBinary::PDSTRUCT *pPdStruct)
 {
     bool bResult = false;
 
     XZip xzip(pDevice);
 
     if (xzip.isValid()) {
-        XBinary::PDSTRUCT pdStruct = {};
+        QList<XArchive::RECORD> listRecords = xzip.getRecords(-1, pPdStruct);
 
-        QList<XArchive::RECORD> listRecords = xzip.getRecords(-1, &pdStruct);
-
-        bResult = XArchive::isArchiveRecordPresent("plugin_info.json", &listRecords);
+        bResult = XArchive::isArchiveRecordPresent("plugin_info.json", &listRecords, pPdStruct);
     }
 
     return bResult;
@@ -173,7 +171,7 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
     return baResult;
 }
 
-Utils::MDATA Utils::getMDataFromZip(QString sFileName, QString sRootPath)
+Utils::MDATA Utils::getMDataFromZip(QString sFileName, QString sRootPath, XBinary::PDSTRUCT *pPdStruct)
 {
     Utils::MDATA result = {};
 
@@ -182,7 +180,7 @@ Utils::MDATA Utils::getMDataFromZip(QString sFileName, QString sRootPath)
     file.setFileName(sFileName);
 
     if (file.open(QIODevice::ReadOnly)) {
-        result = getMDataFromZip(&file, sRootPath);
+        result = getMDataFromZip(&file, sRootPath, pPdStruct);
 
         file.close();
     }
@@ -190,7 +188,7 @@ Utils::MDATA Utils::getMDataFromZip(QString sFileName, QString sRootPath)
     return result;
 }
 
-Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath)
+Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath, XBinary::PDSTRUCT *pPdStruct)
 {
     Utils::MDATA result = {};
 
@@ -199,12 +197,11 @@ Utils::MDATA Utils::getMDataFromZip(QIODevice *pDevice, QString sRootPath)
     XZip xzip(pDevice);
 
     if (xzip.isValid()) {
-        XBinary::PDSTRUCT pdStruct = {};
-        QList<XArchive::RECORD> listRecords = xzip.getRecords(-1, &pdStruct);
+        QList<XArchive::RECORD> listRecords = xzip.getRecords(-1, pPdStruct);
 
         XArchive::RECORD pluginInfoRecord = XArchive::getArchiveRecord("plugin_info.json", &listRecords);
 
-        QByteArray baData = xzip.decompress(&pluginInfoRecord, false, nullptr);
+        QByteArray baData = xzip.decompress(&pluginInfoRecord, false, pPdStruct);
 
         result = getMDataFromData(baData);
     }

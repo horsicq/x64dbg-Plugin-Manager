@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,9 @@ void DialogInstallModule::setFileName(QString sModuleFileName)
 {
     this->sModuleFileName = sModuleFileName;
 
-    _mdata = Utils::getMDataFromZip(sModuleFileName, XBinary::convertPathName(sRootPath));
+    XBinary::PDSTRUCT pdStructEmpty = XBinary::createPdStruct();
+
+    _mdata = Utils::getMDataFromZip(sModuleFileName, XBinary::convertPathName(sRootPath), &pdStructEmpty);
 
     ui->widgetInfo->setData(&_mdata);
 

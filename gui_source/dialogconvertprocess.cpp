@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,9 @@ DialogConvertProcess::DialogConvertProcess(QWidget *pParent, Utils::MDATA *pMDat
     pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pConvertProcess->setData(pMData, sDataPath);
+    g_pdStructEmpty = XBinary::createPdStruct();
+
+    pConvertProcess->setData(pMData, sDataPath, &g_pdStructEmpty);
 
     bIsRun = true;
 

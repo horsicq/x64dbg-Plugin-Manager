@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,20 @@
 
 ConvertProcess::ConvertProcess(QObject *pParent) : QObject(pParent)
 {
-    bIsStop = false;
     currentStats = {};
+    g_pPdStruct = nullptr;
 }
 
-void ConvertProcess::setData(Utils::MDATA *pMData, QString sDataPath)
+void ConvertProcess::setData(Utils::MDATA *pMData, QString sDataPath, XBinary::PDSTRUCT *pPdStruct)
 {
     this->pMData = pMData;
     this->sDataPath = XBinary::convertPathName(sDataPath);
+    this->g_pPdStruct = pPdStruct;
 }
 
 void ConvertProcess::stop()
 {
-    bIsStop = true;
+    g_pPdStruct->bIsStop = true;
 }
 
 Utils::STATS ConvertProcess::getCurrentStats()
@@ -47,13 +48,11 @@ void ConvertProcess::process()
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 
-    bIsStop = false;
-
     QString sGithubZipModulePath = Utils::getConvertModulePath(sDataPath, pMData->sName);
 
     currentStats.nTotalModule = pMData->listConvertRecords.count();
 
-    for (int i = 0; (i < currentStats.nTotalModule) && (!bIsStop); i++) {
+    for (int i = 0; (i < currentStats.nTotalModule) && (!(g_pPdStruct->bIsStop)); i++) {
         Utils::HANDLE_RECORD handleRecord = pMData->listConvertRecords.at(i);
 
         QString sFileName = Utils::getConvertDownloadFileName(sDataPath, pMData->sName, handleRecord.sPattern);
@@ -72,12 +71,12 @@ void ConvertProcess::process()
             // TODO errors
         } else if (handleRecord.action == Utils::ACTION_UNPACKFILE) {
             if (sFileName != "") {
-                zip.decompressToFile(sFileName, handleRecord.sSrc, sPath);
+                zip.decompressToFile(sFileName, handleRecord.sSrc, sPath, g_pPdStruct);
             }
             // TODO errors
         } else if (handleRecord.action == Utils::ACTION_UNPACKDIRECTORY) {
             if (sFileName != "") {
-                zip.decompressToPath(sFileName, handleRecord.sSrc, sPath);
+                zip.decompressToPath(sFileName, handleRecord.sSrc, sPath, g_pPdStruct);
             }
             // TODO errors
         }

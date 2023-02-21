@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,9 @@ DialogCreateModuleProcess::DialogCreateModuleProcess(QWidget *pParent, Utils::MD
     pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pCreateModuleProcess->setData(pMData, bCreateInfoFile);
+    g_pdStructEmpty = XBinary::createPdStruct();
+
+    pCreateModuleProcess->setData(pMData, bCreateInfoFile, &g_pdStructEmpty);
 
     bIsRun = true;
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -267,7 +267,9 @@ void GuiMainWindow::getModules()
 
 void GuiMainWindow::openPlugin(QString sFileName)
 {
-    if (Utils::isPluginValid(sFileName)) {
+    XBinary::PDSTRUCT pdStructEmpty = XBinary::createPdStruct();
+
+    if (Utils::isPluginValid(sFileName, &pdStructEmpty)) {
         DialogInstallModule dialogInstallModule(this, xOptions.getDataPath(), xOptions.getRootPath());
         connect(&dialogInstallModule, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
@@ -402,7 +404,9 @@ void GuiMainWindow::dragEnterEvent(QDragEnterEvent *pEvent)
         if (urlList.count()) {
             QString sFileName = urlList.at(0).toLocalFile();
 
-            if (Utils::isPluginValid(sFileName)) {
+            XBinary::PDSTRUCT pdStructEmpty = XBinary::createPdStruct();
+
+            if (Utils::isPluginValid(sFileName, &pdStructEmpty)) {
                 pEvent->acceptProposedAction();
             }
         }

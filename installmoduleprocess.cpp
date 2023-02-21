@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 hors<horsicq@gmail.com>
+// Copyright (c) 2019-2023 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,21 @@
 
 InstallModuleProcess::InstallModuleProcess(QObject *pParent) : QObject(pParent)
 {
-    bIsStop = false;
     currentStats = {};
+    g_pPdStruct = nullptr;
 }
 
-void InstallModuleProcess::setData(QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames)
+void InstallModuleProcess::setData(QString sDataPath, QString sRootPath, QList<QString> listModuleFileNames, XBinary::PDSTRUCT *pPdStruct)
 {
     this->sDataPath = XBinary::convertPathName(sDataPath);
     this->sRootPath = XBinary::convertPathName(sRootPath);
     this->listModuleFileNames = listModuleFileNames;
+    this->g_pPdStruct = pPdStruct;
 }
 
 void InstallModuleProcess::stop()
 {
-    bIsStop = true;
+    g_pPdStruct->bIsStop = true;
 }
 
 Utils::STATS InstallModuleProcess::getCurrentStats()
@@ -48,11 +49,9 @@ void InstallModuleProcess::process()
     QElapsedTimer elapsedTimer;
     elapsedTimer.start();
 
-    bIsStop = false;
-
     currentStats.nTotalModule = listModuleFileNames.count();
 
-    for (qint32 i = 0; (i < currentStats.nTotalModule) && (!bIsStop); i++) {
+    for (qint32 i = 0; (i < currentStats.nTotalModule) && (!(g_pPdStruct->bIsStop)); i++) {
         currentStats.sModule = QString("%1: %2").arg(tr("Install module")).arg(QFileInfo(listModuleFileNames.at(i)).baseName());
         emit infoMessage(currentStats.sModule);
 
@@ -60,17 +59,15 @@ void InstallModuleProcess::process()
         file.setFileName(listModuleFileNames.at(i));
 
         if (file.open(QIODevice::ReadOnly)) {
-            Utils::MDATA mdata = Utils::getMDataFromZip(&file, XBinary::convertPathName(sRootPath));
+            Utils::MDATA mdata = Utils::getMDataFromZip(&file, XBinary::convertPathName(sRootPath), g_pPdStruct);
 
             XZip zip(&file);
 
-            XBinary::PDSTRUCT pdStruct = {};
-
-            QList<XArchive::RECORD> listZipRecords = zip.getRecords(-1, &pdStruct);
+            QList<XArchive::RECORD> listZipRecords = zip.getRecords(-1, g_pPdStruct);
 
             currentStats.nTotalFile = mdata.listInstallRecords.count();
 
-            for (qint32 j = 0; (j < currentStats.nTotalFile) && (!bIsStop); j++) {
+            for (qint32 j = 0; (j < currentStats.nTotalFile) && (!(g_pPdStruct->bIsStop)); j++) {
                 Utils::HANDLE_RECORD record = mdata.listInstallRecords.at(j);
 
                 currentStats.sFile = QString("%1: %2").arg(tr("Install file")).arg(sRootPath + QDir::separator() + record.sPath);
@@ -80,7 +77,7 @@ void InstallModuleProcess::process()
                     if (XBinary::isFileExists(sRootPath + QDir::separator() + record.sPath)) {
                         if (!XBinary::removeFile(sRootPath + QDir::separator() + record.sPath)) {
                             emit errorMessage(QString("%1: %2").arg(tr("Cannot remove file")).arg(sRootPath + QDir::separator() + record.sPath));
-                            bIsStop = true;
+                            g_pPdStruct->bIsStop = true;
                         }
                     }
 
@@ -89,7 +86,7 @@ void InstallModuleProcess::process()
 
                     if (!XBinary::isFileHashValid(XBinary::HASH_SHA1, sRootPath + QDir::separator() + record.sPath, record.sSHA1)) {
                         emit errorMessage(QString("%1: %2").arg(tr("Invalid file HASH")).arg(sRootPath + QDir::separator() + record.sPath));
-                        bIsStop = true;
+                        g_pPdStruct->bIsStop = true;
                     }
                 } else if (record.action == Utils::ACTION_MAKEDIRECTORY) {
                     XBinary::createDirectory(sRootPath + QDir::separator() + record.sPath);
@@ -103,7 +100,7 @@ void InstallModuleProcess::process()
             if (XBinary::isFileExists(sInfoFileName)) {
                 if (!XBinary::removeFile(sInfoFileName)) {
                     emit errorMessage(QString("%1: %2").arg(tr("Cannot remove file")).arg(sInfoFileName));
-                    bIsStop = true;
+                    g_pPdStruct->bIsStop = true;
                 }
             }
 
