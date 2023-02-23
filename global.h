@@ -24,7 +24,7 @@
 #include <QString>
 
 #define X_APPLICATIONNAME "x64dbg Plugin Manager"
-#define X_APPLICATIONVERSION "0.05"
+#define X_APPLICATIONVERSION "0.06"
 #define X_ORGANIZATIONNAME "NTInfo"
 #define X_ORGANIZATIONDOMAIN "ntinfo.biz"
 #define X_OPTIONSFILE "x64plgmnr.ini"
