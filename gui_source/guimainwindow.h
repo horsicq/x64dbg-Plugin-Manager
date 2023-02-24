@@ -78,7 +78,7 @@ private slots:
     void errorMessage(QString sMessage);
     void getModules();
     void openPlugin(QString sFileName);
-    void updateJsonList();
+    void updateJsonList(bool bInit);
     void installButtonSlot();
     void removeButtonSlot();
     void installPlugin(QString sName);

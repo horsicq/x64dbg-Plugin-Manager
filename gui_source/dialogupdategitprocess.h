@@ -36,7 +36,7 @@ class DialogUpdateGitProcess : public QDialog {
     Q_OBJECT
 
 public:
-    explicit DialogUpdateGitProcess(QWidget *pParent, QString sDataPath);
+    explicit DialogUpdateGitProcess(QWidget *pParent, QString sServerListFileName, QString sServerLastestListFileName, bool bInit);
     ~DialogUpdateGitProcess();
 
 private slots:
@@ -49,7 +49,7 @@ signals:
 
 private:
     Ui::DialogUpdateGitProcess *ui;
-    QString sDataPath;
+    QString sServerLastestListFileName;
     UpdateGitProcess *pUpdateGitProcess;
     QThread *pThread;
     bool bIsRun;

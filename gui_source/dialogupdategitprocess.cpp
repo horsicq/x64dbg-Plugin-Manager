@@ -22,11 +22,11 @@
 
 #include "ui_dialogupdategitprocess.h"
 
-DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sDataPath) : QDialog(pParent), ui(new Ui::DialogUpdateGitProcess)
+DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sServerListFileName, QString sServerLastestListFileName, bool bInit) : QDialog(pParent), ui(new Ui::DialogUpdateGitProcess)
 {
     ui->setupUi(this);
 
-    this->sDataPath = sDataPath;
+    this->sServerLastestListFileName = sServerLastestListFileName;
 
     pUpdateGitProcess = new UpdateGitProcess;
     pThread = new QThread;
@@ -40,7 +40,7 @@ DialogUpdateGitProcess::DialogUpdateGitProcess(QWidget *pParent, QString sDataPa
     pTimer = new QTimer(this);
     connect(pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    pUpdateGitProcess->setData(sDataPath);
+    pUpdateGitProcess->setData(sServerListFileName, sServerLastestListFileName, bInit);
 
     bIsRun = true;
 

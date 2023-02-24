@@ -33,7 +33,7 @@ class UpdateGitProcess : public QObject {
 
 public:
     explicit UpdateGitProcess(QObject *pParent = nullptr);
-    void setData(QString sServerListFileName);
+    void setData(QString sServerListFileName, QString sServerLastestListFileName, bool bInit);
     void stop();
     Utils::STATS getCurrentStats();
     void setCredentials(QString sUser, QString sToken);
@@ -48,10 +48,12 @@ public slots:
 
 private:
     QString sServerListFileName;
+    QString sServerLastestListFileName;
     bool bIsStop;
     Utils::STATS currentStats;
     QString sAuthUser;
     QString sAuthToken;
+    bool g_bInit;
 };
 
 #endif  // UPDATEGITPROCESS_H

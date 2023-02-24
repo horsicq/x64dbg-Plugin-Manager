@@ -108,6 +108,7 @@ public:
         QString sSHA1;
         QString sGithub;
         QList<QString> listDownloads;
+        QString sUpdated;
     };
 
     struct FILE_RECORD {

@@ -358,6 +358,7 @@ void Utils::mDataToObject(Utils::MDATA *pMData, QJsonObject *pObject)
     pObject->insert("Is32", QJsonValue::fromVariant(pMData->bIs32));
     pObject->insert("Is64", QJsonValue::fromVariant(pMData->bIs64));
     pObject->insert("Src", QJsonValue::fromVariant(pMData->sSrc));
+    pObject->insert("Updated", QJsonValue::fromVariant(pMData->sUpdated));
 
     if (pMData->sSHA1 != "") {
         pObject->insert("SHA1", QJsonValue::fromVariant(pMData->sSHA1));
@@ -448,6 +449,7 @@ void Utils::objectToMData(QJsonObject *pObject, Utils::MDATA *pMData)
     pMData->sSrc = pObject->value("Src").toString();
     pMData->sSHA1 = pObject->value("SHA1").toString();
     pMData->sGithub = pObject->value("Github").toString();
+    pMData->sUpdated = pObject->value("Updated").toString();
 
     // TODO optimize
     QJsonArray installArray = pObject->value("Install").toArray();
@@ -760,6 +762,7 @@ bool Utils::updateJsonFile(QString sFileName, QList<MDATA> listMData)
         for (int j = 0; j < _nCount; j++) {
             if ((mdata.sName == listMData.at(j).sName) && (listMData.at(j).sDate != "")) {
                 mdata = listMData.at(j);
+                mdata.sUpdated = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
                 break;
             }
         }

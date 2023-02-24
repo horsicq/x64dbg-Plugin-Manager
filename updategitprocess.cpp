@@ -20,15 +20,33 @@
 //
 #include "updategitprocess.h"
 
+bool _sort_mdata(const Utils::MDATA &mdata1, const Utils::MDATA &mdata2)
+{
+    bool bResult = false;
+
+    if (mdata1.sName == "x64core") {
+        bResult = true;
+    } else if (mdata2.sName == "x64core") {
+        bResult = false;
+    } else {
+        bResult = (mdata2.sUpdated > mdata1.sUpdated);
+    }
+
+    return bResult;
+}
+
 UpdateGitProcess::UpdateGitProcess(QObject *pParent) : QObject(pParent)
 {
     bIsStop = false;
+    g_bInit = false;
     currentStats = {};
 }
 
-void UpdateGitProcess::setData(QString sServerListFileName)
+void UpdateGitProcess::setData(QString sServerListFileName, QString sServerLastestListFileName, bool bInit)
 {
     this->sServerListFileName = sServerListFileName;
+    this->sServerLastestListFileName = sServerLastestListFileName;
+    this->g_bInit = bInit;
 }
 
 void UpdateGitProcess::stop()
@@ -48,7 +66,34 @@ void UpdateGitProcess::process()
 
     bIsStop = false;
 
-    QList<Utils::MDATA> listMData = Utils::getModulesFromJSONFile(sServerListFileName);
+    QList<Utils::MDATA> listMData = Utils::getModulesFromJSONFile(sServerLastestListFileName);
+
+    if (g_bInit) { // The first core only
+        QList<Utils::MDATA> _listMData;
+
+        if (listMData.count()) {
+            _listMData.append(listMData.at(0));
+
+            listMData = _listMData;
+        }
+    } else {
+        if (XBinary::isFileExists(sServerListFileName)) {
+            QList<Utils::MDATA> _listMData = Utils::getModulesFromJSONFile(sServerListFileName);
+
+            int nCount = listMData.count();
+
+            for (int i = 0; i < nCount; i++) {
+                QString sName = listMData.at(i).sName;
+                Utils::MDATA mdata = Utils::getMDataByName(&_listMData, sName);
+
+                if (mdata.sUpdated != "") {
+                    listMData[i].sUpdated = mdata.sUpdated;
+                }
+            }
+        }
+    }
+
+    std::sort(listMData.begin(), listMData.end(), _sort_mdata);
 
     int nCount = listMData.count();
 
@@ -66,6 +111,10 @@ void UpdateGitProcess::process()
         Utils::MDATA mdata = listMData.at(i);
 
         if (mdata.sGithub != "") {
+#ifdef QT_DEBUG
+            qDebug("Guthub %s", mdata.sGithub.toLatin1().data());
+#endif
+
             QString sGithub = mdata.sGithub;
             sGithub = sGithub.section("github.com/", 1, 1);
 
@@ -110,8 +159,13 @@ void UpdateGitProcess::process()
 
                 mdata.listDownloads = stDownloads.toList();
 
-                Utils::updateJsonFile(sServerListFileName, QList<Utils::MDATA>() << mdata);
-            } else {
+                Utils::updateJsonFile(sServerLastestListFileName, QList<Utils::MDATA>() << mdata);
+            }
+
+            if (release.bNetworkError)  {
+#ifdef QT_DEBUG
+                qDebug("Broken %s", mdata.sGithub.toLatin1().data());
+#endif
                 break;
             }
         }

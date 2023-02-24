@@ -521,7 +521,7 @@ int main(int argc, char *argv[])
 
             QObject::connect(&updateGitProcess, SIGNAL(infoMessage(QString)), &consoleOutput, SLOT(infoMessage(QString)));
             QObject::connect(&updateGitProcess, SIGNAL(errorMessage(QString)), &consoleOutput, SLOT(errorMessage(QString)));
-            updateGitProcess.setData(sServerLastestListFileName);
+            updateGitProcess.setData(sServerListFileName, sServerLastestListFileName, false);
             updateGitProcess.process();
         }
 

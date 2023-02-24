@@ -84,7 +84,7 @@ GuiMainWindow::GuiMainWindow(QWidget *pParent) : QMainWindow(pParent), ui(new Ui
         openPlugin(sFileName);
     } else {
         if (!XBinary::isFileExists(Utils::getServerListFileName(xOptions.getDataPath()))) {
-            updateJsonList();
+            updateJsonList(true);
         }
     }
 
@@ -282,7 +282,7 @@ void GuiMainWindow::openPlugin(QString sFileName)
     }
 }
 
-void GuiMainWindow::updateJsonList()
+void GuiMainWindow::updateJsonList(bool bInit)
 {
     QString sServerListFileName = Utils::getServerListFileName(xOptions.getDataPath());
     QString sServerLastestListFileName = Utils::getServerLastestListFileName(xOptions.getDataPath());
@@ -299,7 +299,7 @@ void GuiMainWindow::updateJsonList()
     dialogGetFileFromServer.exec();
 
     if (Utils::isGithubPresent(sServerLastestListFileName)) {
-        DialogUpdateGitProcess dialogUpdateGitProcess(this, sServerLastestListFileName);
+        DialogUpdateGitProcess dialogUpdateGitProcess(this, sServerListFileName, sServerLastestListFileName, bInit);
 
         connect(&dialogUpdateGitProcess, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
@@ -575,7 +575,7 @@ void GuiMainWindow::_removePluginInstalled()
 
 void GuiMainWindow::updateServerList()
 {
-    updateJsonList();
+    updateJsonList(false);
 
     getModules();
 }
