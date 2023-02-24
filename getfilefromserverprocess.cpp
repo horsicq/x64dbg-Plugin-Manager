@@ -72,11 +72,12 @@ void GetFileFromServerProcess::process()
         loop.exec();
 
         if (pReply->error() == QNetworkReply::NoError) {
-            if (pReply->bytesAvailable()) {
+
+            QString sRedirectUrl = pReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
+
+            if (pReply->bytesAvailable()||(sRedirectUrl != "")) {
                 bool bSuccess = false;
                 QByteArray baData;
-
-                QString sRedirectUrl = pReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
 
                 if (sRedirectUrl != "")  // Github redirect
                 {
