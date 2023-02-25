@@ -19,3 +19,6 @@
 [submodule "XUpdate"]
 	path = XUpdate
 	url = https://github.com/horsicq/XUpdate
+[submodule "XAboutWidget"]
+	path = XAboutWidget
+	url = https://github.com/horsicq/XAboutWidget
