@@ -184,7 +184,6 @@
      <string>Help</string>
     </property>
     <addaction name="actionAbout"/>
-    <addaction name="actionCheck_for_updates"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -237,11 +236,6 @@
   <action name="actionUpdate_all_installed_plugins">
    <property name="text">
     <string>Update all installed plugins</string>
-   </property>
-  </action>
-  <action name="actionCheck_for_updates">
-   <property name="text">
-    <string>Check for updates</string>
    </property>
   </action>
  </widget>

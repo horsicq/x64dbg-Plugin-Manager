@@ -88,6 +88,11 @@ FORMS += \
     include(../XOptions/xoptions.pri)
 }
 
+!contains(XCONFIG, xaboutwidget) {
+    XCONFIG += xaboutwidget
+    include(../XAboutWidget/xaboutwidget.pri)
+}
+
 win32 {
     RC_ICONS = ../icons/main.ico
 }

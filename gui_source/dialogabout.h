@@ -25,6 +25,7 @@
 #include <QDialog>
 
 #include "../global.h"
+#include "xoptions.h"
 
 namespace Ui {
 class DialogAbout;

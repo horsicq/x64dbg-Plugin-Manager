@@ -95,7 +95,6 @@ private slots:
     void _removePluginInstalled();
     void updateServerList();
     void updateAllInstalledPlugins();
-    void checkForUpdates();
     void on_pushButtonUpdateServerList_clicked();
     void on_pushButtonUpdateAllInstalledPlugins_clicked();
     void on_actionExit_triggered();
@@ -105,7 +104,6 @@ private slots:
     void on_actionOptions_triggered();
     void on_actionUpdate_server_list_triggered();
     void on_actionUpdate_all_installed_plugins_triggered();
-    void on_actionCheck_for_updates_triggered();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *pEvent) override;

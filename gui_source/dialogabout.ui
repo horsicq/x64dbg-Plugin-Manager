@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>365</width>
-    <height>451</height>
+    <width>464</width>
+    <height>278</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,88 +21,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="labelLogo">
-       <property name="minimumSize">
-        <size>
-         <width>314</width>
-         <height>177</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>314</width>
-         <height>177</height>
-        </size>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="resources.qrc">:/images/main.png</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QLabel" name="labelInfo">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Bugreports: &lt;a href=&quot;mailto:horsicq@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ff0000;&quot;&gt;horsicq@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Website: &lt;a href=&quot;http://ntinfo.biz&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ff0000;&quot;&gt;http://ntinfo.biz&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;2019-2022(C) hors&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Thanks:&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fernando Mercês: &lt;/span&gt;&lt;a href=&quot;https://www.mentebinaria.com.br/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ff0000;&quot;&gt;https://www.mentebinaria.com.br&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;David Zimmer: &lt;/span&gt;&lt;a href=&quot;http://sandsprite.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ff0000;&quot;&gt;http://sandsprite.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;misonothx: &lt;/span&gt;&lt;a href=&quot;https://github.com/miso-xyz&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ff0000;&quot;&gt;https://github.com/miso-xyz&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;FrenchYeti: &lt;/span&gt;&lt;a href=&quot;https://twitter.com/frenchyeti&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ff0000;&quot;&gt;https://twitter.com/frenchyeti&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="openExternalLinks">
-      <bool>true</bool>
+    <widget class="XAboutWidget" name="widgetAbout" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
     </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -130,8 +56,14 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <customwidgets>
+  <customwidget>
+   <class>XAboutWidget</class>
+   <extends>QWidget</extends>
+   <header>xaboutwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
  <connections/>
 </ui>
