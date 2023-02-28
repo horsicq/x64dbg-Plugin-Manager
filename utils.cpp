@@ -114,7 +114,7 @@ QByteArray Utils::createPluginInfo(Utils::MDATA *pMData, QList<Utils::FILE_RECOR
 
     mDataToObject(pMData, &recordObject);
 
-    if (pMData->sSHA1 == "")  // In zip
+    if ((pMData->sSHA1 == "") || (pMData->listInstallRecords.count() == 0))  // In zip
     {
         int nFilesCount = pListFileRecords->count();
         int nDirectoriesCount = pListDirectoryRecords->count();
