@@ -72,10 +72,9 @@ void GetFileFromServerProcess::process()
         loop.exec();
 
         if (pReply->error() == QNetworkReply::NoError) {
-
             QString sRedirectUrl = pReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
 
-            if (pReply->bytesAvailable()||(sRedirectUrl != "")) {
+            if (pReply->bytesAvailable() || (sRedirectUrl != "")) {
                 bool bSuccess = false;
                 QByteArray baData;
 

@@ -68,7 +68,7 @@ void UpdateGitProcess::process()
 
     QList<Utils::MDATA> listMData = Utils::getModulesFromJSONFile(sServerLastestListFileName);
 
-    if (g_bInit) { // The first core only
+    if (g_bInit) {  // The first core only
         QList<Utils::MDATA> _listMData;
 
         if (listMData.count()) {
@@ -162,7 +162,7 @@ void UpdateGitProcess::process()
                 Utils::updateJsonFile(sServerLastestListFileName, QList<Utils::MDATA>() << mdata);
             }
 
-            if (release.bNetworkError)  {
+            if (release.bNetworkError) {
 #ifdef QT_DEBUG
                 qDebug("Broken %s", mdata.sGithub.toLatin1().data());
 #endif
