@@ -814,27 +814,13 @@ QString Utils::actionIdToString(Utils::ACTION action)
     QString sResult = "unknown";
 
     switch (action) {
-        case ACTION_UNKNOWN:
-            sResult = QString("unknown");
-            break;
-        case ACTION_COPYFILE:
-            sResult = QString("copy_file");
-            break;
-        case ACTION_REMOVEFILE:
-            sResult = QString("remove_file");
-            break;
-        case ACTION_REMOVEDIRECTORYIFEMPTY:
-            sResult = QString("remove_directory_if_empty");
-            break;
-        case ACTION_MAKEDIRECTORY:
-            sResult = QString("make_directory");
-            break;
-        case ACTION_UNPACKDIRECTORY:
-            sResult = QString("unpack_directory");
-            break;
-        case ACTION_UNPACKFILE:
-            sResult = QString("unpack_file");
-            break;
+        case ACTION_UNKNOWN: sResult = QString("unknown"); break;
+        case ACTION_COPYFILE: sResult = QString("copy_file"); break;
+        case ACTION_REMOVEFILE: sResult = QString("remove_file"); break;
+        case ACTION_REMOVEDIRECTORYIFEMPTY: sResult = QString("remove_directory_if_empty"); break;
+        case ACTION_MAKEDIRECTORY: sResult = QString("make_directory"); break;
+        case ACTION_UNPACKDIRECTORY: sResult = QString("unpack_directory"); break;
+        case ACTION_UNPACKFILE: sResult = QString("unpack_file"); break;
     }
 
     return sResult;
