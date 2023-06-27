@@ -830,20 +830,13 @@ Utils::ACTION Utils::stringToActionId(QString sAction)
 {
     Utils::ACTION result = ACTION_UNKNOWN;
 
-    if (sAction == "unknown")
-        result = ACTION_UNKNOWN;
-    else if (sAction == "copy_file")
-        result = ACTION_COPYFILE;
-    else if (sAction == "remove_file")
-        result = ACTION_REMOVEFILE;
-    else if (sAction == "remove_directory_if_empty")
-        result = ACTION_REMOVEDIRECTORYIFEMPTY;
-    else if (sAction == "make_directory")
-        result = ACTION_MAKEDIRECTORY;
-    else if (sAction == "unpack_directory")
-        result = ACTION_UNPACKDIRECTORY;
-    else if (sAction == "unpack_file")
-        result = ACTION_UNPACKFILE;
+    if (sAction == "unknown") result = ACTION_UNKNOWN;
+    else if (sAction == "copy_file") result = ACTION_COPYFILE;
+    else if (sAction == "remove_file") result = ACTION_REMOVEFILE;
+    else if (sAction == "remove_directory_if_empty") result = ACTION_REMOVEDIRECTORYIFEMPTY;
+    else if (sAction == "make_directory") result = ACTION_MAKEDIRECTORY;
+    else if (sAction == "unpack_directory") result = ACTION_UNPACKDIRECTORY;
+    else if (sAction == "unpack_file") result = ACTION_UNPACKFILE;
 
     return result;
 }
