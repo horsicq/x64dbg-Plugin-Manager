@@ -116,7 +116,7 @@ void CreateModuleProcess::process()
                         XZip::ZIPFILE_RECORD zipFileRecord = {};
 
                         zipFileRecord.sFileName = QString("files/") + fileRecord.sPath;
-                        zipFileRecord.method = XZip::METHOD_DEFLATE;
+                        zipFileRecord.method = XZip::CMETHOD_DEFLATE;
 
                         XZip::addLocalFileRecord(&file, &fileResult, &zipFileRecord);  // TODO handle errors
 
@@ -158,7 +158,7 @@ void CreateModuleProcess::process()
                 XZip::ZIPFILE_RECORD zipFileRecord = {};
 
                 zipFileRecord.sFileName = "plugin_info.json";
-                zipFileRecord.method = XZip::METHOD_DEFLATE;
+                zipFileRecord.method = XZip::CMETHOD_DEFLATE;
 
                 XZip::addLocalFileRecord(&bufferInfoFile, &fileResult, &zipFileRecord);
 
